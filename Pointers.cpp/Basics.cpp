@@ -81,15 +81,17 @@ int main()
 	cout<<"p  Adress of  a "<<p<<endl;
 	cout<<"*p value of   a  "<<*p<<endl;// *p holds value of a
 
-	cout<<"&q  address of a  "<<*q<<endl;// *q holds address of a
+	cout<<"*q  address of a  "<<*q<<endl;// *q holds address of a
 	cout<<"&p  Address of p  "<<&p<<endl;// &p holds Address of p
-	cout<<"*q  address of p  "<<&*q<<endl;// *q holds address of p
-	cout<<"*q value of   p   "<<**q<<endl;// **q holds value of p
+	cout<<"&*q  address of p  "<<&*q<<endl;// &*q holds address of p
+	cout<<"**q value of   a   "<<**q<<endl;// **q holds value of a
 	
-	cout<<"*r  Adress of  a  "<<*r<<endl;// **r Adress of a
+	cout<<"*r  Adress of  p  "<<*r<<endl;// *r Adress of p
 	cout<<"&q   Address of q  "<<&q<<endl;// &q holds Address of q
 	cout<<"&*r  Adress of  q  "<<&*r<<endl;// &*r Adress of q
-	cout<<"r value of   q   "<<**r<<endl;// ***r value of q
+	cout<<"**r address of  a  "<<**r<<endl;// **r address of  a 
+	cout<<"&**r address of  p  "<<&**r<<endl;// &**r address of  p
+	cout<<"***r value of  a  "<<***r<<endl;// ***r value of  a 
 	cout<<"Address of r  "<<&r<<endl;
-	return 0;
+    return 0;
 }
