@@ -252,7 +252,20 @@ int main() {
 Explanation:
 ptr[i][j] stores the address of row j in block i.
 *(ptr[i][j] + k) accesses column k.
-//////////////////////////////////////////////
+/*    
+ptr - This is a pointer to a pointer (int** ptr), representing a dynamically allocated 2D array.*/
+
+/*    
+ptr + i - Moves to the i-th row. Since ptr is an array of pointers (each pointing to a row), ptr + i gives the address of row i.*/
+
+/*     
+ *(ptr + i) - Dereferencing ptr + i gives the base address of the i-th row (i.e., the first element of that row).*/
+
+ /* 
+*(ptr + i) + j - Moves to the j-th column within the i-th row. Since *(ptr + i) is a pointer to the first element of the row, adding j moves j positions forward in that row.*/
+
+/*  
+ *(*(ptr + i) + j)  - Finally, dereferencing this expression gives the actual value stored at the i-th row and j-th column.*/
 📌 Explanation:
 ptr is a pointer to a 2D array ([3][4]).
 *(ptr + i) moves to block i.
