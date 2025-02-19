@@ -84,7 +84,7 @@ int main()
 	cout<<"&q  address of a  "<<*q<<endl;// *q holds address of a
 	cout<<"&p  Address of p  "<<&p<<endl;// &p holds Address of p
 	cout<<"*q  address of p  "<<&*q<<endl;// *q holds address of p
-	cout<<"*q value of   p   "<<*q<<endl;// **q holds value of p
+	cout<<"*q value of   p   "<<**q<<endl;// **q holds value of p
 	
 	cout<<"*r  Adress of  a  "<<*r<<endl;// **r Adress of a
 	cout<<"&q   Address of q  "<<&q<<endl;// &q holds Address of q
