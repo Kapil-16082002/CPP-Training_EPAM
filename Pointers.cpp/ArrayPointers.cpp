@@ -81,6 +81,13 @@ int main() {
     cin >> rows >> cols;
 
     int **arr = new int*[rows];// Allocate memory for row pointers
+    //  int **arr
+     //   arr is a pointer to a pointer to an integer.
+     //   It will be used to store multiple pointers, each pointing to a row of integers.
+
+    // new int*[rows]
+       //This dynamically allocates an array of rows number of int* (pointers to integers).
+       // Each element of this array is an int*, which will later point to a dynamically allocated row.
     for (int i = 0; i < rows; i++) {
         arr[i] = new int[cols];  // Allocate memory for each row
     }
@@ -108,7 +115,7 @@ Memory is freed correctly using delete[].
 Since arrays cannot be passed by value, we typically pass them by pointer.
 #include <iostream>
 using namespace std;
-void printArray(int arr[] /*  or int *arr*/ , int size) {  // Equivalent to int *arr , int arr[]=int *arr
+void printArray(int arr[] /*  or int *arr  */ , int size) {  // Equivalent to int *arr , int arr[]=int *arr
     cout << "Array elements: ";
     for (int i = 0; i < size; i++) {
         cout << arr[i] << " ";
