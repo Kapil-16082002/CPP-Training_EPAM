@@ -28,7 +28,7 @@ int main() {
 
     cout << "Accessing using pointer arithmetic:\n";
     for (int i = 0; i < 5; i++) {
-        cout << *(ptr + i) << " ";
+        cout << *(ptr + i) << " ";//  *(arr + i)
     }
     return 0;
 }
@@ -90,10 +90,24 @@ int main() {
     int arr[2][3] = {{1, 2, 3}, {4, 5, 6}};
     int (*ptr)[3] = arr;  // means Pointer to an array of 3 integers(column size is 3)
   
-    cout<<arr;// first block address
-    cout<<*arr;// first block address
-    cout<<arr[0];//first block address
-    cout<<arr[0][0];//first block address
+    cout<<arr<<endl;//  first block address
+    cout<<*arr<<endl;//   first row column address
+    cout<<arr[0]<<endl;//  first block  address
+    
+    cout<<endl;
+    
+    cout<<ptr<<endl;//  points to  first row
+    cout<<*(ptr)<<endl;//  points to (first row first column) element address
+    cout<< *(ptr)+1 <<endl; //  points to (first row second column) element address
+    cout<<**(ptr)<<endl;//  points to (first row first column) element 
+    cout<<ptr[0]<<endl;//  first row. first cloumn address
+    cout<<(ptr[0]+3)<<endl;//  second row first column address
+    cout<<(ptr[1])<<endl;//  second row first column address
+      
+    cout<<(ptr+1)<<endl;//   moves pointer to next row(i)
+    cout<<*(ptr+1)<<endl;//  points to (Second row first column) element address
+    cout<<**(ptr+1)<<endl;//  points to (Second row first column) element 
+    
 
     cout << "Accessing using pointer to an array:\n";
     for (int i = 0; i < 2; i++) {
@@ -102,6 +116,8 @@ int main() {
         }
         cout << endl;
     }
+    
+}
     /* Explanation of Methods
  
 /*    
@@ -245,16 +261,24 @@ Since arr is an array of 2D arrays, we can use a pointer to a 2D array.
 using namespace std;
 int main() {
     int arr[2][3][4] = {
-        {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}},
+        { {1, 2, 3, 4},    {5, 6, 7, 8},     {9, 10, 11, 12}},
         {{13, 14, 15, 16}, {17, 18, 19, 20}, {21, 22, 23, 24}}
     };
     int (*ptr)[3][4] = arr; // Pointer to a 2D array
-    cout << "Accessing using pointer to 2D array:\n";
+    
+    cout<<ptr<<endl;//  first block address
+    cout<<*ptr<<endl;//   first block address,first row first column address
+    cout<<ptr[0]<<endl;//  first block  addres
+    cout<<ptr[0]+0<<endl;//  first block  addres,first row address
+    cout<<ptr[0][0]+0<<endl; // first block ,first row, first column addres
+    cout<<*(ptr[0][0]+0)<<endl;//first block ,first row,first column element
+    cout<<ptr[0][0][0]<<endl;// gives first block, first row, first column element
+    
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < 3; j++) {
             for (int k = 0; k < 4; k++) {
                 cout << *(*(*(ptr + i) + j) + k) << " ";
-                cout << *(ptr[i][j] + k) << " "; //Equivalent to arr[i][j][k] == *(*(*(ptr + i) + j) + k)==*(*(ptr[i]+j) + k)==*(ptr[i][j] + k)
+                //cout << *(ptr[i][j] + k) << " "; //Equivalent to arr[i][j][k] == *(*(*(ptr + i) + j) + k)==*(*(ptr[i]+j) + k)==*(ptr[i][j] + k)
             }
             cout << endl;
         }
@@ -271,31 +295,5 @@ ptr is a pointer to a 2D array ([3][4]).
 *(ptr + i) moves to block i.
 *(*(ptr + i) + j) moves to row j.
 *(*(*(ptr + i) + j) + k) accesses column k.
-////////////////////////////////////////////METHOD:4
-
-#include <iostream>
-using namespace std;
-int main() {
-    int arr[2][3][4] = {
-        {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}},
-        {{13, 14, 15, 16}, {17, 18, 19, 20}, {21, 22, 23, 24}}
-    };
-
-    int (*ptr)[3][4] = arr; // Pointer to a 2D array
-
-    cout << "Accessing using pointer to 2D array:\n";
-    for (int i = 0; i < 2; i++) {
-        for (int j = 0; j < 3; j++) {
-            for (int k = 0; k < 4; k++) {
-                cout << *(*(*(ptr + i) + j) + k) << "__";
-                cout << *(ptr[i][j] + k) << " "; // Equivalent to arr[i][j][k]
-            }
-            cout << endl;
-        }
-        cout << endl;
-    }
-
-    return 0;
-}
 
 
