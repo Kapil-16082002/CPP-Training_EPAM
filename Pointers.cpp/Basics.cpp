@@ -1,6 +1,16 @@
+The size of pointers in C is - 
+This size of pointers in C only depends on the system architecture.
+    8 bytes for a 64-bit System
+    4 bytes for a 32-bit System
+	On a 32-bit system, memory addresses are 4 bytes (32 bits), so all pointers are 4 bytes.
+	On a 64-bit system, memory addresses are 8 bytes (64 bits), so all pointers are 8 bytes.
+	
+	The reason for the same size is that the pointers store the memory addresses, no matter what type they are. 
+	As the space required to store the addresses of the different memory locations is the same, 
+	the memory required by one pointer type will be equal to the memory required by other pointer types.
+
 #include <bits/stdc++.h>
 using namespace std;
-
 int main()
 {
 	int a=10;
