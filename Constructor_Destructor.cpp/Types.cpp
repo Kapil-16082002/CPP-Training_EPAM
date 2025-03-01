@@ -64,8 +64,21 @@ public:
 };
 int main() {
     Number num1(10);  // Normal object creation
-    Number num2 = num1;  // Copy constructor is called
+    Number num2 = num1;  //also  Number num2(num1);   
+/*
+✅ Number num2 = num1; → Copy Initialization
+This syntax implicitly calls the copy constructor.
+The compiler treats it as Number num2(num1);
+Slightly less efficient
+Use Cases: Used when object creation involves implicit conversions
 
+✅ Number num2(num1); → Direct Initialization
+Number num2(num1);
+This syntax is called direct initialization.
+It explicitly calls the copy constructor.
+More efficient
+More efficient than Number num2 = num1; since no implicit conversion is involved.
+*/
     num1.display();
     num2.display();
 
