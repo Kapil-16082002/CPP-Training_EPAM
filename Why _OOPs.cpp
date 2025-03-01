@@ -32,7 +32,6 @@ Data is more secure as we have public, private, protected access modifiers.
 Procedural Programming:
 Data is typically stored in global variables or passed between functions and hence  less control over accessing of data, which can lead to unintended modifications or bugs.
 
-
 	               OOP                                          	Procedural Programming
 Main focus- 	    Objects (data + functions)	                       Functions and procedures
 Approach-	        Bottom-up (design objects first)	               Top-down (design functions first)
