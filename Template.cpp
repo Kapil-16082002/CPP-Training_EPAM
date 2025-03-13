@@ -1,5 +1,6 @@
-Templates in C++ (Complete Guide with Code & Use Cases)
-Templates in C++ allow writing generic and reusable code. They enable functions and classes to work with different data types without code duplication.
+
+Templates in C++ allow writing generic and reusable code. 
+They enable functions and classes to work with different data types without code duplication.
 
 1️⃣ Types of Templates in C++
 ✅ 1. Function Templates
@@ -7,6 +8,14 @@ Templates in C++ allow writing generic and reusable code. They enable functions 
 ✅ 3. Variadic Templates (C++11)
 ✅ 4. Template Specialization
 ✅ 5. Template Non-Type Parameters
+
+Disadvantages of Template->
+.cpp               .obj                  .exe
+Source code        Object code           executable code
+            ----->>             ------>>
+           Compiler             Linker
+Templates in C++ increase the size of the object code because each template instantiation generates a separate version of the code for every different type used. 
+This leads to code bloat and a larger .obj (object file) size.
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 1️⃣ Function Templates
@@ -35,14 +44,40 @@ int main() {
 🔹 Output:
 Addition (int): 30
 Addition (double): 30.8
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+How to Decide the Return Type of a Template Function?
+In template functions with multiple types (T1, T2), the return type depends on how the compiler deduces the result type of an expression. Lets break this down.
+
+🔹 1. Implicit Return Type (Compiler Deduction)
+template <typename T1, typename T2>
+T1 add(T1 a, T2 b) {
+    return a + b;
+}
+The return type is T1, meaning the result will always be of the first type.
+Problem: If T1 is int and T2 is double, the result will be truncated (loss of precision).
+✅ Example:
+cout << add(10, 20.5); // Output: 30 (instead of 30.5) because T1 is int
+
+🔹 2. Using decltype to Infer Correct Return Type
+To return the correct type based on a + b, use decltype(a + b):
+template <typename T1, typename T2>
+auto add(T1 a, T2 b) -> decltype(a + b) {
+    return a + b;
+}
+decltype(a + b) automatically detects the correct return type.
+If a is int and b is double, the return type will be double.
+No loss of precision or truncation issues.
+✅ Example: cout << add(10, 20.5); // Output: 30.5 (correct!)
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 2️⃣ Class Templates
 A class template allows defining a class with generic data types.
 
 🔹 Example: Generic Class for a Pair
 #include <iostream>
 using namespace std;
-
 template <typename T1, typename T2>
 class Pair {
 private:
@@ -89,16 +124,47 @@ int main() {
 4️⃣ Template Specialization
 Template specialization allows writing a specific implementation for a particular type.
 
+#include <iostream>
+using namespace std;
+// Generic Template Function
+template <typename T>
+void print(T value) {            // Takes 1 Argument
+    cout << "Generic Value: " << value << endl;
+}
+// Full Specialization for string
+template <>
+void print<string>(string value) {        // Takes 1 Argument
+    cout << "String Value: " << value << endl;
+}
+int main() {
+    print(10);        // Uses Generic Template 
+    print(3.14);      // Uses Generic Template
+    print("Hello");   // invokes the specialized function for string. Uses Specialized Template
+    return 0;
+}
+🔹 Explanation:
+template <> → This indicates that the function is a full specialization of a previously defined function template. 
+The empty angle brackets (<>) mean that no additional template parameter is being introduced.
+void print<string>(string value) → This defines a special version of the print function specifically for the string type.
+Primary Template and Full Specialization Must Have the Same Number of Arguments.
+
+
+🔹 Why Use Specialization?
+This is useful when you want a custom implementation for a specific type (string in this case) while keeping a generic template for other types.
+Full Specialization Requires a Primary Template-> 
+Full specialization (template <>) only works if there is a previously defined primary function template.
+If the compiler does not find a primary template print<T>, it won’t know what function you are trying to specialize.
+
 🔹 Example: Specialized Template for 
 #include <iostream>
 #include <string>
 using namespace std;
 
-template <typename T>
+template <typename T1,typename T2>
 class Printer {
 public:
-    static void print(T value) {
-        cout << "Value: " << value << endl;
+    static void print(T1 value1,T2 value2) {
+        cout << "Value: " << value1+value2 << endl;
     }
 };
 // Specialized version for std::string
@@ -111,8 +177,8 @@ public:
 };
 
 int main() {
-    Printer<int>::print(10);       // Calls the generic template
-    Printer<double>::print(10.5);  // Calls the generic template
+    Printer<int>::print(10,20);       // Calls the generic template
+    //Printer<double>::print(10.5);  // Calls the generic template
     Printer<string>::print("Hello"); // Calls the specialized version
 
     return 0;
@@ -219,7 +285,7 @@ int main() {
     show<int>(); // ✅ Now it's instantiated and works.
     return 0;
 }
-////////////////////////////////////
+/////////////////////////////////////////////////////////
 🔹 2️⃣ Ambiguous Overload
 🔸 Reason: Multiple template instances match the call.
 🔹 Solution: Use explicit specialization.
@@ -237,7 +303,8 @@ int main() {
     print(10);  // 🚨 Ambiguous: Which `print` to use?
     return 0;
 }
-Solution (Use Different Function Names or Remove General Template)
+Solution: (Use Different Function Names or Remove General Template)
+
 template <typename T>
 void printValue(T value) {
     cout << "Generic print: " << value << endl;
@@ -250,7 +317,7 @@ int main() {
     printValue(10);  // ✅ Now it works.
     return 0;
 }
-/// @brief /////////////////////////////////////////
+///////////////////////////////////////////////////////
 
 🔹 3️⃣ Template Instantiation Error
 🔸 Reason: Incorrect or missing template arguments.
@@ -362,3 +429,159 @@ Non-Deduced Context	    Compiler cannot infer type	               Explicitly spe
 Linker Errors	        Templates not defined in headers	       Move template definitions to header files
 Code Bloat	            Too many template instances	               Reduce unnecessary specializations
 SFINAE Issues	        Unexpected failures	                        Use std::enable_if for better control
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Disadvantages of Template->
+.cpp               .obj                  .exe
+Source code        Object code           executable code
+            ----->>             ------>>
+           Compiler             Linker
+Templates in C++ increase the size of the object code because each template instantiation generates a separate version of the code for every different type used. 
+This leads to code bloat and a larger .obj (object file) size.
+
+
+🔹 How Templates Cause Larger Object Code?
+🔸 1️⃣ Multiple Instantiations of the Same Code->
+Every time a template is used with a new type, the compiler creates a new version of the code.
+Example: Template Instantiation
+#include <iostream>
+using namespace std;
+
+template <typename T>
+void show(T value) {
+    cout << "Value: " << value << endl;
+}
+
+int main() {
+    show(10);     // Creates show<int>()
+    show(10.5);   // Creates show<double>()
+    show('A');    // Creates show<char>()
+}
+🔍 How This Affects .obj Size
+The compiler does not generate one single show() function.
+Instead, it creates separate copies for:
+show<int>()
+show<double>()
+show<char>()
+This duplicates code and increases .obj file size.
+
+//////////////////////////////////////////////////////////
+
+🔹 2️⃣ Code Bloat Due to Class Templates
+With class templates, every different data type creates a new class definition, leading to more compiled code.
+
+Example: Class Template Instantiations
+template <typename T>
+class Data {
+    T value;
+public:
+    Data(T val) : value(val) {}
+    void display() { cout << "Value: " << value << endl; }
+};
+
+int main() {
+    Data<int> d1(10);       // Generates Data<int>
+    Data<double> d2(10.5);  // Generates Data<double>
+    Data<char> d3('A');     // Generates Data<char>
+}
+🔍 How This Affects .obj Size
+The compiler creates different versions:
+Data<int>
+Data<double>
+Data<char>
+Each version contains its own separate copy of:
+The constructor
+display() function
+This significantly increases the .obj file size.
+
+//////////////////////////////////////////////////////////////////
+
+🔹 3️⃣ Templates Are Instantiated in Every Compilation Unit
+Templates must be instantiated in every .cpp file that uses them, leading to duplicate template instantiations across multiple files.
+
+Example: Using Templates in Multiple Files
+Header File (mytemplate.h)
+template <typename T>
+void show(T value) {
+    cout << value << endl;
+}
+File 1 (file1.cpp)
+#include "mytemplate.h"
+void func1() {
+    show(100);  // Instantiates show<int>()
+}
+File 2 (file2.cpp)
+#include "mytemplate.h"
+void func2() {
+    show(100);  // Instantiates show<int>() again!
+}
+🔍 Effect:
+
+show<int>() is instantiated twice, once in file1.obj and again in file2.obj.
+This duplicates the object code and increases the overall executable size.
+✅ Solution: Use explicit instantiation in one .cpp file and extern declaration elsewhere.
+
+////////////////////////////////////////////////////////////
+
+🔹 4️⃣ Lack of Optimization (Inlining Issue)
+Templates are not always inlined by the compiler.
+If inlining is disabled, each instantiation adds extra function call overhead, further increasing object code size.
+Example: Template Function Not Inlined
+template <typename T>
+void show(T value) {
+    cout << value << endl;  // If not inlined, this adds function call overhead
+}
+✅ Solution: Use inline keyword when applicable.
+template <typename T>
+inline void show(T value) {
+    cout << value << endl;
+}
+///////////////////////////////////////////////////////////////
+🔹 5️⃣ Explicit Specialization Can Further Increase .obj Size
+If explicit specializations are created, they add extra copies of template code.
+
+Example: Specialized Template
+template <typename T>
+class Printer {
+public:
+    static void print(T value) {
+        cout << "Value: " << value << endl;
+    }
+};
+
+// Specialization for `string`
+template <>
+class Printer<string> {
+public:
+    static void print(string value) {
+        cout << "String Value: " << value << endl;
+    }
+};
+
+int main() {
+    Printer<int>::print(10);      // Creates Printer<int>
+    Printer<double>::print(10.5); // Creates Printer<double>
+    Printer<string>::print("Hi"); // Creates specialized Printer<string>
+}
+🔍 Effect on .obj Size
+
+The compiler generates separate versions for:
+Printer<int>
+Printer<double>
+Specialized Printer<string>
+This further adds extra code, increasing object file size.
+✅ Solution: Avoid unnecessary specializations and use partial specialization when possible.
+
+🔹 6️⃣ STL Containers Use Templates and Cause Code Bloat
+Using Standard Template Library (STL) containers (like vector, map, set) generates new code for each data type.
+
+Example: STL Template Code Bloat
+#include <vector>
+using namespace std;
+vector<int> v1;     // Generates code for vector<int>
+vector<double> v2;  // Generates code for vector<double>
+🔍 Effect on .obj File
+
+vector<int> and vector<double> are compiled separately, increasing file size.
+✅ Solution: Use references (vector<int>&) when possible to avoid redundant instantiations.
