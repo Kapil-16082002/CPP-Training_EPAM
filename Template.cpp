@@ -178,7 +178,7 @@ public:
 
 int main() {
     Printer<int>::print(10,20);       // Calls the generic template
-    //Printer<double>::print(10.5);  // Calls the generic template
+    Printer<double>::print(10.5);  // Calls the generic template
     Printer<string>::print("Hello"); // Calls the specialized version
 
     return 0;
@@ -258,6 +258,270 @@ Compile-time Computation	       Meta-programming techniques.
 ✅ Avoid unnecessary using namespace std; in large projects.
 ✅ Use explicit specialization when needed.
 ✅ Understand STL containers, which heavily rely on templates.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+🔹 Types of Template Specialization
+Full Specialization –     Specializes a template for a specific type.
+Partial Specialization –  Specializes a template for a subset of template parameters.
+Function Template Specialization – Specializes a function template for a specific type.
+Member Function Specialization – Specializes a specific member function of a template class.
+Variable Template Specialization (C++14) – Specializes template variables.
+
+2. Full Specialization
+Full specialization completely overrides the general template for a particular type.
+
+📌 Example: Full Specialization of a Class Template
+#include <iostream>
+using namespace std;
+template <typename T>     // Generic template
+class Printer {
+public:
+    void print(T value) {
+        cout << "General template: " << value << endl;
+    }
+};
+template <>   // Full specialization for type `int`
+class Printer<int> {
+public:
+    void print(int value) {
+        cout << "Specialized for int: " << value << endl;
+    }
+};
+int main() {
+    Printer<double> obj1;  
+    obj1.print(3.14);  // Calls generic template
+
+    Printer<int> obj2;  
+    obj2.print(42);  // Calls specialized template
+    return 0;
+}
+✅ Output:
+General template: 3.14
+Specialized for int: 42
+✔ The specialized class completely replaces the generic template for int.
+//-----------------------------------------------------------------------------------------------------------
+
+3. Partial Specialization
+Partial specialization allows modifying a subset of the template parameters while keeping others generic.
+
+📌 Example: Partial Specialization
+#include <iostream>
+using namespace std;
+
+// General template
+template <typename T1, typename T2>
+class Pair {
+public:
+    void show() { cout << "General template" << endl; }
+};
+
+// Partial specialization when both types are the same
+template <typename T>
+class Pair<T, T> {
+public:
+    void show() { cout << "Partial specialization: Same type" << endl; }
+};
+
+int main() {
+    Pair<int, double> obj1;
+    obj1.show();  // Calls general template
+
+    Pair<int, int> obj2;
+    obj2.show();  // Calls partial specialization
+
+    return 0;
+}
+✅ Output:
+General template
+Partial specialization: Same type
+✔ The specialization triggers only when both template parameters are the same.
+
+//---------------------------------------------------------------------------------------------------------------
+4. Function Template Specialization
+Function template specialization is used to define a different implementation of a function template for a specific type.
+
+📌 Example: Function Template Specialization
+#include <iostream>
+using namespace std;
+
+// Generic template function
+template <typename T>
+void display(T value) {
+    cout << "Generic function: " << value << endl;
+}
+
+// Specialization for `char*`
+template <>
+void display<char*>(char* value) {
+    cout << "Specialized for char*: " << value << endl;
+}
+
+int main() {
+    display(100);  // Calls generic function
+    display("Hello");  // Calls specialized function
+
+    return 0;
+}
+✅ Output:
+Generic function: 100
+Specialized for char*: Hello
+✔ The specialized version only applies to char*, while other types use the generic version.
+
+//--------------------------------------------------------------------------------------------------------------
+
+5. Member Function Specialization
+You can specialize a single function inside a class template while keeping the rest generic.
+
+📌 Example: Specializing a Member Function
+#include <iostream>
+using namespace std;
+
+// General template
+template <typename T>
+class Demo {
+public:
+    void show(double val) {
+        cout << "Generic class" << endl;
+    }
+
+    // Specialization for `int`
+    void show(int value) {
+        cout << "Specialized member function for int: " << value << endl;
+    }
+};
+int main() {
+    Demo<double> obj1;
+    obj1.show();  // Calls generic function
+
+    Demo<int> obj2;
+    obj2.show(42);  // Calls specialized function
+
+    return 0;
+}
+✅ Output:
+Generic class
+Specialized member function for int: 42
+✔ The show(int value) function is only specialized while the rest remains generic.
+
+//--------------------------------------------------------------------------------------------------------------
+
+6. Variable Template Specialization (C++14)
+Variable template specialization allows defining a specialized variable for specific types.
+
+📌 Example: Variable Template Specialization
+#include <iostream>
+using namespace std;
+// Generic template variable
+template <typename T>
+constexpr T pi = T(3.141592653589793);
+
+// Specialization for `int`
+template <>
+constexpr int pi<int> = 3;
+
+int main() {
+    cout << "pi<double>: " << pi<double> << endl;  // Uses generic template
+    cout << "pi<int>: " << pi<int> << endl;  // Uses specialized template
+
+    return 0;
+}
+✅ Output:
+pi<double>: 3.14159
+pi<int>: 3
+✔ The generic version keeps high precision, while the int specialization rounds the value.
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Template Metaprogramming (TMP) ???->
+Template Metaprogramming (TMP) is a technique in C++ that uses templates to perform computations at compile time. 
+This allows optimizations, static assertions, and conditional logic before the program even runs.
+
+Key Features of TMP:
+Compile-time computations (no runtime overhead)
+Type manipulations (type traits, type transformations)
+Conditional branching (similar to if-else, but at compile time)
+Recursion-based loops (no actual loops, recursion is used)
+
+2️⃣ Basic Example of Template Metaprogramming
+Here’s a compile-time factorial calculation using TMP.
+
+#include <iostream>
+using namespace std;
+template <int N>      // Primary template for factorial computation
+struct Factorial {
+    static const int value = N * Factorial<N - 1>::value;
+};
+template <>
+struct Factorial<0> {         // Specialization for base case (Factorial of 0 is 1)
+    static const int value = 1;
+};
+int main() {
+    cout << "Factorial of 5: " << Factorial<5>::value << endl;
+    return 0;
+}
+✅ Output:
+✔ Factorial is computed at compile time, so there is no runtime overhead.
+//-------------------------------------------------------------------------------------------------------------
+#include <iostream>
+using namespace std;
+// Primary template for factorial computation
+template <int N>
+class Factorial {
+public:
+    static const int value = N * Factorial<N - 1>::value;
+};
+// Specialization for base case (Factorial of 0 is 1)
+template <>
+class Factorial<0> {
+public:
+    static const int value = 1;
+};
+int main() {
+    cout << "Factorial of 5: " << Factorial<5>::value << endl;
+    return 0;
+}
+//-------------------------------------------------------------------------------------------------------------
+
+constexpr Keyword in c++ -> 
+constexpr (short for "constant expression") is a keyword in C++ that tells the compiler that a function or a variable can be evaluated at compile time. 
+This allows for optimizations and ensures that values are computed before runtime, reducing unnecessary computations.
+
+#include <iostream>
+constexpr int square(int x) {
+    return x * x;
+}
+int main() {
+    constexpr int num = 5; // num is known at compile-time
+    constexpr int result = square(num); // square(5) is computed at compile-time
+    std::cout << "Square of 5: " << result << std::endl;
+    return 0;
+}
+
+Using constexpr with Class Template (Factorial Example) ->
+#include <iostream>
+using namespace std;
+template <int N>
+constexpr int Factorial() {          // Primary template for factorial computation
+    return N * Factorial<N - 1>();
+}
+template <>                         // Specialization for base case (Factorial of 0 is 1)
+constexpr int Factorial<0>() {
+    return 1;
+}
+int main() {
+    cout << "Factorial of 5: " << Factorial<5>() << endl;
+    return 0;
+}
+🔹 Key Points:
+The factorial of 5 (Factorial<5>::value) is calculated before runtime.
+The compiler replaces Factorial<5>::value with 120 directly in the binary.
+This eliminates function calls and improves performance.
+
+const int x = 5;          // Run-time constant
+constexpr int y = 10;     // Compile-time constant
+int arr[y]; // ✅ Allowed (since y is compile-time constant)
+int arr[x]; // ❌ Error (x is not guaranteed to be compile-time)
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -317,7 +581,7 @@ int main() {
     printValue(10);  // ✅ Now it works.
     return 0;
 }
-///////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
 
 🔹 3️⃣ Template Instantiation Error
 🔸 Reason: Incorrect or missing template arguments.
@@ -585,3 +849,83 @@ vector<double> v2;  // Generates code for vector<double>
 
 vector<int> and vector<double> are compiled separately, increasing file size.
 ✅ Solution: Use references (vector<int>&) when possible to avoid redundant instantiations.
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Interview Related Questions?? 
+Why can not  we separate template definitions into .cpp files like normal functions?
+Answer:
+Templates must be defined in header files because they are instantiated at compile-time.
+🔹 What Happens If You Put Template Code in a .cpp File?
+🚨 Error! The compiler will not find the definition.
+Example (Incorrect Approach):
+mytemplate.h
+template <typename T>
+void show(T value);
+
+mytemplate.cpp
+#include "mytemplate.h"
+template <typename T>
+void show(T value) { cout << value << endl; }
+
+main.cpp
+#include "mytemplate.h"
+int main() {
+    show(5); // ❌ ERROR: Undefined reference to `show<int>`
+    return 0;
+}
+🔴 Why?
+The compiler does not know which types will be used at the time of compilation.
+
+🔹 Correct Approach: Put the Definition in the Header File
+mytemplate.h
+#ifndef MYTEMPLATE_H
+#define MYTEMPLATE_H
+
+#include <iostream>
+using namespace std;
+
+template <typename T>
+void show(T value) { cout << value << endl; }
+#endif
+✅ Solution:
+Define templates in header files to ensure proper instantiation.
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Can templates cause an increase in binary size? How do compilers optimize this?
+Answer:
+Yes, templates can increase binary size because each instantiation creates a new version of the function/class, leading to code bloat.
+
+Example (Code Bloat Problem):
+template <typename T>
+void print(T value) {
+    cout << "Value: " << value << endl;
+}
+int main() {
+    print(10);    // Instantiates print<int>
+    print(3.14);  // Instantiates print<double>
+    print('A');   // Instantiates print<char>
+    return 0;
+}
+✅ Solution:
+Use constexpr when possible to evaluate expressions at compile-time.
+Explicitly instantiate common types instead of allowing multiple instantiations.
+Example (Optimization Using Explicit Instantiation):
+template <typename T>
+void print(T value) { cout << "Value: " << value << endl; }
+
+// Explicitly instantiate only required versions
+template void print<int>(int);
+template void print<double>(double);
+
+int main() {
+    print(10);    // Uses precompiled print<int>
+    print(3.14);  // Uses precompiled print<double>
+    return 0;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+What is the difference between explicit and implicit template instantiation?
+non-type template parameters ?? 
