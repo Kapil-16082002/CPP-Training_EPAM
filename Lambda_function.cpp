@@ -13,7 +13,6 @@ function_body → Contains the logic of the lambda.
 #include <iostream>
 using namespace std;
 int main() {
-
     auto sum = [](int a, int b) { return a + b; };
     cout << "Sum: " << sum(5, 3) << endl;
     return 0;
