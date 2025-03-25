@@ -87,7 +87,7 @@ To do ->
         int* x = new int;
         int* y = new int[5];
         int* z = new int;
-        
+
         //delete x;
         // delete[]y;
         // //delete z;
