@@ -1,18 +1,20 @@
+
+To do ->
+    Try to implement using Linked list also??
+    Other Approach??
+
 #include <iostream>
 #include <cstdlib>  // For malloc/free
 using namespace std;
 
-// Define a struct to hold memory allocations
-struct MemoryRecord {
+struct MemoryRecord {      // Define a struct to hold memory allocations
     void* address;
     size_t size;
 };
 // Array to track allocated memory
-const int MAX_ALLOC = 100;  // Maximum number of tracked allocations
-// static MemoryRecord memoryList[MAX_ALLOC];
-// static int allocCount = 0;
-MemoryRecord memoryList[MAX_ALLOC];
-int allocCount = 0;
+const int MAX_ALLOC = 100;  
+MemoryRecord memoryList[MAX_ALLOC];          // static MemoryRecord memoryList[MAX_ALLOC];
+int allocCount = 0;                         // static int allocCount = 0;
 
 // Function to add an allocation to the tracking array
 void addRecord(void* p, size_t size) {
@@ -33,6 +35,7 @@ void removeRecord(void* p) {
         }
     }
 }
+
 // Overloaded new operator with file and line info
 void* operator new(size_t size,  int line) {
     cout << "Overloaded new at " << ":" << line << " (size: " << size << " bytes)" << endl;
@@ -41,6 +44,7 @@ void* operator new(size_t size,  int line) {
     addRecord(p, size);  // Track allocation
     return p;
 }
+
 // Overloaded delete operator
 void operator delete(void* p) noexcept {
     if (p) {
@@ -49,6 +53,7 @@ void operator delete(void* p) noexcept {
         free(p);
     }
 }
+
 // Overloaded new[] operator (for arrays)
 void* operator new[](size_t size, int line) {
     cout << "Overloaded new[] at "  << ":" << line << " (size: " << size << " bytes)" << endl;
@@ -57,6 +62,7 @@ void* operator new[](size_t size, int line) {
     addRecord(p, size);
     return p;
 }
+
 // Overloaded delete[] operator (for arrays)
 void operator delete[](void* p) noexcept {
     if (p) {
@@ -79,14 +85,13 @@ void checkLeak() {
 // Macro to pass file and line info to new
 //#define new new(__FILE__, __LINE__)
 int main() {
-    // Allocate memory
+ 
     int* x = new int;
     int* y = new int[5];
 
-    // Deallocate memory
     delete x;
-    //delete[] y;
-    // Check for memory leaks
+    delete[] y;
+
     checkLeak();
     
     return 0;
