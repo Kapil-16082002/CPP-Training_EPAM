@@ -1,79 +1,93 @@
 #include <iostream>
-#include <unordered_map>
 #include <cstdlib>  // For malloc/free
 using namespace std;
 
-static unordered_map<void*, size_t> mp;
-unordered_map<void*, size_t> &getMap() {
+// Define a struct to hold memory allocations
+struct MemoryRecord {
+    void* address;
+    size_t size;
+};
+// Array to track allocated memory
+const int MAX_ALLOC = 100;  // Maximum number of tracked allocations
+// static MemoryRecord memoryList[MAX_ALLOC];
+// static int allocCount = 0;
+MemoryRecord memoryList[MAX_ALLOC];
+int allocCount = 0;
 
-    return mp;
-
-}
-// Overloaded new operator with a line number parameter (placement new)
-void* operator new(size_t size, const char* file, int line) {
-    cout << "Overloaded new at " << file << ":" << line << endl;
-    void* p = malloc(size);  // Use malloc to allocate memory
-    if (!p) {
-        throw std::bad_alloc();
+// Function to add an allocation to the tracking array
+void addRecord(void* p, size_t size) {
+    if (allocCount < MAX_ALLOC) {
+        memoryList[allocCount++] = {p, size};
     }
-    getMap()[p] = size;  // Track the allocated memory
+}
+// Function to remove an allocation from the tracking array
+void removeRecord(void* p) {
+    for (int i = 0; i < allocCount; ++i) {
+        if (memoryList[i].address == p) {
+            // Shift elements left to fill the gap
+            for (int j = i; j < allocCount - 1; ++j) {
+                memoryList[j] = memoryList[j + 1];
+            }
+            --allocCount;
+            break;
+        }
+    }
+}
+// Overloaded new operator with file and line info
+void* operator new(size_t size,  int line) {
+    cout << "Overloaded new at " << ":" << line << " (size: " << size << " bytes)" << endl;
+    void* p = malloc(size);
+    if (!p) throw bad_alloc();
+    addRecord(p, size);  // Track allocation
     return p;
 }
 // Overloaded delete operator
 void operator delete(void* p) noexcept {
     if (p) {
-        if(mp.find(p)!=mp.end()){
-            getMap().erase(p);
-        }
+        removeRecord(p);  // Remove from tracking array
         cout << "Overloaded delete at " << p << endl;
-          // Free the memory
+        free(p);
     }
-    else return;
-    free(p);
 }
 // Overloaded new[] operator (for arrays)
-void* operator new[](size_t size, const char* file, int line) {
-    cout << "Overloaded new[] at " << file << ":" << line << endl;
-    void* p = malloc(size);  // Use malloc to allocate memory
-    getMap()[p] = size;  // Track the allocated memory
+void* operator new[](size_t size, int line) {
+    cout << "Overloaded new[] at "  << ":" << line << " (size: " << size << " bytes)" << endl;
+    void* p = malloc(size);
+    if (!p) throw bad_alloc();
+    addRecord(p, size);
     return p;
 }
-void checkleak(unordered_map<void*, size_t> &mp){
-    if(!mp.empty()){
-        cout<<"leak detected"<<endl;
-        for(auto& it: mp) cout<<it.first<<" "<<it.second<<endl;
-    }
-    else cout<<" no leak detected"<<endl;
-}
- 
 // Overloaded delete[] operator (for arrays)
 void operator delete[](void* p) noexcept {
-
     if (p) {
-        mp.erase(p);
+        removeRecord(p);
         cout << "Overloaded delete[] at " << p << endl;
-        free(p);  // Free the memory
+        free(p);
     }
 }
- 
-// Macro to automatically insert the current line number and file
-#define new new(__FILE__, __LINE__)
-
-int main() {
-
-    // Allocate memory for a single integer using the overloaded new
-    int* x = new int;
-    // Allocate memory for an array of integers
-    // int* y = new int[1];
-   // Deallocate memory
-
-    //delete x;
-    // delete[] y;
-    
-    checkleak(mp);
-
-    return 0;
-
+// Function to check for memory leaks
+void checkLeak() {
+    if (allocCount > 0) {
+        cout << "Memory Leak Detected!" << endl;
+        for (int i = 0; i < allocCount; ++i) {
+            cout << "Leaked: Address=" << memoryList[i].address << ", Size=" << memoryList[i].size << " bytes" << endl;
+        }
+    } else {
+        cout << "No Memory Leak Detected!" << endl;
+    }
 }
+// Macro to pass file and line info to new
+//#define new new(__FILE__, __LINE__)
+int main() {
+    // Allocate memory
+    int* x = new int;
+    int* y = new int[5];
 
- 
+    // Deallocate memory
+    delete x;
+    //delete[] y;
+    // Check for memory leaks
+    checkLeak();
+    
+    return 0;
+}
