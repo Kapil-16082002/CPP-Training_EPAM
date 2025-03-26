@@ -4,30 +4,32 @@ To do ->
     Other Approach??
 
     #include <iostream>
-    #include <cstdlib> 
+    #include <cstdlib>  
     using namespace std;
     
-    struct MemoryRecord {      
+    struct MemoryRecord {  
         void* address;
         size_t size;
+        int line;  
     };
-    const int MAX_ALLOC = 100;             
-    static MemoryRecord memoryList[MAX_ALLOC]; // MemoryRecord memoryList[MAX_ALLOC];
-    static int allocCount = 0;                 //  int allocCount = 0;
-               
     
-    // Function to add an allocation to the tracking array
-    void addRecord(void* p, size_t size) {
+     const int MAX_ALLOC = 100;  
+     MemoryRecord memoryList[MAX_ALLOC];  
+     int allocCount = 0;  
+    
+    // Function to add allocation record
+    void addRecord(void* p, size_t size, int line) {
         if (allocCount < MAX_ALLOC) {
-            memoryList[allocCount++] = {p, size};
+            memoryList[allocCount++] = {p, size, line};
         }
     }
-    // Function to remove an allocation from the tracking array
+    
+    // Function to remove allocation record
     void removeRecord(void* p) {
         for (int i = 0; i < allocCount; ++i) {
-            if (memoryList[i].address == p) {
-                // Shift elements left to fill the gap
-                for (int j = i; j <= allocCount - 2; ++j) {
+            if (memoryList[i].address == p) { cout<<"Line No." <<memoryList[i].line;
+                // Shift elements left to maintain order
+                for (int j = i; j < allocCount - 1; ++j) {
                     memoryList[j] = memoryList[j + 1];
                 }
                 --allocCount;
@@ -36,64 +38,69 @@ To do ->
         }
     }
     
-    // Overloaded new operator with file and line info
-    void* operator new(size_t size) {
+    // Overloaded new operator with file & line tracking
+    void* operator new(size_t size, const char* file, int line) {
         void* p = malloc(size);
-        cout << "Overloaded new at " << p<<":"  << " (size: " << size << " bytes)" << endl;
         if (!p) throw bad_alloc();
-        addRecord(p, size);  // Track allocation
+        addRecord(p, size, line);
+        cout << "[Allocated] " << size << " bytes at " << p << " (Line " << line << ")" << endl;
         return p;
     }
+    
     // Overloaded delete operator
     void operator delete(void* p) noexcept {
         if (p) {
-            removeRecord(p);  // Remove from tracking array
-            cout << "Overloaded delete at " << p << endl;
+            removeRecord(p);
+            cout << "[Freed] Memory at " << p << endl;
             free(p);
         }
     }
-    // Overloaded new[] operator (for arrays)
-    void* operator new[](size_t size) {
-        
+    
+    // Overloaded new[] operator (for array allocations)
+    void* operator new[](size_t size, const char* file, int line) {
         void* p = malloc(size);
-        cout << "Overloaded new[] at "  <<p<< ":"  << " (size: " << size << " bytes)" << endl;
         if (!p) throw bad_alloc();
-        addRecord(p, size);
+        addRecord(p, size, line);
+        cout << "[Allocated Array] " << size << " bytes at " << p << " (Line " << line << ")" << endl;
         return p;
     }
     
-    // Overloaded delete[] operator (for arrays)
+    // Overloaded delete[] operator (for array deletions)
     void operator delete[](void* p) noexcept {
         if (p) {
             removeRecord(p);
-            cout << "Overloaded delete[] at " << p << endl;
+            cout << "[Freed Array] Memory at " << p << endl;
             free(p);
         }
     }
+    
     // Function to check for memory leaks
-    void checkLeak() {
+    void checkLeaks() {
         if (allocCount > 0) {
-            cout << allocCount<<": Memory Leak Detected!" << endl;
+            cout<< "Total: "<<allocCount<<  "   MEMORY LEAK DETECTED! " << endl;
             for (int i = 0; i < allocCount; ++i) {
-                cout << "Leaked: Address=" << memoryList[i].address << ", Size=" << memoryList[i].size << " bytes" << endl;
+                cout << "Leaked " << memoryList[i].size << " bytes at " 
+                     << memoryList[i].address << " (Line " << memoryList[i].line << ")" << endl;
             }
-        } 
-        else {
-            cout << "No Memory Leak Detected!" << endl;
+        } else {
+            cout << "\n✅ No Memory Leaks Detected!" << endl;
         }
     }
-    int main() {
-     
-        int* x = new int;
-        int* y = new int[5];
-        int* z = new int;
-
-        //delete x;
-        // delete[]y;
-        // //delete z;
     
-        checkLeak();
-        
+    // Macro to replace new with line tracking
+    #define new new(__FILE__, __LINE__)
+    
+    int main() {
+        int* x = new int;     // Leak
+        int* y = new int[5];  // Leak
+        int* z = new int;     // Leak
+    
+        //delete x;  
+        // delete[] y;
+        // delete z;
+    
+        checkLeaks(); // Check for memory leaks
+    
         return 0;
     }
     
