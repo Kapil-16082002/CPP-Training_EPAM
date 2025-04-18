@@ -54,6 +54,9 @@ expired() tells if the object has been destroyed.
 use_count() returns the number of std::shared_ptr objects managing the object.
 
 
+// Custom deleter-> you allocate memory using malloc and share this to shared_ptr, then how to delete??
+//why custom deleter?? if already managed by smart pointer 
+
 
 
 
