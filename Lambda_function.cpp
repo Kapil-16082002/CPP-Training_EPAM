@@ -1,6 +1,9 @@
+// difference between lambda and normal(regular) function??
+// why lambda function??
+
 lambda function->
 A lambda function is an inline, unnamed function that can be defined within expressions.
-It is primarily used for short, simple operations like callbacks, sorting, or quick calculations.
+It is primarily used for short,STL algorithms, simple operations like callbacks, sorting, or quick calculations.
 
 🔹 Lambda Function Syntax
 [capture_list](parameters) -> return_type { function_body };
@@ -82,7 +85,7 @@ a: 10, b: 30
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 4️⃣ Specifying Return Type
-By default, the return type is inferred(return automatic by compiler based on expression computation).
+By default, the return type is inferred(return automatic declared by compiler based on expression computation).
 If needed, specify explicitly using -> return_type.
 
 🔹 Example: Explicit Return Type
