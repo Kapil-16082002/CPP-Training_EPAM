@@ -1,3 +1,8 @@
+// why put noExcept in move constructor??
+// if don't put noexcept in move constructor then what??
+//what if throw exception in constructor then object will create or not?
+
+
 
 1. What is a move constructor? How is it different from a copy constructor?
 Answer: A move constructor transfers ownership of resources from one object to another without making a deep copy. It is more efficient when dealing with temporary or large objects.
