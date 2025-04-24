@@ -3,6 +3,8 @@ A thread is a lightweight unit of execution inside a process.
  This makes threading fast but also risky due to race conditions.
 In C++ (OOPs approach), we create threads using std::thread (from the <thread> library), which enables multi-threading in C++.
 
+
+// Types of thread
 Mutex:
 A mutex (mutual exclusion) 
 Mutual Exclusion  -> only one thread can access a shared resource (critical section) at a time. 
@@ -89,7 +91,46 @@ Reusable?	               ❌ Can't call again after join	        ❌ Can't call 
 ⚠️ Important Note:
 You cannot call both join() and detach() on the same thread. You must choose one.
 
+//---------------------------------------------------------------------------------------------------------------
 
+Common Example
+
+#include <iostream>
+#include <thread>
+#include <mutex>
+
+int counter = 0;
+std::mutex mtx;
+
+void increment() {
+    for (int i = 0; i < 10000; ++i) {
+        std::lock_guard<std::mutex> lock(mtx); // Lock mutex
+        ++counter;
+        // mutex automatically released when lock goes out of scope
+    }
+}
+int main() {
+    std::thread t1(increment);
+    std::thread t2(increment);
+
+    t1.join();
+    t2.join();
+
+    std::cout << "Counter: " << counter << std::endl;
+}
+Whats happening here?
+counter is a shared resource.
+Two threads (t1, t2) are incrementing it.
+Without the mutex, both threads could try to update counter at the same time, causing incorrect results (like skipped increments).
+std::lock_guard<std::mutex> lock(mtx); locks the mutex before modifying the counter.
+When the thread is done with the critical section (modifying counter), the mutex is automatically released.
+
+So what is mtx doing?
+mtx is acting like a traffic light:
+It lets only one thread at a time into the critical section (the part modifying shared data).
+Other threads wait until the mutex is available.
+
+mtx ensures that only one thread at a time can access or modify shared data (counter, in this case), preventing bugs due to race conditions. Without it, your program might behave unpredictably when run on multiple threads.
 //---------------------------------------------------------------------------------------------------------------
 
 #include <bits/stdc++.h>
@@ -213,34 +254,13 @@ You must make sure the thread has enough time to finish (hence the sleep).
 Don’t access local resources after detaching, or it may crash.
 
 
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
 /* 
 
 🧠 What is detach()?
 detach() is a method you can call on a std::thread object to let the thread run independently in the background (i.e., detached from the main thread).
 
 🔧 Syntax:
-cpp
-Copy
-Edit
+
 std::thread t(func);
 t.detach();
 After calling detach(), the thread:
@@ -270,9 +290,6 @@ Undefined behavior, especially if the thread accesses resources that are deleted
 Program crash or memory corruption.
 
 ✅ Example:
-cpp
-Copy
-Edit
 #include <iostream>
 #include <thread>
 
@@ -290,9 +307,6 @@ int main() {
     return 0;
 }
 🧾 Sample Output:
-arduino
-Copy
-Edit
 Main thread done
 Running in background thread
 (Depending on timing, order may vary.)
