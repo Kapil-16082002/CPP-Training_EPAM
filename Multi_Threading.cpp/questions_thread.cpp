@@ -1,4 +1,5 @@
 
+// wait vs sleep
 🧨 When is a thread destroyed in C++?
 A thread is destroyed (i.e., the std::thread object gets cleaned up) in C++ when:
 
