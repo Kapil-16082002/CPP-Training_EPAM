@@ -1,4 +1,4 @@
-// why put noExcept in move constructor??
+// why put noExcept in move constructor?
 // if don't put noexcept in move constructor then what??
 //what if throw exception in constructor then object will create or not?
 
