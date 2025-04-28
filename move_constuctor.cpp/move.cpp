@@ -278,7 +278,7 @@ int main() {
     LogBuffer d("Delta");
     d = b;  // Calls copy assignment
 
-    std::cout << "--- Move Assignment ---\n";
+    std::cout << "--- Move Assignment --\n";
     LogBuffer e("Echo");
     e = std::move(c);  // Calls move assignment
 
