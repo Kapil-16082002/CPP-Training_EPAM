@@ -10,7 +10,7 @@ It prevents race conditions on simple types without needing locks.
 ✅ Thread-safe operations
 ✅ No need to manually lock/unlock like std::mutex
 ✅ Better performance (no kernel-level context switching)
-❌ Only works well for simple data types like int, bool, pointers
+❌ Only works well for simple data types like int, bool, pointers  
 
 🔥 Example Without Atomic (Race Condition)
 #include <iostream>
