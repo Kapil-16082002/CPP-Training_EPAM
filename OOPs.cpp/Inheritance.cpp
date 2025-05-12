@@ -1,7 +1,18 @@
 Inheritance is a fundamental concept of object-oriented programming in C++ that allows one class (derived class) to inherit properties and behaviors (data members and member functions) of another class (base class). 
 This promotes code reuse and helps in building a hierarchical relationship between classes.
 
-1. Single Inheritance
+Advantages of Inheritance
+Code Reusability: Common functionality is written once in the base class and reused in derived classes.
+Extensibility: The behavior of existing code can be extended by creating new derived classes.
+Polymorphism: Enables run-time polymorphism when combined with virtual functions.
+
+Key Notes:
+Use virtual inheritance to resolve ambiguity in a hybrid inheritance scenario.
+Private members of a base class are never directly accessible in derived classes, even with public inheritance.
+Use inheritance only where it logically fits (e.g., "is-a" relationship).
+
+
+✅1. Single Inheritance
 In this type, a single derived class inherits from a single base class.
 
 #include <iostream>
@@ -31,7 +42,7 @@ This is the Derived class
 
 //--------------------------------------------------------------------------------------------------------------
 
-2. Multilevel Inheritance
+✅2. Multilevel Inheritance
 In this type, a class is derived from another derived class.
 
 #include <iostream>
@@ -69,7 +80,7 @@ This is the Child class
 
 //-----------------------------------------------------------------------------------------------------------------
 
-3. Multiple Inheritance
+✅3. Multiple Inheritance
 In this type, a single derived class inherits from multiple base classes.
 
 
@@ -108,7 +119,7 @@ This is the Derived class
 
 //-----------------------------------------------------------------------------------------------------------------
 
-4. Hierarchical Inheritance
+✅4. Hierarchical Inheritance
 In this type, multiple derived classes inherit from a single base class.
 
 #include <iostream>
@@ -132,7 +143,6 @@ public:
         cout << "This is the Derived2 class" << endl;
     }
 };
-
 int main() {
     Derived1 obj1;
     Derived2 obj2;
@@ -153,7 +163,7 @@ This is the Derived2 class
 
 //-----------------------------------------------------------------------------------------------------------------
 
-5. Hybrid (Virtual) Inheritance
+✅5. Hybrid (Virtual) Inheritance
 A combination of multiple and multilevel inheritance to prevent ambiguity using the virtual keyword.
 
 Ambiguity Without Virtual Inheritance:
