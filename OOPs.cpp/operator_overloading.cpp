@@ -1,17 +1,32 @@
-
-Operator overloading  allows us to define custom behaviors for operators (+, -, *, /, ++, --, etc.) when used with user-defined data types (classes/structs).
+Operator overloading allows giving additional meanings to the operators when they are used with user-defined data types (like objects).
+For example, we can make use of the addition operator (+) for string class to concatenate two strings.
+We know that the task of this operator is to add two operands. 
+So a single operator ‘+’, when placed between integer operands, adds them and when placed between string operands, concatenates them.
 
 For example, using + to add two objects of a class.
 Complex c1(3, 4), c2(2, 5);
 Complex c3 = c1 + c2;  // Calls overloaded operator+
 
-🔹 Why Use Operator Overloading?
-   Enhances Code Readability - Allows natural syntax for objects.
-   Increases Reusability - Operators can be defined for multiple data types.
-   Encapsulates Behavior - Ensures proper data handling inside the class.
+✅🔹 Why Use Operator Overloading?
+Increases Reusability - Operators can be defined for multiple data types.
+Enhances Code Readability - Allows natural syntax for objects.
+Encapsulates Behavior - Ensures proper data handling inside the class.
+
+✅Why Use Operator Overloading? 
+It makes your custom objects interact more naturally. For example, if you define a Vector class:
+Vector v1(1, 2), v2(3, 4);
+Vector result = v1 + v2;  // Overloaded 'operator+'
+Such operations improve code readability and allows developers to use objects much like primitive data types.
 
 
-   Operators can be overloaded as a member function or as a friend function.
+✅Rules for Operator Overloading
+
+You cannot create new operators. You can only overload existing ones.
+Certain operators cannot be overloaded (::, .*, ., sizeof, typeid, etc.).
+At least one operand should be a user-defined type.
+Overloaded operators must comply with their usual precedence and associativity.
+
+✅Operators can be overloaded as a member function or as a friend function.
    🔸 Member Function Overloading-
    1.Used when first operand is the calling object (this pointer).
    2.Requires only one parameter for binary operators.
@@ -29,7 +44,7 @@ Complex c3 = c1 + c2;  // Calls overloaded operator+
        friend ReturnType operatorOp(ParameterType obj1, ParameterType obj2);
    };  
 
-   🔹 Types of Operators That Can Be Overloaded
+   ✅🔹 Types of Operators That Can Be Overloaded
    Operator Type	   Examples	            Overloadable?
    Arithmetic	       + - * / %	         ✅ Yes
    Relational	       == != < > <= >=	     ✅ Yes
@@ -52,7 +67,15 @@ Complex c3 = c1 + c2;  // Calls overloaded operator+
    typeid (Type information)
    const_cast, static_cast, etc.
  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ 
  1️⃣ Arithmetic Operator Overloading (+, -, *, /)->
+
+1.The operator+ function is used to overload the + operator.
+2.You can overload binary operators for adding:
+  Two objects of the same class.
+  An object and a basic datatype (e.g., int).
+  An object and a user-defined class.
+
 #include <iostream>
 using namespace std;
 class Complex {
