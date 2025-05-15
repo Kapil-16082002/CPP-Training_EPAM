@@ -204,9 +204,6 @@ int main() {
 The function operator+(c1, c2) is called.
 Both c1 and c2 are explicitly passed to the function.
 Inside the function:
-cpp
-Copy
-Edit
 return Complex(c1.real + c2.real, c1.imag + c2.imag);
 c1.real refers to the real part of c1.
 c2.real refers to the real part of c2.
