@@ -4,7 +4,7 @@ L-values and R-values are fundamental concepts in C++ related to expressions and
 1️⃣ L-Value (Left-Hand Side Value)
 ✅ Definition:
 //An L-value is an expression that persists beyond a single expression (i.e., it has a memory address). 
- L-values have a memory address, and they remain in memory even after an expression is executed.
+L-values have a memory address, and they remain in memory even after an expression is executed.
 It can appear on both left and right sides of an assignment.
 
 ✅ Characteristics:
