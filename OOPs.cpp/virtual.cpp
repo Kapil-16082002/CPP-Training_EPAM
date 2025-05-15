@@ -1,0 +1,499 @@
+✅Virtual Table (VTable)
+When a class contains virtual functions:
+1.The compiler creates a data structure called the Virtual Table (VTable).
+2.The VTable is an array of function pointers where each pointer points to the most derived implementation of a virtual function for a particular class.
+Each class has its own VTable (if it contains virtual functions), and all objects of that class share the same VTable.
+
+NOTE:
+The VTable allows the program to decide which function implementation to execute dynamically at runtime, rather than determining the function to be called at compile time. This is central to achieving runtime polymorphism.
+
+
+✅Virtual Pointer (VPTR)
+Each object of a class that contains virtual functions has a hidden pointer to the class's VTable. 
+This pointer is called the vptr and set up by the compiler automatically when the object is created.
+
+✅virtual function
+virtual function is a member function of a class that is declared using the virtual keyword. 
+Virtual functions enable function overriding in derived classes and support runtime polymorphism.
+
+purpose of the virtual keyword :
+1. Virtual functions enable function overriding in derived classes and support runtime polymorphism.
+2.It ensures that the most derived version of a function is called when the function is invoked through a base class reference or pointer.
+
+
+✅pure virtual function in C++?
+A virtual function that is declared by assigning = 0 in its declaration. 
+Example:
+class Base {
+    virtual void func() = 0;  // Pure virtual function
+};
+It makes the class abstract, meaning it cannot be instantiated.
+
+✅Dynamic Dispatch
+When you call a virtual function via a base class pointer or reference, the object’s vptr is used to look up the overridden function in the VTable at runtime. 
+This process, called dynamic dispatch, enables polymorphic behavior.
+
+✅Late Binding vs Early Binding
+Non-virtual functions are resolved at compile-time (early binding), while virtual functions are resolved at runtime (late binding).
+
+
+✅Structure of the VTable
+The VTable is a simple array-like structure, where:
+
+Each entry is a pointer to a virtual function defined in the class or in its derived classes.
+For pure virtual functions, there’s no actual function pointer, and the compiler often uses special entries to indicate that the class cannot be instantiated directly (abstract class).
+
+#include <iostream>
+using namespace std;
+class Base {
+public:
+    virtual void func1() { cout << "Base: func1" << endl; }
+    virtual void func2() { cout << "Base: func2" << endl; }
+    virtual ~Base() {}  // Virtual destructor
+};
+class Derived : public Base {
+public:
+    void func1() override { cout << "Derived: func1" << endl; }
+    void func2() override { cout << "Derived: func2" << endl; }
+};
+Base class VTable:
+Index	Function Pointer
+0	    Address of Base::func1
+1	    Address of Base::func2
+2	    Address of Base::~Base
+
+Derived VTable:
+Index	Function Pointer
+0	Address of Derived::func1
+1	Address of Derived::func2
+2	Address of Derived::~Derived
+
+Reason: 
+Every Derived object is assigned a vptr that points to the Derived VTable.
+A call to func1() or func2() through a Base pointer will resolve to the Derived implementation because the vptr in the derived object points to the Derived VTable.
+
+int main() {
+    Base* obj = new Derived();
+    obj->func1();  // Dynamic lookup via vptr: Derived::func1() is called
+    obj->func2();  // Dynamic lookup via vptr: Derived::func2() is called
+    delete obj;    // Proper destruction: calls ~Derived() and ~Base()
+}
+Output:
+Derived: func1
+Derived: func2
+
+
+✅VTable and Dynamic Dispatch
+
+1.Dispatch Without Virtual Functions:
+Without virtual, function calls are resolved at compile time based on the type of the pointer/reference. 
+This is called static binding( Early Binding ):
+
+Base base;
+Derived derived;
+Base* ptr = &derived;
+ptr->func1();  // Calls Base::func1(), because the pointer type is Base*
+
+2.Dispatch with Virtual Functions:
+When a function is marked virtual, calls are resolved at runtime based on the actual type of the object being pointed to (not the type of the pointer itself). 
+This is called dynamic binding(late binding):
+
+Base* ptr = new Derived();
+ptr->func1();  // Dynamic dispatch: Derived::func1() is called
+Dynamic dispatch ensures that the correct version of the function in the derived class is executed, even when accessed through a base class pointer/reference.
+
+
+
+✅Key Points about VTable: 
+1.created Per-Class, Not Per-Object:
+A VTable is created for the class, not for individual objects.
+All objects of a class share the same VTable.
+
+2.Pure Virtual Functions:
+If a class has a pure virtual function, the VTable may store special markers or null function pointers to indicate the class is abstract and cannot be instantiated.
+
+✅ Performance Costs of the VTable Mechanism:
+
+Performance Overhead:
+Function calls via the VTable require an indirect function lookup (following the vptr to the VTable and then invoking the function). 
+This adds a small runtime overhead compared to direct calls.
+
+Memory Overhead:
+Each class with virtual functions requires a VTable.
+Each object contains an additional vptr (hidden pointer), which increases object size.
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+✅Frequently Asked Questions
+
+
+✅. What happens if no virtual functions exist in the class?
+If a class has no virtual functions, no VTable is created for it, and no vptr is needed. All function calls are resolved at compile time (static binding).
+
+2. Can VTables be shared across classes?
+No, every class with virtual functions has its own VTable.
+3. Can I control or inspect the VTable?
+The VTable is generated and managed entirely by the compiler. It’s possible to inspect the VTable indirectly using debugging tools but not programmatically manipulate it.
+
+//----------------------------------------------------------------------------------------------------------------
+
+✅What happens if a class does not override all pure virtual functions in its base class?
+
+The derived class becomes abstract and cannot be instantiated until all pure virtual functions are overridden.
+Reason: Because anotherPureVirtualFunction is not implemented . See below code..
+#include <iostream>
+class Base {
+public:
+    virtual void pureVirtualFunction() = 0; 
+    virtual void anotherPureVirtualFunction() = 0; 
+};
+class Derived : public Base {
+public:
+    void pureVirtualFunction() override {
+        std::cout << "pureVirtualFunction implemented in Derived" << std::endl;
+    }
+    // Note: anotherPureVirtualFunction is not overridden!
+};
+int main() {
+    Derived obj;  // ERROR: Cannot instantiate an abstract class
+    return 0;
+}
+//--------------------------------------------------------------------------------------------------------------
+
+✅How does the compiler handle virtual function calls at runtime?
+The compiler creates a VTable for each class that has virtual functions. 
+Each object of such a class contains a vptr. 
+At runtime, the vptr is used to determine the correct function pointer in the VTable to dynamically resolve and call the appropriate version of the virtual function.
+
+//----------------------------------------------------------------------------------------------------------------
+
+✅Can a constructor be declared as virtual? Why or why not?
+
+No, constructors cannot be virtual because virtual functions rely(fully dependent) on the virtual table (vtable).
+And vtable is formed after the object is constructed—so during construction, the object does not yet have its vtable ready.
+
+Since constructors run top-down (starting with the base class and then the derived class), there’s no way to dynamically decide which constructor to call. 
+This means it’s not possible to dispatch constructors dynamically the way we do with virtual functions.
+
+//---------------------------------------------------------------------------------------------------------------
+
+✅What happens if you call a virtual function inside the constructor or destructor of a base class?
+
+Calling a virtual function inside a base class constructor or destructor calls the base class implementation—
+because the derived class vtable is either not set up yet (during construction) or reset to the base class (during destruction).
+
+#include <iostream>
+class Base {
+public:
+    Base() {
+        std::cout << "Base constructor\n";
+        print();  // Call to virtual function inside a constructor
+    }
+    virtual void print() const {
+        std::cout << "Base print function\n";
+    }
+    virtual ~Base() {
+        std::cout << "Base destructor\n";
+        print();  // Call to virtual function inside a destructor
+    }
+};
+class Derived : public Base {
+public:
+    Derived() {
+        std::cout << "Derived constructor\n";
+    }
+    void print() const override {
+        std::cout << "Derived print function\n";
+    }
+    ~Derived() {
+        std::cout << "Derived destructor\n";
+    }
+};
+int main() {
+    Base* obj = new Derived();  // Create a Derived object
+    delete obj;                 // Delete the object
+    return 0;
+}
+Output:
+Base constructor
+Base print function
+Derived constructor
+Derived destructor
+Base destructor
+Base print function
+
+//------------------------------------------------------------------------------------------------------------------
+✅Can an abstract class have a constructor?
+Yes, an abstract class can have a constructor, but it cannot be instantiated directly. 
+The constructor can be called when an object of a derived (non-abstract) class is created.
+This is useful for initializing the parts of the object that belong to the base class.
+#include <iostream>
+using namespace std;
+
+class AbstractBase {
+public:
+    // Constructor in abstract class
+    AbstractBase() {
+        cout << "AbstractBase constructor called\n";
+    }
+    virtual void display() const = 0;
+};
+class Derived : public AbstractBase {
+public:
+    // Constructor in derived class
+    Derived() {
+        cout << "Derived constructor called\n";
+    }
+    // Override the pure virtual function
+    void display() const override {
+        cout << "Derived display function called\n";
+    }
+};
+
+int main() {
+    // Create an object of the derived class
+    Derived obj;
+    obj.display();
+
+    return 0;
+}
+Output:
+AbstractBase constructor called
+Derived constructor called
+Derived display function called
+
+Execution Order:
+The base class constructor (AbstractBase) is called first, followed by the derived class constructor (Derived).
+This is because the derived class object consists of both the base class and derived class portions, and the base class must be initialized first.
+
+//----------------------------------------------------------------------------------------------------------------
+
+✅what happens if we do not make destructor virtual in abstract class and when a derived class object is deleted using a base class pointer. ??
+Answer: Only Base destructor is called and derived destructor never called.
+Because, destructor of the Base class is non-virtual.
+When you delete a base class pointer (Base* obj) that points to a derived class object (new Derived()), the deletion process only considers the Base destructor. 
+The derived class destructor is not called because the base class pointer does not enable runtime polymorphism for the destructor.
+
+This can lead to resource leaks. With a virtual destructor, both base and derived class destructors are called in the correct order.
+
+
+Base Destructor type   Behavior
+Non-Virtual	           Only the base destructor is called; derived destructor is skipped.
+Virtual	               Both derived and base destructors are called properly.
+
+class Base {
+    public:
+        ~Base() {
+            std::cout << "Base Destructor" << std::endl;
+        }
+    };
+class Derived : public Base {
+    public:
+        ~Derived() {
+            std::cout << "Derived Destructor" << std::endl;
+        }
+    };
+int main() {
+    Base* obj = new Derived();
+    delete obj;  // Only Base destructor is called
+    return 0;
+    /*
+    Derived* obj = new Derived(); // both destructor called
+    delete obj; 
+    Output: 
+    Derived Destructor
+    Base Destructor
+    */
+
+}
+
+Explore gievn code also------>>>>>>>>
+#include<bits/stdc++.h>
+using namespace std;
+
+class Base {
+    public:
+     Base() {
+            std::cout << "Base Constructor" << std::endl;
+        }
+        ~Base() {
+            std::cout << "Base Destructor" << std::endl;
+        }
+    };
+class Derived : public Base {
+    public:
+    Derived() {
+            std::cout << "Derived Constructor" << std::endl;
+        }
+        ~Derived() {
+            std::cout << "Derived Destructor" << std::endl;
+        }
+    };
+int main() {
+    Base* obj = new Derived();
+    delete obj; 
+    return 0;
+    /* 
+    Derived* obj = new Derived();
+    delete obj; 
+
+    Output:
+    Base Constructor
+    Derived Constructor
+    Base Destructor
+    Derived Destructor
+
+    */
+}
+Output:
+Base Constructor
+Derived Constructor
+Base Destructor
+
+
+
+//----------------------------------------------------------------------------------------------------------------
+
+✅Explain the difference between hiding and overriding in the context of inheritance.
+
+Hiding: Occurs when a derived class method with the same name as a base class method has a different signature or is not declared as virtual. The base class method is hidden but can be explicitly accessed using the scope resolution operator.
+Overriding: Occurs when a derived class provides a virtual function with the same name, signature, and return type as the base class method.
+
+
+//------------------------------------------------------------------------------------------------------------------
+
+✅ how many virtual table does a class have?
+
+The number of virtual tables (vtables) a class has depends on whether or not it is part of an inheritance hierarchy and its relationship with virtual base classes.
+Here's a breakdown of how it works:
+
+1. Single Inheritance and No Virtual Inheritance
+A class generally has one vtable if it has at least one virtual function (including a virtual destructor).
+This applies regardless of whether it is a base class or a derived class. All the virtual functions of the class are referenced in this single vtable.
+
+
+#include <iostream>
+class Base {
+public:
+    virtual void foo() {}
+};
+class Derived : public Base {
+public:
+    void foo() override {}
+ 
+};
+The Base class has a single virtual function: A vtable is generated for the Base class.
+The Derived class overrides the foo() function: A new vtable is generated for the Derived class because it overrides the virtual function.
+Total : 2 vtables
+
+
+
+#include <iostream>
+class Base {
+public:
+    virtual void foo() {}  // Virtual function
+};
+class Derived : public Base {
+public:
+    void foo() {}  // NOT marked `override` or `virtual`
+};
+Base defines a virtual function foo(). This means a vtable will be created for the Base class.
+In Derived, the foo() function is not declared as virtual, and there is no override keyword explicitly used.
+Derived simply "hides" Base's foo() due to name hiding. This is sometimes referred to as function hiding in C++.
+Since Derived does not override Base's foo() in the virtual table, it does not generate its own vtable.
+Both Base and Derived share the same vtable, which points to the Base implementation of foo().
+Total: 1 vtable
+
+
+
+#include <iostream>
+class Base {
+public:
+    virtual void foo() {}
+};
+class Derived : public Base {
+public:
+    void foo()override {}
+    virtual void bar() {}
+};
+The Base class has 1 vtable that includes an entry for foo().
+The Derived class also has 1 vtable, but it includes:
+An overridden entry for foo().
+An additional entry for bar().
+So, in this case, both Base and Derived have one vtable each separately.
+Total : 2 vtable
+
+
+2. Multiple Inheritance (No Virtual Inheritance)
+In the case of multiple inheritance without virtual base classes, each base class that has virtual functions contributes its own separate vtable to the derived class.
+
+class Base1 {
+public:
+    virtual void foo1() {}
+};
+class Base2 {
+public:
+    virtual void foo2() {}
+};
+
+class Derived : public Base1, public Base2 {
+public:
+    void foo1() override {}
+    void foo2() override {}
+};
+Base1 has 1 vtable that includes an entry for foo1().
+Base2 has 1 vtable that includes an entry for foo2().
+Derived has 2 separate vtables, one for Base1 and one for Base2.
+One vtable overrides foo1().
+The second vtable overrides foo2().
+Total : 3 vtables not 4..
+
+
+class Base1 {
+    public:
+        virtual void foo1() {}
+};
+class Base2 {
+    public:
+        virtual void foo2() {}
+};
+class Derived : public Base1, public Base2 {
+    public:
+        void foo1() {}
+        void foo2() override {}
+};
+
+
+
+3. Virtual Inheritance
+When a class involves virtual inheritance, the derived class might share vtables across the hierarchy to manage the multiple shared instances of its virtual base class.
+
+Example:
+cpp
+
+
+class Base {
+public:
+    virtual void foo() {}
+};
+
+class Derived1 : public virtual Base {
+    virtual void bar() {}
+};
+
+class Derived2 : public virtual Base {
+    virtual void baz() {}
+};
+
+class MultiDerived : public Derived1, public Derived2 {};
+Here:
+
+The Base class has a vtable with an entry for foo().
+Each derived class (Derived1, Derived2) still gets a unique vtable for its own virtual functions (bar() and baz()).
+The MultiDerived class:
+Shares a single vtable for Base due to virtual inheritance.
+Manages separate vtables for entries in Derived1 and Derived2.
+Summary:
+Single Inheritance without Virtual Inheritance: One vtable per class.
+Multiple Inheritance: One vtable per base class with virtual functions; the derived class has multiple vtables.
+Virtual Inheritance: Shared vtables for common virtual base classes.
