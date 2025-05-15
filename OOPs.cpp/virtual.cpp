@@ -37,6 +37,12 @@ This process, called dynamic dispatch, enables polymorphic behavior.
 Non-virtual functions are resolved at compile-time (early binding), while virtual functions are resolved at runtime (late binding).
 
 
+✅How the Virtual Table Works:
+For every class containing virtual functions, the compiler generates a vtable.
+The table stores pointers to the class's virtual functions, and when a derived class overrides a virtual function, its implementation replaces the corresponding entry in the vtable.
+Each object of the class contains a virtual pointer (vptr) that points to the vtable. At runtime, the vptr is used to determine which function implementation to call.
+
+
 ✅Structure of the VTable
 The VTable is a simple array-like structure, where:
 
@@ -125,7 +131,14 @@ Each object contains an additional vptr (hidden pointer), which increases object
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ✅Frequently Asked Questions
+//----------------------------------------------------------------------------------------------------------------
+✅why is virtual table called 'virtual'?
 
+The virtual table (vtable) is called "virtual" because it supports the dynamic resolution of virtual function calls at runtime, a key feature of runtime polymorphism. 
+It is specifically created for classes with virtual functions, enabling behavior to change dynamically based on the actual type of the object rather than its static type at compile time. 
+The vtable facilitates dynamic dispatch by storing pointers to virtual function implementations, allowing overridden functions in derived classes to be correctly invoked.
+
+//----------------------------------------------------------------------------------------------------------------
 
 ✅. What happens if no virtual functions exist in the class?
 If a class has no virtual functions, no VTable is created for it, and no vptr is needed. All function calls are resolved at compile time (static binding).
@@ -164,6 +177,28 @@ int main() {
 The compiler creates a VTable for each class that has virtual functions. 
 Each object of such a class contains a vptr. 
 At runtime, the vptr is used to determine the correct function pointer in the VTable to dynamically resolve and call the appropriate version of the virtual function.
+//---------------------------------------------------------------------------------------------------------------
+
+✅if I define a constructor in abstract class, what will happen then?
+Answer:
+In C++, you can define a constructor in an abstract class, and it behaves just like a constructor in any other class.
+
+Key Points About Constructors in Abstract Classes:
+An Abstract Class Can Have a Constructor:
+Although you cannot create an instance of an abstract class directly, its constructor can still be defined and will be called when a derived class is instantiated.
+The constructor of the abstract class is mainly used to initialize common data shared by derived classes.
+
+**The Constructor is Called During Derived Class Instantiation:
+When a derived class inherits from an abstract class, the abstract class’s constructor is called first (before the derived class constructor). This ensures that any initialization required for the base class is completed before the derived class’s constructor executes.
+
+Object Instantiation Prohibited for Abstract Class:
+Since you cannot directly instantiate an abstract class (due to at least one pure virtual function), you cannot call the constructor by creating an object of the abstract class itself.
+This does not prevent the constructor from being called indirectly during the creation of a derived class object.
+//---------------------------------------------------------------------------------------------------------------
+✅ Why base class constructor is called first and derived later??
+
+The base class acts as the foundation for the derived class, and its members and states need to be fully initialized before the derived class can add its specific properties. 
+This prevents undefined behavior by ensuring that derived class functionality does not access uninitialized base class members. 
 
 //----------------------------------------------------------------------------------------------------------------
 
