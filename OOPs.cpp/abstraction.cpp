@@ -2,6 +2,13 @@
  It is the process of hiding the complex implementation details and showing only the essential or necessary 
  information of an object. 
 
+how does abstraction differ from encapsulation?
+
+Aspect	                    Abstraction	                                    Encapsulation
+Description	 Hiding implementation(logic) details.	          Hiding internal  data details and restricting direct access to certain parts of data using access control (e.g., private, protected).
+Purpose	    Focuses on defining WHAT an object does, rather than HOW it does it.	Focuses on controlling HOW the internal behavior or data of an object is accessed or modified.
+Goal	To provide a simplified interface for the user and hide unnecessary details of the implementation.	To restrict unauthorized access and protect the internal state of an object.
+
 #Key Features of Abstraction:
 1.Security: Users do not need to know the implementation details of a function or method.
 2.Focus on Essentials: It allows the programmer to focus on what an object does rather than how it does it.
