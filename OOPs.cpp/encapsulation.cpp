@@ -2,6 +2,8 @@
 Encapsulation is defined as the wrapping up of data and information in a single unit. 
 Encapsulation is defined as binding together the data and the functions that manipulate them.
 
+It refers to bundling the data (variables) and the methods (functions) within a single entity (a class), and controlling access to the internal details of that entity(class).
+
 Example
 /*
 In a company, there are different sections like the accounts section, finance section, sales section, etc. Now,
@@ -68,7 +70,6 @@ int main() {
     return 0;
 }
 Output:
-yaml
 Employee ID: 101
 Employee Name: John Doe
 Employee ID: 101, Name: John Doe
