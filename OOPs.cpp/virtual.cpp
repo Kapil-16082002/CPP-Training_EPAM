@@ -167,7 +167,7 @@ At runtime, the vptr is used to determine the correct function pointer in the VT
 
 //----------------------------------------------------------------------------------------------------------------
 
-✅Can a constructor be declared as virtual? Why or why not?
+✅can i have a pure virtual constructor?
 
 No, constructors cannot be virtual because virtual functions rely(fully dependent) on the virtual table (vtable).
 And vtable is formed after the object is constructed—so during construction, the object does not yet have its vtable ready.
@@ -176,6 +176,94 @@ Since constructors run top-down (starting with the base class and then the deriv
 This means it’s not possible to dispatch constructors dynamically the way we do with virtual functions.
 
 //---------------------------------------------------------------------------------------------------------------
+
+✅can i have a pure virtual destructor?
+
+Yes, you can have a pure virtual destructor in C++.
+What Is a Pure Virtual Destructor?
+A pure virtual destructor is a destructor that is declared as pure virtual using the = 0 syntax:
+class Base {
+public:
+    virtual ~Base() = 0; // Pure virtual destructor
+};
+unlike other pure virtual functions, a pure virtual destructor must still be defined in the class. 
+This is an exception to the general rule for pure virtual functions 
+because the base class destructor will always be called (directly or indirectly) when an object of a derived class is destroyed.
+
+Why Do We Need a Pure Virtual Destructor?
+A pure virtual destructor establishes the base class as an abstract class, meaning that:
+
+1.You cannot instantiate objects of the base class directly.
+2.It enforces that derived classes must implement their destructors.
+
+#include <iostream>
+
+class Base {
+public:
+    // Pure virtual destructor
+    virtual ~Base() = 0; // Declaration of a pure virtual destructor
+
+    void display() {
+        std::cout << "Base Display function" << std::endl;
+    }
+};
+Base::~Base() {           // Definition of the pure virtual destructor
+    std::cout << "Base Destructor called"  << std::endl;
+}
+class Derived : public Base {
+public:
+    ~Derived() {
+        std::cout << "Derived Destructor called" << std::endl;
+    }
+};
+int main() {
+    Base* ptr = new Derived(); // Create a Derived object as a Base pointer
+    delete ptr; // Proper destruction sequence: Derived -> Base
+
+    return 0;
+}
+Output:
+Derived Destructor called
+Base Destructor called
+
+//----------------------------------------------------------------------------------------------------------------
+✅can I have a static virtual function?
+or
+Why Can’t a Function be Both Static and Virtual?
+
+static functions do not have a this pointer: Since static functions are not tied to any particular object, they cannot access instance-specific data or functionality.
+virtual functions operate based on an instance of the class and rely on the this pointer to resolve the correct implementation via the virtual table.
+Therefore, it’s logically inconsistent for a function to be both static (no this pointer) and virtual (requires a this pointer).
+
+//----------------------------------------------------------------------------------------------------------------
+
+✅when does a virtual pointer get associated to an object, before construction, after it or at the time of construction?
+Answer: vptr is initialized during object construction
+
+1.Before Construction Starts: Before the constructor runs, the object is not fully constructed, and the vptr is not yet set. 
+At this point, there is no association between the object and its vtable.
+2.During Construction:
+When a constructor of a class is invoked, the vptr points to the vtable corresponding to the object type.
+If the class has a base class, the base class's constructor is called first. 
+During the base class constructor's execution, the vptr points to the vtable of the base class.
+After control returns to the derived class constructor, the vptr is updated to point to the vtable of the derived class.
+This ensures that any virtual function calls made inside the constructors (or destructors) will resolve to the correct implementation associated with the type of the currently constructed object.
+
+3.After Construction: Once the construction process is complete, the object is fully set up, with its vptr correctly pointing to its vtable
+
+//----------------------------------------------------------------------------------------------------------------
+
+can i have a pure virtual function in a structure?
+Answer:
+Yes, you can have a pure virtual function in a structure in C++, 
+because in C++ there is no fundamental difference between a struct and a class other than the default access specifier.
+
+Key Differences Between struct and class in C++
+In a class, members are private by default.
+In a struct, members are public by default.
+Both struct and class can have member functions, constructor/destructor, data members, inheritance, polymorphism, and even pure virtual functions.
+
+//----------------------------------------------------------------------------------------------------------------
 
 ✅What happens if you call a virtual function inside the constructor or destructor of a base class?
 
