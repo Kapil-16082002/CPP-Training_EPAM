@@ -11,27 +11,6 @@ Can Be Overloaded:        Multiple constructors can be defined with different pa
 #Two constructor can't have same Arguments(i.e can not be overloaded)
 #Two objects can't have same name
 
-class Demo {                                                       
-    public:
-        Demo() {
-            cout << "Constructor Called!" << endl;
-        }
-        ~Demo() {
-            cout << "Destructor Called!" << endl;
-        }
-        cout<  
-    };   
-    int main() {
-        Demo a,b,c;
-        return 0;
-    }
-Output:  
-Constructor Called!
-Constructor Called!
-Constructor Called!
-Destructor Called!
-Destructor Called!
-Destructor Called!
 /////////////////////////////////// Code_Logic:1
 class Demo {
     public:
@@ -47,14 +26,11 @@ class Demo {
     };
     int main() {
        Demo d(10); 
-       cout<<endl;//Const,cons,dest called after this endl;
-       //Demo(10);
         Demo a;
         return 0;
     }
 Output:
 x 10
-
 Constructor Called!
 Destructor Called!
 Destructor Called!
@@ -72,9 +48,8 @@ class Demo {
         } 
     };
     int main() {
-       //Demo d(10); 
-        cout<<endl;
-        Demo(10);//both const, dest called immediately
+       //Demo d(10);  // named object
+        Demo(10); // Temporary unnamed object, both constructor, destructor called immediately
         Demo a;
         return 0;
     }
@@ -84,16 +59,17 @@ Destructor Called!
 Constructor Called!
 Destructor Called!
 
-Difference betwen Demo d(10) and Demo(10) -> ////////////////////////
-1. Demo d(10); (Named Object)
-This creates an automatic (stack-based) object named d of type Demo.
+Case 1: Demo d(10);
+This explicitly creates a named (stack-based)object d of type Demo.
 The constructor Demo(int) is called with 10 as an argument.
-The object d persists until it goes out of scope (typically the end of the enclosing block).
+Since d is a named object, its lifetime exist until it goes out of scope  (in main or (typically the end of the enclosing block).).
+The destructor is only called when the object d goes out of scope at the end of main.
 
-2. Demo(10); (Temporary Object)
+Case 2: Demo(10);
 This creates a temporary (unnamed) object of type Demo.
-The constructor Demo(int) is invoked with 10 as an argument.
-The object exists only for that statement and is immediately destroyed after its creation (unless assigned to a reference).
+Temporary object is destroyed immediately after creation.so it exists only for the expression in which it is created.
+The destructor is called immediately after the temporary object’s creation completes, since the object is not stored and has no further use beyond its creation.
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <iostream>
