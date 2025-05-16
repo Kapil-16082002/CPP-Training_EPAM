@@ -1,9 +1,10 @@
-Types of Constructors in C++ - 
+✅Types of Constructors in C++ - 
 Default Constructor
 Parameterized Constructor
 Copy Constructor
 Move Constructor (C++11)
-1. Default Constructor
+
+✅1. Default Constructor
 A default constructor is a constructor that takes no parameters. 
 If no constructor is defined, C++ provides a default constructor automatically.
 #include <iostream>
@@ -21,7 +22,8 @@ int main() {
 Output:
 Default Constructor Called!
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-2. Parameterized Constructor
+
+✅2. Parameterized Constructor
 A parameterized constructor allows passing arguments to initialize an object with specific values.
 #include <iostream>
 using namespace std;
@@ -44,9 +46,18 @@ int main() {
 }
 Output:
 Name: Alice, Age: 20
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-3. Copy Constructor
+
+✅3. Copy Constructor
 A copy constructor is used to create a new object as a copy of an existing object.
+
+Does C++ Provide a Default Copy Constructor?
+Yes.
+If you do not explicitly declare a copy constructor, the compiler automatically generates a default copy constructor for you.
+The default copy constructor performs a shallow copy of each member of the class.
+
+
 #include <iostream>
 using namespace std;
 class Number {
@@ -55,7 +66,7 @@ public:
     Number(int v) {  // Parameterized Constructor
         value = v;
     }
-    Number(const Number &obj) {  // Copy Constructor
+    Number(const Number &obj) { // The const ensures that the source object (other) cannot be modified during the copy process
         value = obj.value;
     }
     void display() {
@@ -73,7 +84,6 @@ Slightly less efficient
 Use Cases: Used when object creation involves implicit conversions
 
 ✅ Number num2(num1); → Direct Initialization
-Number num2(num1);
 This syntax is called direct initialization.
 It explicitly calls the copy constructor.
 More efficient
