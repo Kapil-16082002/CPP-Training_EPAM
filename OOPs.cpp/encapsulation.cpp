@@ -25,6 +25,8 @@ Key Features of Encapsulation:
                    Public: Members declared as public are accessible from outside the class.
                    Protected: Members declared as protected are accessible within the class and its derived classes
 
+1.how to access private members of a class without getter,setter method??
+2.why encapsulation principle, still private members can be access??                 
 #include <iostream>
 using namespace std;
 class Employee {
