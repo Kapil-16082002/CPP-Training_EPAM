@@ -1,5 +1,5 @@
-#Abstraction:
- It is the process of hiding the complex implementation details and showing only the essential or necessary 
+✅#Abstraction:
+It is the process of hiding the complex implementation details and showing only the essential or necessary 
  information of an object. 
 
 how does abstraction differ from encapsulation?
@@ -9,11 +9,24 @@ Description	 Hiding implementation(logic) details.	          Hiding internal  da
 Purpose	    Focuses on defining WHAT an object does, rather than HOW it does it.	Focuses on controlling HOW the internal behavior or data of an object is accessed or modified.
 Goal	To provide a simplified interface for the user and hide unnecessary details of the implementation.	To restrict unauthorized access and protect the internal state of an object.
 
-#Key Features of Abstraction:
+✅#Key Features of Abstraction:
 1.Security: Users do not need to know the implementation details of a function or method.
 2.Focus on Essentials: It allows the programmer to focus on what an object does rather than how it does it.
 
-How Abstraction Works in C++:
+✅why use abstrct class??
+1.Give Common Interface:
+An abstract class is useful when you want to define a common interface (behavior) that all derived classes must implement. 
+It ensures that all derived classes follow the same rules and provide their specific implementations for the required method(s)
+
+2.Enabling Polymorphism
+Supports runtime polymorphism by defining a base class pointer/reference to call overridden methods in derived classes.
+Use Case: A Transport class with virtual void move() = 0; enables polymorphic behavior for derived classes like Car, Airplane, etc.
+
+3.Providing code extensibility:
+derived class must implement abstract class methods.
+
+
+✅How Abstraction Works in C++:
 1.Abstract Class: A class that cannot be instantiated and is meant to be inherited by other classes. 
 It has at least one pure virtual function (a function with no definition and declared with = 0).
 2.Pure Virtual Function: A virtual function that must be implemented by derived classes.
