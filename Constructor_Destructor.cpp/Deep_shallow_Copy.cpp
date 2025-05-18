@@ -1,8 +1,8 @@
- Topics Covered: 
-         Shallow copy 
-          Deep copy
-          Handling Assignment Operator(=)
-          chaining Assignment
+Topics Covered: 
+    Shallow copy 
+    Deep copy
+    Handling Assignment Operator(=)
+    chaining Assignment
 
 What is Copying in C++?
 When an object is copied to another, its data members (variables) are also copied.
@@ -19,6 +19,7 @@ Allocates new memory and copies the actual data.
 Each object has its own independent memory.
 Prevents memory corruption and dangling pointer issues.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 1️⃣ Shallow Copy (Problem Example)
 ❌ Problem: Shared Memory Leads to Double Delete Error
 #include<bits/stdc++.h>
@@ -460,7 +461,7 @@ public:
         strcpy(str, obj.str);
     }
     // ✅ Deep Copy Assignment Operator
-    Deep& operator=(const Deep& obj) {
+    Deep& operator=(const Deep& obj) {            // try void in place of Deep&?????
         if (this != &obj) {  // Avoid self-assignment
             delete[] str;  // Free old memory
             str = new char[strlen(obj.str) + 1];  // Allocate new memory
