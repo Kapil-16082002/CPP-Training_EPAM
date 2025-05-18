@@ -1,3 +1,6 @@
+Keyword: virtual
+The keyword virtual in C++ allows the function to be overridden in derived classes, enabling runtime polymorphism through virtual table (vtable) mechanics.
+
 ✅Virtual Table (VTable)
 When a class contains virtual functions:
 1.The compiler creates a data structure called the Virtual Table (VTable).
@@ -140,6 +143,67 @@ The vtable facilitates dynamic dispatch by storing pointers to virtual function 
 
 //----------------------------------------------------------------------------------------------------------------
 
+✅Difference between virtual double area() = 0;  and   virtual double area() ;
+1. virtual double area() = 0;
+This syntax declares a pure virtual function.
+which basically means that  base class does not provide an implementation and derived class must implement it.
+
+Derived classes must provide their own implementation of the pure virtual function. 
+if do not make implementation of the pure virtual function in derived class will make the derived class abstract as well.
+
+2. virtual double area();
+This syntax declares a regular virtual function, not a pure virtual function.
+A regular virtual function is a function that can be overridden in derived classes but it is not mandatory.
+
+The base class can provide a default implementation, which derived classes can optionally override.
+Behavior:
+If a derived class overrides the function, polymorphism ensures the overridden version is called when accessed through a base class pointer/reference.
+However, if the derived class does not override the function, the base class's implementation is used.
+
+#include <iostream>
+using namespace std;
+class Shape {
+public:
+    // Regular virtual function
+    virtual double area() {
+        return 0.0; // Default implementation
+    }
+    virtual ~Shape() {}
+};
+class Circle : public Shape {
+private:
+    double radius;
+public:
+    Circle(double r) : radius(r) {}
+    double area() override { // Overriding area() function
+        return 3.14 * radius * radius;
+    }
+};
+class Square : public Shape {
+private:
+    double side;
+public:
+    Square(double s) : side(s) {}
+    double area() override { // Overriding area() function
+        return side * side;
+    }
+};
+int main() {
+    Shape* circle = new Circle(5.0);
+    Shape* square = new Square(4.0);
+    Shape* genericShape = new Shape(); // Base class object
+
+    cout << "Circle Area: " << circle->area() << endl;
+    cout << "Square Area: " << square->area() << endl;
+    cout << "Generic Shape Area (default): " << genericShape->area() << endl;
+
+    delete circle;
+    delete square;
+    delete genericShape;
+    return 0;
+}
+//----------------------------------------------------------------------------------------------------------------
+
 ✅. What happens if no virtual functions exist in the class?
 If a class has no virtual functions, no VTable is created for it, and no vptr is needed. All function calls are resolved at compile time (static binding).
 
@@ -194,7 +258,24 @@ When a derived class inherits from an abstract class, the abstract class’s con
 Object Instantiation Prohibited for Abstract Class:
 Since you cannot directly instantiate an abstract class (due to at least one pure virtual function), you cannot call the constructor by creating an object of the abstract class itself.
 This does not prevent the constructor from being called indirectly during the creation of a derived class object.
-//---------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------
+
+✅Why Can't Abstract Classes Be Instantiated in C++?
+Because They are incomplete by design, containing at least one pure virtual function without an implementation.
+Abstract classes are designed to serve as blueprints or interfaces, enforcing derived classes to implement specific functionality defined by pure virtual functions. 
+Creating an object of an abstract class is not allowed because it does not have all the necessary implementations to function properly.
+
+Let’s break this down in detail:
+Key Reasons Why Abstract Classes Cannot Be Instantiated:
+
+1. Presence of Pure Virtual Functions
+An abstract class contains at least one pure virtual function, which is declared with the = 0 syntax:
+virtual void functionName() = 0;
+A pure virtual function does not have an implementation in the abstract class. 
+Derived classes are expected to override and provide their own implementation of these functions.
+If you were to create an object of an abstract class, the compiler would have no definition to call for the pure virtual function if it is invoked, resulting in undefined behavior. To prevent this, the compiler prohibits instantiation of abstract classes.
+
+//----------------------------------------------------------------------------------------------------------------
 ✅ Why base class constructor is called first and derived later??
 
 The base class acts as the foundation for the derived class, and its members and states need to be fully initialized before the derived class can add its specific properties. 
