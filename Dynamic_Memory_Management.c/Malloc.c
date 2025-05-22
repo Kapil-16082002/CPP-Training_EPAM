@@ -3,6 +3,7 @@ Memory management  involves the allocation, deallocation, and management of memo
 What is malloc()?
 malloc() (Memory Allocation) is a function in the C standard library (stdlib.h) used for dynamic memory allocation. 
 It allocates a specified number of bytes in the heap and returns a pointer to the allocated memory.
+malloc() allocates raw, uninitialized, contiguous memory from the heap.
 
 Syntax of malloc() in C
 ptr = (cast-type*) malloc(byte-size)
@@ -43,8 +44,25 @@ new and delete: These provide type safety and automatically determine the type.
 std::vector, std::unique_ptr, std::shared_ptr: These Standard Library features handle memory allocation and lifetime management automatically, minimizing the risk of memory leaks.
 
 */
+✅Common Problems with Heap Memory: malloc , calloc, new etc...
+1.Memory Leaks:
+If you forget to free() memory after use, the allocated memory remains inaccessible, wasting resources.
+int* ptr = (int*) malloc(10 * sizeof(int)); 
+ptr = NULL; // Memory leak: Lost reference to the allocated memory
 
-Best Practices for Using malloc()
+2.Double-Free Errors:
+Freeing the same block of memory more than once can lead to undefined behavior.
+free(ptr);
+free(ptr); // Undefined behavior
+
+3.Dangling Pointers:
+Accessing a pointer after freeing its memory leads to dangling pointers and undefined behavior.
+free(ptr);
+printf("%d\n", *ptr); // Dangling pointer: Accessing freed memory
+
+
+
+✅Best Practices for Using malloc()
 Always Check for NULL: Ensure memory allocation succeeds before using the memory.
 Free Allocated Memory: Always free() memory when it is no longer needed to avoid memory leaks.
 Avoid Dangling Pointers: Do not use pointers after freeing them. Set them to NULL after free().
@@ -210,4 +228,8 @@ int main() {
 Output:
 Memory allocation failed
 ✅ Key Takeaway: Always check for NULL after malloc().
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
