@@ -10,7 +10,7 @@ Suitable for scenarios where frequent operations at both ends (e.g., front and b
 ✅Built-in Functions in std::deque
 
  
-Function	     Theory / Description	                                   Syntax
+Function	     Theory / Description	                                 Syntax
 push_back()	    Adds an element to the end of the deque.	              dq.push_back(value);
 push_front()	Adds an element to the front of the deque.	              dq.push_front(value);
 pop_back()	    Removes the element at the end of the deque.	          dq.pop_back();
