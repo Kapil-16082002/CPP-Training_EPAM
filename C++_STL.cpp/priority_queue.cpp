@@ -46,7 +46,22 @@ bool customComparator(int left, int right) {
 }
 int main() {
     std::priority_queue<int, std::vector<int>, decltype(&customComparator)> minHeap(customComparator);
+/*
+decltype(customComparator) also work fine because it is also treated as a function pointer type bool (*)(int, int) by compiler.
+decltype(customComparator) will give the same result as decltype(&customComparator) — the function pointer type.
 
+decltype(&customComparator) : a function pointer type bool (*)(int, int).
+decltype is a C++ feature that determines the type of an expression at compile time.
+&customComparator takes the address of the function, and its type is bool (*)(int, int) (a pointer to a function taking two int arguments and returning a bool).
+
+minHeap(customComparator): explicitly passes the function pointer instance to the priority_queue's constructor because it knows which comparator to use for comparing elements.   
+
+*What Happens If You Directly Pass cmp Without Using decltype?
+The Compare parameter expects a type, not an object or instance
+This will not work because cmp refers to the instance of the lambda (i.e., its object), not its type. 
+The std::priority_queue template requires the type of the comparator to be known at compile-time.
+
+*/
     minHeap.push(30);
     minHeap.push(10);
     minHeap.push(20);
@@ -57,7 +72,7 @@ int main() {
     }
     return 0;
 }
-
+//-----------------------------------------------------------------------------------------------------------------
 2.Using a Lambda Function:
 #include <iostream>
 #include <queue>
@@ -77,6 +92,7 @@ int main() {
     }
     return 0;
 }
+//---------------------------------------------------------------------------------------------------------------
 3.Using a Struct:
 #include <iostream>
 #include <queue>
@@ -132,7 +148,7 @@ int main() {
     return 0;
 }
 
-
+//-----------------------------------------------------------------------------------------------------------------
 4.Comparator for Multiple Conditions (Custom Struct or Lambda)
 You can write a comparator to account for multiple conditions. 
 Useful when sorting involves multiple criteria (e.g., lexicographically, or nested field comparisons).
