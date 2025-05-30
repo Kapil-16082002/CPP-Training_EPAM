@@ -633,3 +633,42 @@ After rehash:
 Number of elements: 5
 Number of buckets: 10
 Load factor: 0.5
+
+
+Comparison of Time Complexities
+Function	      std::map	    std::unordered_map	    std::multimap
+Constructor      	O(1)	     O(1)	                  O(1)
+
+Access & Lookup			
+m[key]	         O(log n)	O(1) average, O(n) worst	   O(log n)
+m.at(key)	O(log n)	O(1) average, O(n) worst	       O(log n)
+m.find(key)	O(log n)	O(1) average, O(n) worst	       O(log n)
+m.count(key)	O(log n)	O(1) average, O(n) worst	   O(log n)
+m.equal_range(key)	O(log n)	O(1) average, O(n) worst	O(log n + k)` (k = count of key)
+
+Insertions			
+m.insert(pair)	O(log n)	O(1) average, O(n) worst	    O(log n)
+m.emplace(...)	O(log n)	O(1) average, O(n) worst	    O(log n)
+m.insert_or_assign(...)	O(log n)	O(1) average, O(n) worst	N/A
+m[key] = value	O(log n)	O(1) average, O(n) worst	        N/A
+
+Deletions			
+m.erase(key)	   O(log n)	O(1) average, O(n) worst	    O(log n + k)` (for all duplicates)
+m.erase(iterator)	O(1)	O(1)	O(1)
+m.clear()	O(n)	O(n)	O(n)
+
+Iteration			
+Iterating (e.g., begin() to end())	O(n) traversal	O(n) traversal	O(n) traversal
+
+Capacity			
+m.empty()	O(1)	O(1)	O(1)
+m.size()	O(1)	O(1)	O(1)
+
+Bucket-Related Operations (for Unordered Maps)	N/A		N/A
+m.bucket_count()	N/A	O(1)	N/A
+m.load_factor()	N/A	O(1)	N/A
+m.max_load_factor()	N/A	O(1)	N/A
+m.rehash(buckets)	N/A	O(n)	N/A
+
+Miscellaneous			
+m.swap(m2)	O(1)	O(1)	O(1)
