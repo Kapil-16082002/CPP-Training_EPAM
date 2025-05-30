@@ -32,12 +32,59 @@ Efficient insertion/removal: Ideal for scenarios where frequent addition/removal
 Single-direction traversal: You can only traverse the list forward.
 Supports forward iterators only, making operations like reverse iteration impossible.
 
+/*  
+✅Internal Structure of std::list
+1.Doubly Linked List:
+   A pointer to the data (the value stored in the list node).
+   A pointer to the next node.
+   A pointer to the previous node.
+The list itself maintains two additional pointers:
+   A pointer to the head of the list (the first element).
+   A pointer to the tail of the list (the last element).
+The memory for the nodes in a std::list is non-contiguous and allocated dynamically on a per-node basis.
+2.Node Representation:
+struct ListNode {
+    T data;           // The data stored in the node
+    ListNode* next;   // Pointer to the next node
+    ListNode* prev;   // Pointer to the previous node
+};
+
+✅Memory Allocation in Insertion
+1. Dynamic Memory Allocation:
+When an element is inserted into the std::list, a new node is created dynamically using std::allocator (or the default dynamic memory system, typically via operator new).
+Memory for the new node's data field, along with the prev and next pointers, is allocated dynamically.
+
+2.Performance & Complexity:
+The insertion operation has a complexity of O(1) if performed at a known position (e.g., using an iterator pointing to the desired location).
+Unlike std::vector, std::list does not require shifting elements or reallocation of the entire container when inserting.
+
+✅Memory Deallocation in Deletion:
+1.Dynamic Memory Deallocation:
+During deletion, the node to be removed is first detached from the list by updating the pointers in the surrounding nodes.
+The memory allocated to the node is then deallocated using std::allocator::deallocate (or the default delete operator internally).
+
+2.Performance & Complexity:
+Like insertion, deletion is also an O(1) operation as the node to be removed can be located using an iterator, and no shifting or reallocation of other elements is necessary.
+
+
+✅Advantages:
+Efficient O(1) insertion and deletion at arbitrary positions.
+Iterators remain valid even after inserting or deleting elements (except for iterators pointing to deleted elements).
+No need to shift or copy elements when modifying the list.
+
+✅Disadvantages:
+Memory overhead per node is high due to the storage of two pointers (prev and next).
+Non-contiguous memory allocation may cause poor cache performance and memory fragmentation.
+Greater memory usage compared to std::vector or std::deque due to dynamic allocation of nodes.
+
+*/
+
 ✅inbuilt functions:
 
 1. Constructors std::list
 
 std::list<int> lst;                        // Default constructor
-std::list<int> lst2(5);                    // Creates a list with 5 default-initialized elements
+std::list<int> lst2(5);                    // Creates a list with 5 default-initialized elements, value=0 default
 std::list<int> lst3(5, 100);               // Creates a list with 5 elements, each of value 100
 std::list<int> lst4 = {1, 2, 3, 4};        // List initialization with initializer list
 std::list<int> lst5(lst4.begin(), lst4.end()); // Range constructor
@@ -183,3 +230,65 @@ lst.emplace(iteratorPos, 3); // Constructs and inserts element at iteratorPos
 
 std::forward_list Only supports in-place construction at the front:
 flst.emplace_front(1); // Constructs element at the front
+
+
+
+Comparison Table: Functions and Time Complexity
+Category	      Function	                          Time Complexity (Best, Avg, Worst)
+Constructors	  std::list<int> lst;                     O(1), O(1), O(1)
+                 std::list<int> lst2(5);	              O(n), O(n), O(n)
+                 std::list<int> lst3(5, 100);	          O(n), O(n), O(n)
+                 std::list<int> lst4 = {1, 2, 3, 4};	  O(n), O(n), O(n)
+                std::list<int> lst5(lst4.begin(), lst4.end());	O(n), O(n), O(n)
+                  std::forward_list<int> flst;	         O(1), O(1), O(1)
+                  std::forward_list<int> flst2(5)	     O(n), O(n), O(n)
+                  std::forward_list<int> flst3(5, 100)	 O(n), O(n), O(n)
+                  std::forward_list<int> flst4 = {1, 2, 3, 4};	O(n), O(n), O(n)
+
+	           
+size               lst.size()	                              O(1), O(1), O(1)
+                   std::distance(flst.begin(), flst.end())	  O(n), O(n), O(n)
+Modifiers	
+                   lst.push_front(1)	                      O(1), O(1), O(1)
+                   lst.push_back(2)	                          O(1), O(1), O(1)
+                   lst.pop_front()	                          O(1), O(1), O(1)
+                   lst.pop_back()	                          O(1), O(1), O(1)
+                   flst.push_front(1)	                      O(1), O(1), O(1)
+                   flst.pop_front()	                          O(1), O(1), O(1)
+Element Access	
+                   lst.front()	                             O(1), O(1), O(1)
+                   lst.back()	                             O(1), O(1), O(1)
+                   flst.front()	                             O(1), O(1), O(1)
+Iterators	
+                   lst.begin() / lst.end()	                  O(1), O(1), O(1)
+                   lst.rbegin() / lst.rend()	             O(1), O(1), O(1)
+                   flst.begin() / flst.end()	              O(1), O(1), O(1)
+Sorting	
+                    lst.sort()	                           O(n log n), O(n log n), O(n log n)
+                  flst.sort()	O(n log n), O(n log n), O(n log n)
+Removing	
+                  lst.remove(5)	                          O(n), O(n), O(n)
+                  lst.remove_if(predicate)	              O(n), O(n), O(n)
+                  lst.clear()	                          O(n), O(n), O(n)
+                 flst.remove(5)	                          O(n), O(n), O(n)
+                flst.remove_if(predicate)	               O(n), O(n), O(n)
+                flst.clear()	                            O(n), O(n), O(n)
+Reverse	
+                lst.reverse()	                            O(n), O(n), O(n)
+                reverseForwardList() (custom function)	    O(n), O(n), O(n)
+
+                
+Unique	        
+                lst.unique()	                         O(n), O(n), O(n)
+                flst.unique()	                         O(n), O(n), O(n)
+Merge	
+                 lst1.merge(lst2)	                    O(n + m), O(n + m), O(n + m)
+                 flst1.merge(flst2)	                    O(n + m), O(n + m), O(n + m)
+Splicing	
+                 lst.splice(iteratorPos, lst2)	         O(1), O(1), O(1)
+                 flst.splice_after(iteratorPos, flst2)	 O(1), O(1), O(1)
+Emplace	
+                lst.emplace_front(1)	                 O(1), O(1), O(1)
+                lst.emplace_back(2)	                     O(1), O(1), O(1)
+                lst.emplace(iteratorPos, 3)	             O(1), O(1), O(1)
+                flst.emplace_front(1)	                 O(1), O(1), O(1)
