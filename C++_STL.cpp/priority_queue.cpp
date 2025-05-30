@@ -2,6 +2,15 @@
 while insertion and deletion take logarithmic time. 
 Specifically, it’s implemented as a max-heap or min-heap, depending on the comparison function used.
 
+
+In C++ Standard Template Library (STL), the priority_queue class is implemented using a heap data structure. 
+Specifically, it uses a binary heap (a complete binary tree) to store the elements efficiently.
+
+
+By default, std::priority_queue uses a std::vector as its underlying container to store the elements.
+Internally, the elements in the vector are arranged in the form of a binary heap using the heap algorithms provided by STL (e.g., std::make_heap, std::push_heap, and std::pop_heap).
+
+
 C++ STL provides the std::priority_queue container to implement priority queues.
 ✅Types of Priority Queues:
 
@@ -15,6 +24,7 @@ This can be achieved by providing a custom comparison function.
 
 ✅Syntax:
 std::priority_queue<value_type> pq;  // Max-Heap by default
+
 std::priority_queue<value_type, container_type, comparison_function> pq; // Custom behavior such as Min-Heap
 Parameters
 value_type: The type of elements stored in the priority queue (e.g., int, float, std::pair, etc.).
