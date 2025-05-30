@@ -72,16 +72,18 @@ This results in a time complexity of O(n) for such push_back operations in the w
 
 ✅ In-Built Functions Provided by std::stack
 
-Member Function	        Description
-push(const T& value)	Pushes (inserts) an element onto the top of the stack.
-pop()	                Removes the element at the top of the stack (but does not return it).
-top()	                Returns a reference to the top element of the stack (does not remove it).
-empty()	                Returns true if the stack is empty, otherwise false.
-size()	                Returns the number of elements in the stack.
-emplace(args...)	    Constructs and inserts an element at the top of the stack in-place (more efficient).
+Time complexity of all functions: O(1) in all best,Average,Worst if std::deque as container
+
+Member Function	       Time(std::vector)                   Description
+push(const T& value) 	 O(1),O(1),O(n)  Pushes (inserts) an element onto the top of the stack.
+pop()	                O(1),O(1),O(1)    Removes the element at the top of the stack (but does not return it).
+top()	              O(1),O(1),O(1)       Returns a reference to the top element of the stack (does not remove it).
+empty()	               O(1),O(1),O(1)      Returns true if the stack is empty, otherwise false.
+size()	               O(1),O(1),O(1)      Returns the number of elements in the stack.
+emplace(args...)	    O(1),O(1),O(n)    Constructs and inserts an element at the top of the stack in-place (more efficient).
 emplace allows you to construct the element directly in the stack (avoiding an additional copy).
 
-swap(stack s)	        Swaps the contents of two stacks (requires both have the same underlying container type and size).
+swap(stack s)	O(n),O(n),O(n)  Swaps the contents of two stacks (requires both have the same underlying container type and size).
 #include <iostream>
 #include <stack>
 int main() {
