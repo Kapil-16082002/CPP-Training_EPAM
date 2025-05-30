@@ -15,16 +15,18 @@ You want average case O(1) performance for lookups instead of O(log(n)).
 
 /*
 
-Internal Structure of std::map:
-Tree Data Structure: std::map uses a Red-Black Tree, which is a type of binary search tree (BST) with additional rules that maintain balance within the tree. 
-Balanced means the height of the tree is kept approximately ( O(\log N) ), ensuring efficient operations.
+✅Internal Structure of std::map:
+Tree Data Structure: std::map uses a Red-Black Tree, which is a type of self-balancing binary search tree (BST)  with additional rules that maintain balance within the tree.
+
+Balanced means the height of the tree is kept approximately ( O(\log N) ),after each insert, delete, or update operation.
+Red-Black Tree ensures that the tree remains approximately balanced after each insert, delete, or update operation, thus guaranteeing a worst-case time complexity of O(log n) for search, insertion, and deletion operations.
 
 Each node in the Red-Black Tree stores a key-value pair (std::pair<Key, Value>), where:
 Key: The identifier by which the value can be accessed.
 Value: The data associated with the key.
 Nodes in the tree are arranged based on the sorted order of their keys.
 
-Operations in std::map:
+✅Operations in std::map:
 1.Insertion: ( O(\log N) )
 Place the element in the correct position in the Red-Black Tree.
 If the key already exists, std::map does not insert duplicates.
@@ -35,15 +37,27 @@ Start from the root and navigate left or right based on key comparison until you
 3.Deletion: ( O(\log N) )
 Locate the key in the tree and perform removal, rebalancing the Red-Black Tree afterward.
 
-//--------------------------------------------------------------------------------------------------------------
+✅Main Properties of a Red-Black Tree:
+1.Each node is either red or black.
+2.The root node must be black.
+3.Red nodes cannot have red children (no two consecutive red nodes).
+4.Leaf nodes (NULL pointers) are always black.
+5.Every path from a node to its descendant NULL pointers (leaves) must contain the same number of black nodes.
+
+
+The red-black tree is widely used in applications such as database systems, compiler design, and associative containers in the STL(e.g., std::map and std::set in C++).
+
+//-----------------------------------------------------------------------------------------------------------------
 
 Internal Structure of std::unordered_map:
 Data Structure: It uses a Hash Table.
 A hash table consists of an array of buckets (Each bucket typically implemented as linked lists or dynamic arrays).
+A bucket typically implemented as linked list or a dynamic array to store multiple key-value pairs when hash collisions occur.
 Each key is processed through a hash function, which computes an index for that bucket within the hash table.
 The key-value pair is stored in the bucket at the resulting index.
-Hash Function:
+If more than one key hashes to the same bucket (a collision), the bucket may use a chain (e.g., a linked list) to hold key-value pairs.
 
+Hash Function:
 Converts the key into an integer, which acts as the index in the array of buckets.
 Default hash function is provided (e.g., std::hash<Key>) but you can supply a custom one.
 Bucket Collision:
