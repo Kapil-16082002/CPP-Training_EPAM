@@ -35,6 +35,18 @@ empty()	        cout << (q.empty() ? "Empty" : "Not empty"); // Checks if queue 
 size()	        cout << q.size(); // Prints the size of the queue
 swap()	        q2.swap(q1); // Exchanges contents of q1 and q2
 
+Time Complexity of Queue Operations
+Function	Underlying Container: std::deque	Underlying Container: std::list	  Notes
+push()	Best: O(1), Avg: O(1), Worst: O(1)	 Best: O(1), Avg: O(1), Worst: O(1)	Adds an element at the back of the queue. Both containers provide constant-time insertion at the back.
+emplace()Best: O(1), Avg: O(1), Worst: O(1)	Best: O(1), Avg: O(1), Worst: O(1)	Similar to push(), constructs and inserts an element at the back in constant time.
+pop()	Best: O(1), Avg: O(1), Worst: O(1)	Best: O(1), Avg: O(1), Worst: O(1)	Removes the front element in constant time. No shifting/rearranging is needed.
+front()	Best: O(1), Avg: O(1), Worst: O(1)	Best: O(1), Avg: O(1), Worst: O(1)	Accessing the front element is always constant time.
+back()	Best: O(1), Avg: O(1), Worst: O(1)	Best: O(1), Avg: O(1), Worst: O(1)	Accessing the back element is constant time for both containers.
+empty()	Best: O(1), Avg: O(1), Worst: O(1)	Best: O(1), Avg: O(1), Worst: O(1)	Checking if the queue is empty is constant time since size is directly available.
+size()	Best: O(1), Avg: O(1), Worst: O(1)	Best: O(1), Avg: O(1), Worst: O(1)	Retrieving size is always constant time. Both containers maintain an internal size counter.
+swap()	Best: O(1), Avg: O(1), Worst: O(1)	Best: O(1), Avg: O(1), Worst: O(1)	Swapping two queues is constant time as it exchanges their internal storage references/pointers.
+
+
 ✅Use Cases of Queue:
 1.Task Scheduling (CPU or OS):
 In an operating system, tasks are scheduled based on their arrival time (FIFO) or priority. 
