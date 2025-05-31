@@ -1,6 +1,7 @@
 ✅Iterators are objects that act as pointers used to iterate through containers. 
 They provide a way to traverse elements in a container (like vector, list, map, etc.) without needing to know the internal structure of the container.
 
+/*
 ✅Differences between  Pointer  &  Iterator
 
 Iterators and pointers are both used for navigating and accessing elements in a container(e.g., arrays, STL containers like std::vector, std::list, etc.).
@@ -19,7 +20,7 @@ An iterator is an abstraction provided by the C++ STL to allow traversal of elem
 An iterator can traverse in non-contiguous containers like std::list.
 Iterators are container-aware, meaning they "know" how to traverse specific containers.
 Works with STL containers (e.g., std::list, std::vector).
-
+*/
 
 ✅Common Iterator Member Functions
 All standard iterators in STL containers support these basic functions. Below are the iterator-related functions available in most containers (std::vector, std::list, etc.):
