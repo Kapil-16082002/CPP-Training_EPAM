@@ -1,3 +1,6 @@
+// why address/pointers not stored in register??
+// accessing auot variable from other scope ?? using ::
+
 storage classes define the scope (visibility), lifetime, and memory location of variables.
 There are five major storage classes:
 Automatic (auto)
