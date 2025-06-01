@@ -156,6 +156,15 @@ lst.sort(); // Sorts the list in ascending order
 std::forward_list Also supports sorting:
 flst.sort(); // Sorts the forward list in ascending order
 
+✅std::erase()
+The erase function in the C++(STL) is particularly useful for removing elements from a std::list.
+Return Value::
+1.When erasing a single element:
+Returns an iterator pointing to the next element after the erased one.
+If the erased element is the last in the list, it returns list.end() (an iterator that represents "past-the-end").
+
+2.When erasing a range:
+Returns an iterator pointing to last (the element right after the range being erased), or list.end() if the erased range includes the end of the list.
 
 
 ✅8. Removal of Elements
