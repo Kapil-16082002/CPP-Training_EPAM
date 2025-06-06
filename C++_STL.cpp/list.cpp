@@ -241,6 +241,7 @@ std::forward_list Only supports in-place construction at the front:
 flst.emplace_front(1); // Constructs element at the front
 
 
+// advance()
 
 Comparison Table: Functions and Time Complexity
 Category	      Function	                          Time Complexity (Best, Avg, Worst)
