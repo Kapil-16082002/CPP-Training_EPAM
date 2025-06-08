@@ -1,23 +1,119 @@
-std::shared_ptr?
+✅std::shared_ptr?
 std::shared_ptr is a smart pointer in C++ that allows multiple pointers to share ownership of a dynamically allocated object. 
-When the last shared_ptr that owns an object is destroyed or reset, the object is automatically deleted.
+When the last shared_ptr that have ownership of an object is destroyed or reset, the object is automatically deleted.
+
+✅Declaration and Initialization:
+1.std::shared_ptr<MyClass> ptr = std::make_shared<MyClass>();
+std::unique_ptr<MyClass[]> myClassArray = std::make_unique<MyClass[]>(size);// array of objects
+  
+2.std::shared_ptr<int> ptr(new int(42)); 
+std::shared_ptr<int[]> ptr(new int[42]);
+
+/* 
+std::shared_ptr<MyClass[]> ptr(new MyClass[3]);
+ptr[0]= MyClass(1);
+ptr[1]= MyClass(2);
+ptr[2]= MyClass(3); 
+
+std::shared_ptr<MyClass[]> ptr(new MyClass[3] {MyClass(1), MyClass(2), MyClass(3)});
+
+*/
 
 2. Key Features of std::shared_ptr
 ✅ Shared Ownership → Multiple shared_ptr instances can own the same object.
 ✅ Reference Counting → Uses a reference counter to track the number of owners.
-✅ Automatic Cleanup → The object is deleted when the last shared_ptr goes out of scope.
+✅ Automatic Cleanup(deallocation) → The object is deleted when the last shared_ptr goes out of scope.
 ✅ Safe Memory Management → Prevents memory leaks and dangling pointers.
+✅ Supports Move Semantics → Ownership can be transferred using std::move().When ownership is moved, the original std::shared_ptr becomes empty (nullptr) because it no longer owns the resource.
+
+✅Use Case: Suitable where multiple objects might need access to the same resource (e.g., in shared data structures).
+
+
+✅Disadvantages of std::shared_ptr
+1.Increased Overhead:
+Reference counting introduces a small runtime overhead.
+
+2.Circular References:
+If not accompanied by std::weak_ptr, shared pointers can cause memory leaks in circular dependency scenarios.
+
+3.Requires Explicit Use:
+Developers must understand its semantics and usage to avoid misuse (e.g., storing raw pointers outside its scope).
+
+
+/* 
+1.Reference count keeps track of how many std::shared_ptr instances currently share ownership of the same resource.
+2.When a std::shared_ptr is created and takes ownership of a resource, the reference count is initialized to 1.
+3.When a new std::shared_ptr is created from an existing std::shared_ptr (via copy construction or assignment), the reference count is incremented to indicate that the resource is shared by another owner.
+4.When a std::shared_ptr is destroyed or reset, the reference count is decremented. 
+If the reference count reaches 0, meaning there are no more std::shared_ptr instances owning the resource, the resource is automatically deallocated (using its associated deleter).
+
+The reference count is internally managed in a thread-safe manner, which means you can safely share std::shared_ptr instances across multiple threads.
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+✅Detailed Explanation of How std::shared_ptr Works
+
+1.Control Block:    dynamically allocated control block (also called a shared memory block or control structure).
+
+When a std::shared_ptr is created, a control block is allocated dynamically alongside the object being managed. 
+This block contains:
+-Reference Count (use_count): Tracks how many std::shared_ptr objects currently share ownership of the managed object.
+-Weak Reference Count (weak_count): Tracks the number of std::weak_ptr objects referring to the same managed object.
+-Custom Deleter (if any): If the std::shared_ptr is constructed with a custom deleter, this deleter is also stored in the control block.
+
+The control block is initialized when the first std::shared_ptr is created for an object, and it's destroyed only when both:
+The reference count (use_count) becomes 0.
+The weak reference count (weak_count) becomes 0.
+
+2.Reference Count Increment & Decrement:
+Every time a std::shared_ptr is copied or assigned to another std::shared_ptr, the reference count (use_count) in the control block is incremented.
+When a std::shared_ptr is destroyed (or reset), the reference count (use_count) is decremented.
+When the reference count reaches 0, the managed object is destroyed.
+
+3.Pointer to the Managed Object:
+The actual pointer to the managed object is stored separately in the control block. 
+This prevents ownership issues when multiple std::shared_ptr instances share the same managed object.
+
+
+
+//-----------------------------------------------------------------------------------------------------------------
+
+✅get():
+Returns the raw pointer to the managed object without affecting the reference count.
+std::shared_ptr<int> ptr = std::make_shared<int>(5);
+int* raw = ptr.get();
+Here, raw is just a raw pointer to the same object that ptr manages. However, raw does not own the resource, so it does not contribute to the reference count.
+
+Ownership and Destruction:
+The std::shared_ptr (ptr) still owns the resource (the integer with value 5, in this case).
+The destructor for the resource will not be called until the std::shared_ptr goes out of scope or is reset, and the reference count drops to zero.
+If you dereference or use the raw pointer after its owning shared_ptr is destroyed, you'll encounter undefined behavior because raw does not know anything about the lifetime of the managed object.
+int main() {
+    int* raw = nullptr;
+    {
+        // Create a shared_ptr that manages an integer
+        std::shared_ptr<int> ptr = std::make_shared<int>(5);
+        raw = ptr.get(); // Get the raw pointer from the shared_ptr
+        std::cout << "Managed resource value: " << *raw << "\n"; // Output: 5
+    } // 'ptr' goes out of scope here, resource is destroyed, and raw becomes a dangling pointer.
+    // Now 'raw' is a dangling pointer
+    // std::cout << *raw << "\n"; // Undefined behavior if uncommented
+}
+✅unique():
+Returns true if the std::shared_ptr is the sole owner of the object (use_count == 1).
+std::shared_ptr<int> ptr1 = std::make_shared<int>(10);
+std::cout << std::boolalpha << ptr1.unique(); // Output: true
+
+*/
 
 #include <iostream>
 #include <memory>
-
 class Car {
 public:
     Car() { std::cout << "Car Created\n"; }
     ~Car() { std::cout << "Car Destroyed\n"; }
     void drive() { std::cout << "Driving the car!\n"; }
 };
-
 int main() {
     std::shared_ptr<Car> car1 = std::make_shared<Car>(); // Creates a Car object
     std::shared_ptr<Car> car2 = car1; // car2 shares ownership
@@ -108,7 +204,6 @@ public:
         std::cout << "Car Created\n";
     }
     ~Car() { std::cout << "Car Destroyed\n"; }
-
     void drive() {
         std::cout << "Car is driving...\n";
         engine->start();
@@ -119,7 +214,7 @@ int main() {
     std::cout << "Reference Count of Engine: " << eng.use_count() << std::endl;// output:1
     {
         std::shared_ptr<Car> car1 = std::make_shared<Car>(eng); // Shares Engine ownership
-        car1->drive();
+        car1->drive();           // Car is driving...
         std::cout << "Reference Count of Car: " << car1.use_count() << std::endl; // Output: 1
         std::cout << "Reference Count of Engine: " << eng.use_count() << std::endl;// output:2
     } // Car is destroyed, but Engine still exists
@@ -172,14 +267,13 @@ public:
 int main() {
     std::shared_ptr<Engine> eng = std::make_shared<Engine>(); // Creates Engine
     std::cout << "Reference Count of Engine: " << eng.use_count() << std::endl;// output:1
-    //{
-        std::shared_ptr<Car> car1 = std::make_shared<Car>(eng); // Shares Engine ownership
-        car1->drive();
-        std::cout << "Reference Count of Car: " << car1.use_count() << std::endl; // Output: 1
-        std::cout << "Reference Count of Engine: " << eng.use_count() << std::endl;// output:2
-    //} // Car is destroyed, but Engine still exists
-  //  car1.reset(); // Engine Destroyed
-  car1->engine->start();
+    
+    std::shared_ptr<Car> car1 = std::make_shared<Car>(eng); // Shares Engine ownership
+    car1->drive();
+    std::cout << "Reference Count of Car: " << car1.use_count() << std::endl; // Output: 1
+    std::cout << "Reference Count of Engine: " << eng.use_count() << std::endl;// output:2
+   
+  car1->engine->start(); // Engine Started
   std::cout << "Reference Count of Engine from car1: " << car1->engine.use_count() << std::endl;// output:2
     std::cout << "Reference Count of Engine: " << eng.use_count() << std::endl; // Output: 2
     std::cout << "Reference Count of Car: " << car1.use_count() << std::endl; // Output: 1
@@ -214,17 +308,17 @@ public:
         std::cout << "Car is being driven." << std::endl;
     }
 };
-void useCar(std::shared_ptr<Car> car) {
-    std::cout << "Inside function, Reference Count: " << car.use_count() << std::endl;
+void useCar(std::shared_ptr<Car> car) { // if passes as reference(&), then  car.use_count()=1, no extra copy will be created.
+    std::cout << "Inside function, Reference Count: " << car.use_count() << std::endl; // 2
     car->drive();
 }
 int main() {
     std::shared_ptr<Car> myCar = std::make_shared<Car>();
-    std::cout << "Before function call, Reference Count: " << myCar.use_count() << std::endl;
+    std::cout << "Before function call, Reference Count: " << myCar.use_count() << std::endl;  // 1
     
     useCar(myCar);
     
-    std::cout << "After function call, Reference Count: " << myCar.use_count() << std::endl;
+    std::cout << "After function call, Reference Count: " << myCar.use_count() << std::endl; // 1 
     return 0;
 }Output:
 Before function call, Reference Count: 1
@@ -249,15 +343,15 @@ public:
     }
 };
 void useCar(const std::shared_ptr<Car>& car) {
-    std::cout << "Inside function, Reference Count: " << car.use_count() << std::endl;
+    std::cout << "Inside function, Reference Count: " << car.use_count() << std::endl; // 1
     car->drive();
 }
 int main() {
     std::shared_ptr<Car> myCar = std::make_shared<Car>();
     
-    std::cout << "Before function call, Reference Count: " << myCar.use_count() << std::endl;
+    std::cout << "Before function call, Reference Count: " << myCar.use_count() << std::endl; //1
     useCar(myCar); // Reference count remains unchanged
-    std::cout << "After function call, Reference Count: " << myCar.use_count() << std::endl;
+    std::cout << "After function call, Reference Count: " << myCar.use_count() << std::endl;  // 1
     
     return 0;
 }Output:
@@ -265,49 +359,17 @@ Before function call, Reference Count: 1
 Inside function, Reference Count: 1
 Car is being driven.
 After function call, Reference Count: 1
-
 ✅ Use this when the function only reads data and should not extend object lifetime.
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 5️⃣ Handling Cyclic References with weak_ptr ->:
-When two objects have shared_ptr references to each other, they create a circular reference that prevents proper deletion.
+When two objects have shared_ptr references to each other, they create a circular reference that prevents proper deletion (destruction) of resources.
 In the below code:
 1.A owns B via std::shared_ptr<B>, and B owns A via std::shared_ptr<A>.
 2.This creates a circular reference where the reference count never reaches zero, causing a memory leak.
 
 Problem: Circular Reference
-// #include <iostream>
-// #include <memory>
-// class B; // Forward declaration
-// class A {
-// public:
-//     std::shared_ptr<B> bptr; // Shared pointer to B
-//     //std::cout << "Reference Count b: " << bptr.use_count() << std::endl;
-//     A() { 
-//         std::cout << "A Created\n"; 
-//     }
-//     ~A() { 
-//         std::cout << "A Destroyed\n"; 
-//     }
-// };
-// class B {
-// public:
-//     std::shared_ptr<A> aptr; // Shared pointer to A
-//     //std::cout << "Reference Count aptr: " << a.use_count() << std::endl;
-//     B() { std::cout << "B Created\n"; }
-//     ~B() { std::cout << "B Destroyed\n"; }
-// };
-// int main() {
-//     std::shared_ptr<A> a = std::make_shared<A>();
-//     std::cout << "Reference Count a: " << a.use_count() << std::endl;
-//     std::shared_ptr<B> b = std::make_shared<B>();
-//     std::cout << "Reference Count b: " << b.use_count() << std::endl;
-
-//     a->bptr = b; // A owns B
-//     b->aptr = a; // B owns A
-
-//     return 0; // Memory leak! A & B never get destroyed
-// }
 #include <iostream>
 #include <memory>
 class B; // Forward declaration
