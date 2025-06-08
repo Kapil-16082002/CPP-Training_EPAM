@@ -1,18 +1,29 @@
 
 1. What is std::unique_ptr?
+std::unique_ptr is a smart pointer in C++ that provides exclusive ownership of a dynamically allocated object. 
 std::unique_ptr is a smart pointer in C++ that manages dynamic memory. 
 It ensures that the allocated object is automatically deleted when the unique_ptr goes out of scope, preventing memory leaks.
-std::unique_ptr is a smart pointer in C++ that provides exclusive ownership of a dynamically allocated object. 
 
 Key Features
-✅ Exclusive Ownership → Only one unique_ptr can own a Object(resource) at a time.
+✅ Exclusive Ownership → Only one unique_ptr can own a Object(resource) at a time. does not allow copy semantics but supports transfer of ownership using move semantics.
 ✅ Automatic Cleanup → Automatically deletes the object when unique_ptr goes out of scope.
 ✅ No Copying Allowed → Copying a unique_ptr is not allowed (unique_ptr can not be shared).
 ✅ Supports Move Semantics → Ownership can be transferred using std::move().
 
+✅Use Case: Best used when a resource should have a single owner like in resource management (e.g., file handles, network sockets).
+
 Syntax:
 std::unique_ptr<MyClass> car1 = std::make_unique<MyClass>();
+// Create a unique_ptr for an array of MyClass objects
+std::unique_ptr<MyClass[]> myClassArray = std::make_unique<MyClass[]>(size);
+/* 
+// Dynamically create a MyClass object with raw pointer
+    MyClass* Obj = new MyClass(42);  // Allocating memory for a single object
 
+    // Dynamically create an array of MyClass objects
+    MyClass* Obj = new MyClass[size];  // Uses default constructor for all objects
+
+*/
 Step 1: std::make_unique<MyClass>()
 std::make_unique<MyClass>() is a C++14 feature.
 It dynamically allocates memory for a MyClass object.
@@ -26,7 +37,6 @@ Ensures proper deletion when it goes out of scope.
 (A) Creating a std::unique_ptr
 #include <iostream>
 #include <memory>
-
 class MyClass {
 public:
     MyClass() { std::cout << "MyClass Constructor\n"; }
@@ -162,12 +172,13 @@ int main() {
 }
 🔹 Safe and efficient way to return dynamic objects.
 🔹 No risk of memory leaks!
-//-------------------------------------------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------------------------------------------
+
 6.unique_ptr with STL Containers->
 #include <iostream>
 #include <memory>
 #include <vector>
-
 class Dog {
 public:
     Dog(std::string name) : name(name) {
@@ -187,8 +198,8 @@ int main() {
 Output:
 Buddy created
 Charlie created
-Buddy destroyed
 Charlie destroyed
+Buddy destroyed
 
 ✅Why is "Buddy destroyed" printed before "Charlie destroyed"?
 The order of destruction in std::vector<std::unique_ptr<Dog>> dogs follows the LIFO (Last In, First Out) principle because:
@@ -198,8 +209,6 @@ The order of destruction in std::vector<std::unique_ptr<Dog>> dogs follows the L
 4.std::vector destroys elements in reverse order of insertion.
 so,
 Charlie was inserted last, so it gets destroyed first.
-
-
 
 //-------------------------------------------------------------------------------------------------------------
 
@@ -221,19 +230,20 @@ int main() {
 }
 🔹 The custom deleter ensures the file is closed properly when filePtr goes out of scope.
 
+
+
 7. std::unique_ptr with Inheritance and Polymorphism
 (F) Handling Polymorphic Objects
+
 class Base {
 public:
     virtual void show() { std::cout << "Base class\n"; }
     virtual ~Base() = default;
 };
-
 class Derived : public Base {
 public:
     void show() override { std::cout << "Derived class\n"; }
 };
-
 int main() {
     std::unique_ptr<Base> ptr = std::make_unique<Derived>();  // Upcasting
     ptr->show();  // Output: Derived class
@@ -249,11 +259,11 @@ int main()
     unique_ptr<int>unPtr = make_unique<int>(25);
     /*
     make_unique<int>(25) -> dynalically allocates an int with value 25, ans returns
-    unique_ptr<int> managing that m/m
+    unique_ptr<int> managing that memory
     unique_ptr<int> unPtr = ... -> unPtr is a unique_ptr<int> that now owns the allocates int
     
     */
-    cout << unPtr.get() << endl; //prints m/m address
+    cout << unPtr.get() << endl; //prints memory address
     cout << *unPtr << endl; //dereferences unique pointer
     /*
     properties of unique_ptr
