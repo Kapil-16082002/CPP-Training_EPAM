@@ -1,17 +1,31 @@
 
-std::weak_ptr ->
+✅std::weak_ptr ->
 std::weak_ptr is a type of smart pointer that does not participate in the reference count. 
 std::weak_ptr is a smart pointers to break circular references between std::shared_ptr objects.
-std::weak_ptr is designed to be used in situations where you want a reference to an object but do not want to extend the objects lifetime.
+
+Use Case: std::weak_ptr is designed to be used in situations where you want a reference to an object but do not want to extend(or control) the objects lifetime.
+Use Case: Used in scenarios like caching, where you do not want to control object lifetime but need to observe it (e.g., accessing a shared resource without ownership).
+usecase: also checks whether std::shared_ptr<> is destroyed or not by converting wek_ptr to shared_ptr
+ std::shared_ptr<MyClass> sp1 = std::make_shared<MyClass>();
+ std::weak_ptr<MyClass> wp1 = sp1;  // taking reference to an sp1 object
+    if (auto sp2 = wp1.lock()) {     // Convert weak_ptr to shared_ptr to access object
+        sp2->show();
+    } 
+    else {
+        std::cout << "Object no longer exists\n";
+    }
+
 
 ✅How std::weak_ptr Works ->
 A std::weak_ptr does not increase the reference count of the object it observes.
 If you try to access the object from a std::weak_ptr, you need to convert it to a std::shared_ptr using the lock() method.
 If the object has been deleted (i.e., no more std::shared_ptr manage it), the lock() method will return a null std::shared_ptr.
 
+
 Important Functions of std::weak_ptr
 ✅lock():   Converts a std::weak_ptr to a std::shared_ptr. 
-            If the object is still alive (i.e., if there is at least one std::shared_ptr), lock() returns a valid std::shared_ptr. Otherwise, it returns a null std::shared_ptr.
+            If the object is still alive (i.e., if there is at least one std::shared_ptr), lock() returns a valid std::shared_ptr. 
+            Otherwise, it returns a null std::shared_ptr.
 ✅expired(): Checks if the object managed by the std::weak_ptr has been destroyed (i.e., all std::shared_ptr to the object are gone). 
             Returns true if the object is expired (deleted), otherwise false.
 ✅use_count(): Returns the number of std::shared_ptr instances managing the object. 
@@ -53,6 +67,12 @@ lock() returns std::shared_ptr only if the object is still alive (i.e., there ar
 expired() tells if the object has been destroyed.
 use_count() returns the number of std::shared_ptr objects managing the object.
 
+/* 
+✅Why Can't You Access Members Directly from a std::weak_ptr?
+std::weak_ptr is designed to be used in situations where you want a reference to an object but do not want to extend the objects lifetime or doesn't have direct ownership of the object.
+A std::weak_ptr is just an observer of a std::shared_ptr, meaning it doesn't have direct ownership of the object and does not guarantee its validity
+
+*/
 
 // Custom deleter-> you allocate memory using malloc and share this to shared_ptr, then how to delete??
 //why custom deleter?? if already managed by smart pointer 
