@@ -14,6 +14,102 @@ Improved Maintainability: Reduces the risk of introducing errors into existing f
 Enhances Extensibility: New features or behaviors can be added without requiring modifications to the already tested code.
 Promotes Reusability: Existing code remains reusable without the need for changes.
 
+
+#include <iostream>
+#include <vector>
+#include <memory> // For smart pointers
+// Abstract Base Class representing a Shape
+class Shape {
+public:
+    // Pure virtual method for calculating area
+    virtual float calculateArea() const = 0;
+
+    // Virtual destructor for safe deletion of derived objects
+    virtual ~Shape() {}
+};
+// Rectangle class implementing Shape
+class Rectangle : public Shape {
+private:
+    float length;
+    float width;
+public:
+    Rectangle(float l, float w) : length(l), width(w) {}
+
+    float calculateArea() const override {
+        return length * width;
+    }
+};
+// Circle class implementing Shape
+class Circle : public Shape {
+private:
+    float radius;
+public:
+    Circle(float r) : radius(r) {}
+
+    float calculateArea() const override {
+        return 3.14 * radius * radius;
+    }
+};
+
+// Triangle class implementing Shape (extension without modification)
+class Triangle : public Shape {
+private:
+    float base;
+    float height;
+public:
+    Triangle(float b, float h) : base(b), height(h) {}
+
+    float calculateArea() const override {
+        return 0.5 * base * height;
+    }
+};
+// class AreaCalculator {
+// public:
+//     float calculateTotalArea(const std::vector<std::shared_ptr<Shape>>& shapes) const {
+//         float totalArea = 0;
+
+//         for (const auto& shape : shapes) {
+//             totalArea += shape->calculateArea();
+//         }
+//         return totalArea;
+//     }
+// };
+
+int main() {
+    // Create shapes using std::make_shared
+    auto rectangle = std::make_shared<Rectangle>(10, 20);
+    auto circle = std::make_shared<Circle>(10);
+    auto triangle = std::make_shared<Triangle>(10, 5);
+
+    // Store shapes in a vector (using polymorphism)
+    std::vector<std::shared_ptr<Shape>> shapes = {rectangle, circle, triangle};
+
+    // Calculate and display area of individual shapes (polymorphism in action)
+    for (const auto& shape : shapes) {
+        std::cout << "Shape Area: " << shape->calculateArea() << std::endl; // Polymorphically calls calculateArea()
+    }
+
+    return 0;
+}
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
 Anti-OCP Example (Code That Violates OCP)
 #include <iostream>
 #include <vector>
@@ -23,7 +119,6 @@ class Rectangle {
 public:
     float length;
     float width;
-
     Rectangle(float l, float w) : length(l), width(w) {}
 };
 class Circle {
@@ -53,7 +148,6 @@ public:
                 totalArea += 3.14 * circle->radius * circle->radius;
             }
         }
-
         return totalArea;
     }
 };
@@ -171,22 +265,15 @@ Let each shape implement its own area computation logic.
 Use abstraction to decouple AreaCalculator from specific shape types.
 Here’s the refactored code that adheres to OCP:
 
-
 #include <iostream>
 #include <vector>
-#include <memory> // For smart pointers
+#include <memory>
 
-// Abstract Base Class representing a Shape
 class Shape {
 public:
-    // Pure virtual method for calculating area
     virtual float calculateArea() const = 0;
-
-    // Virtual destructor for safe deletion of derived objects
     virtual ~Shape() {}
 };
-
-// Rectangle class implementing Shape
 class Rectangle : public Shape {
 private:
     float length;
@@ -198,7 +285,6 @@ public:
         return length * width;
     }
 };
-// Circle class implementing Shape
 class Circle : public Shape {
 private:
     float radius;
@@ -209,7 +295,6 @@ public:
         return 3.14 * radius * radius;
     }
 };
-// New shape: Triangle (can be added without modifying existing code)
 class Triangle : public Shape {
 private:
     float base;
@@ -221,33 +306,30 @@ public:
         return 0.5 * base * height;
     }
 };
-// AreaCalculator class (open for extension, closed for modification)
 class AreaCalculator {
 public:
     float calculateTotalArea(const std::vector<std::shared_ptr<Shape>>& shapes) const {
         float totalArea = 0;
 
         for (const auto& shape : shapes) {
-            totalArea += shape->calculateArea(); // Polymorphism in action
+            totalArea += shape->calculateArea();
         }
         return totalArea;
     }
 };
 int main() {
-    // Create shapes
-    auto rectangle = std::make_shared<Rectangle>(10, 20);// This line creates an object of type Rectangle on the heap using std::make_shared, and stores it in a smart pointer (std::shared_ptr) named rectangle
+    auto rectangle = std::make_shared<Rectangle>(10, 20);
     auto circle = std::make_shared<Circle>(10);
     auto triangle = std::make_shared<Triangle>(10, 5);
 
-    // Store shapes in a vector (using polymorphism)
     std::vector<std::shared_ptr<Shape>> shapes = {rectangle, circle, triangle};
 
-    // Use the AreaCalculator to calculate the total area
     AreaCalculator calculator;
     std::cout << "Total Area: " << calculator.calculateTotalArea(shapes) << std::endl;
 
     return 0;
 }
+
 ✅How Does the Refactored Code Follow OCP?
 1.Open for Extension:
 To add a new shape (e.g., Square), all we need to do is create a new class (Square) derived from the Shape interface. We don't modify AreaCalculator or its existing logic.
