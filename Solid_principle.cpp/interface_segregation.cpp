@@ -1,7 +1,13 @@
-Interface Segregation Principle:
+✅Interface Segregation Principle:
 A client should not be forced to depend on methods it does not use.
 /*"Classes should not be forced to implement  unnecessarily / irrelevant methods that they do not use.*/
 // Main aim removing fat interfaces
+
+When ISP Applies
+The ISP comes into play when:
+You notice large interfaces with many unrelated methods.
+Different implementing classes require only subsets of the interface's methods.
+New features or methods are being added to the interface, impacting all implementing classes unnecessarily
 
 ⚠️Example of ISP Violation
 Here is  an example where the Interface Segregation Principle is violated:
@@ -64,16 +70,16 @@ public:
 };
 int main() {
     Vehicle* car = new Car();
-    car->drive();
-    car->fly();
-    car->sail();
+    car->drive();      // Car is driving!
+    car->fly();        // Car cannot fly!
+    car->sail();       // Car cannot sail!
 
     delete car;
 
     Vehicle* airplane = new Airplane();
-    airplane->fly();
-    airplane->drive();
-    airplane->sail();
+    airplane->fly();    // Airplane can fly
+    airplane->drive();  // Airplane cannot drive
+    airplane->sail();   // Airplane cannot sail
 
     delete airplane;
 
@@ -194,8 +200,4 @@ A client interacting only with a Car doesn’t see irrelevant methods like fly()
 Flexible Design:
 Subsystems remain decoupled, making the design extensible and modular.
 
-When ISP Applies
-The ISP comes into play when:
-You notice large interfaces with many unrelated methods.
-Different implementing classes require only subsets of the interface's methods.
-New features or methods are being added to the interface, impacting all implementing classes unnecessarily
+
