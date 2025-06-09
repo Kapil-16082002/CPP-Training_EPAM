@@ -12,6 +12,11 @@ Key Features
 
 ✅Use Case: Best used when a resource should have a single owner like in resource management (e.g., file handles, network sockets).
 
+
+/*std::unique_ptr does not use a control block.
+Why not?
+std::unique_ptr is a single-owner smart pointer, meaning there is no need to track ownership or reference counts.
+*/
 Syntax:
 std::unique_ptr<MyClass> car1 = std::make_unique<MyClass>();
 // Create a unique_ptr for an array of MyClass objects
