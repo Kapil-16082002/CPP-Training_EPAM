@@ -1,9 +1,13 @@
 
-Liskov Substitution Principle (LSP):
+✅Liskov Substitution Principle (LSP):
 Objects of a superclass should be replaceable with objects of a subclass without changing the correctness of the program.
 
+✅Objects of a superclass should be replaceable with objects of their subclass??
+it means: objects of their subclass can maintain superclass members.
+Subclass inherits all behaviors of the superclass:
 
-Why is LSP Important?
+
+✅Why is LSP Important?
 Improves Code Reusability: Derived classes can be substituted wherever a base class is expected, reducing redundancy.
 Enhances Code Maintainability: Code that depends on abstractions (e.g., base classes) works seamlessly with new derived types.
 Promotes Polymorphism: Allows polymorphic behavior without violating program correctness.
@@ -97,7 +101,8 @@ Unexpected Behavior: The program expects the area to be 50, but it is actually 1
 //-----------------------------------------------------------------------------------------------------------------
 
 ✅Compliant Example (Fixing the Violation)
-To comply with LSP, we need to acknowledge that a Square is not a true subtype of Rectangle because their behaviors are fundamentally different. Instead, we can design Square as a separate class that does not derive from Rectangle but still adheres to a common base class Shape.
+To comply with LSP, we need to acknowledge that a Square is not a true subtype of Rectangle because their behaviors are fundamentally different. 
+Instead, we can design Square as a separate class that does not derive from Rectangle but still adheres to a common base class Shape.
 
 #include <iostream>
 #include <string>
@@ -142,7 +147,6 @@ public:
         return side * side;
     }
 };
-
 int main() {
     // A vector of shapes using polymorphism
     std::vector<std::shared_ptr<Shape>> shapes;
@@ -155,22 +159,23 @@ int main() {
     for (const auto& shape : shapes) {
         std::cout << "Area: " << shape->getArea() << std::endl;
     }
-
     return 0;
 }
-✅Explanation of Compliant Code
+✅How LSP Applies in the Code
 
-1.Common Interface (Shape):
-Both Rectangle and Square inherit from Shape.
-Each class implements its own getArea() function to compute the area independently.
+1.Objects of Rectangle and Square are Replaced by Shape References:
 
-2.No Behavioral Assumptions:
-Rectangle and Square have independent implementations.
-Square does not attempt to override or modify Rectangle's behavior.
+std::vector<std::shared_ptr<Shape>> shapes; // A collection of Shape pointers (base class)
+shapes.push_back(std::make_shared<Rectangle>(10, 20)); // Derived class Rectangle stored as Shape
+shapes.push_back(std::make_shared<Square>(15));       // Derived class Square stored as Shape
+The vector std::vector<std::shared_ptr<Shape>> stores derived class objects (Rectangle and Square) but refers to them through the common base class Shape.
+This demonstrates that subclasses can replace the base class without causing issues (a core idea of LSP).
 
-3.Polymorphism:
-A base-class pointer or reference (Shape*) can refer to both Rectangle and Square.
-This enables substitutability while maintaining their independent behaviors.
+2.Polymorphism in Action:
 
-4.Correctness:
-Programs that operate on Shape can calculate areas for Rectangle and Square objects without needing to worry about behavior inconsistencies.
+for (const auto& it : shapes) {
+    std::cout << "Area: " <<it->getArea() << std::endl; // Calls correct implementation
+}
+This loop calls the getArea() method from the Shape interface.
+However, based on the actual object type being pointed to (Rectangle or Square), the correct implementation of getArea() is called at runtime.
+The program functionality does not break, as each subtype maintains the expected behavior of the Shape interface.
