@@ -1,7 +1,7 @@
 
 The SOLID principles are a set of five design principles in software development, proposed by Robert C. Martin (a.k.a. Uncle Bob). 
-They aim to improve code maintainability, flexibility, readability, and scalability in object-oriented programming (OOP). 
 These principles are guidelines for developers to write cleaner, more modular, and robust software systems.
+They aim to improve code maintainability, flexibility, readability, and scalability in object-oriented programming (OOP). 
 
 ✅SOLID is an acronym that stands for:
 
@@ -39,6 +39,7 @@ Team Collaboration: Clean and well-structured code ensures that teams can work t
 
 //-----------------------------------------------------------------------------------------------------------------
 ✅
+A class should have one and only one reason to change, meaning it should have only one responsibility or function.
 "A class should have only one reason to change."
 This means that a class should perform a single, well-defined task or responsibility. 
 When a class has more than one responsibility, it becomes harder to maintain, debug, and extend because changes in one part of the class may effects on other parts.
@@ -63,15 +64,13 @@ private:
     string email;
 public:
     User(string name, string email) : name(name), email(email) {}
-
     void saveToDatabase() {
         // Code logic for saving user to database
         cout << "Saving user '" << name << "' to the database.\n";
-    }
-    void sendEmail(string message) {
+    }void sendEmail(string message) {
         // Code logic for sending email
         cout << "Sending email to '" << email << "': " << message << endl;
-    }
+    }  
 };
 int main() {
     User user("John Doe", "john.doe@example.com");
@@ -148,7 +147,6 @@ How SRP is Followed in the Refactored Code?
 
 ✅Scalability and Extensibility:
 If you want to introduce new features (like sending SMS notifications or using a different database), you simply create new classes without modifying existing code.
-
 
 ✅Modular Design:
 1.If you need to change the database logic, you only update the UserRepository class.
