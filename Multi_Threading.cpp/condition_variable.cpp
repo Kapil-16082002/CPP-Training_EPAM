@@ -5,10 +5,10 @@ A condition_variable is used to block(wait) a thread until a specific condition 
 Think of it like:
 🧍‍♂️ "Wait here until someone gives you a signal to go."
 
+🧾 Why Do We Need It?
+When one thread have to wait for a condition to be true (like “data is available”), and another thread will notify it once that condition is ready — using a condition_variable makes it safe, efficient, and avoids busy waiting.
 It’s mainly used in Producer-Consumer problems, thread-safe queues, and any time threads must wait for some event or coordinate access.
 
-🧾 Why Do We Need It?
-When one thread needs to wait for a condition to be true (like “data is available”), and another thread will notify it once that condition is ready — using a condition_variable makes it safe, efficient, and avoids busy waiting.
 
 🚫 Without condition_variable — Busy Waiting (Bad)
 
@@ -40,7 +40,6 @@ void worker() {
 	//cv.wait(lock, GetReadyStatus);
 	std::cout << "Worker thread is end\n";
 }
- 
 int main() {
 	std::cout << "Main thread is started\n";
 	std::thread t(worker);
@@ -75,19 +74,19 @@ std::condition_variable cv;// A condition variable lets one thread wait until an
 bool data_ready = false;
 
 void producer() {          //A thread function that simulates work and notifies the consumer.
-    std::this_thread::sleep_for(std::chrono::seconds(2));  // simulate work
+    //std::this_thread::sleep_for(std::chrono::seconds(2));  // simulate work
     std::lock_guard<std::mutex> lock(mtx);
     std::cout << "[Producer] Producing data...\n";
     data_ready = true;                      //producer is done.
     cv.notify_one();  // Notifies one waiting thread (in this case, signal the consumer) that something has changed
 }
-
 void consumer() {                // A thread function that waits for the producer's signal.
     std::unique_lock<std::mutex> lock(mtx);
     std::cout << "[Consumer] Waiting for data...\n";
 
     // Wait until data_ready becomes true
     cv.wait(lock, [] { return data_ready; });
+    //This line unlocks the mutex and puts the thread to sleep until cv.notify_one() is called and the lambda returns true.
 
     std::cout << "[Consumer] Data received and processed!\n";
 }
@@ -119,10 +118,7 @@ Consumer:
 🧠 Why Use wait(lock, condition) Form?
 This version:
 
-cv.wait(lock, [] { return data_ready; });
-is safer than just:
-
-cv.wait(lock);
+cv.wait(lock, [] { return data_ready; }) is safer than cv.wait(lock);
 Because:
 It automatically checks the condition after waking up
 Handles spurious wakeups (thread wakes up without being notified)
