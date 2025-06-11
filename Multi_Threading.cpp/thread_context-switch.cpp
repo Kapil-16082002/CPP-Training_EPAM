@@ -6,6 +6,17 @@ Multithreading in C++ refers to the ability of a program to execute multiple thr
 In C++ (OOPs approach), we create threads using std::thread (from the <thread> library), which enables multi-threading in C++.
 
 
+1. Synchronous Programming
+In synchronous programming, tasks are executed sequentially, one after the other. 
+The program waits for a task to finish before moving on to the next. 
+If a task takes a long time (e.g., a file download or database query), the thread executing it is blocked, stopping the programs progression until the task is complete.
+
+2. Asynchronous Programming
+In asynchronous programming, tasks can be executed concurrently or in parallel, depending on the system, without waiting for each task to finish before starting the next one. 
+When a task is initiated (e.g., downloading a file), it runs in the background, and the program can proceed without being blocked.
+
+
+
 ✅Types of thread
 1. Based on Purpose:
 Threads can be categorized based on their purpose or functionality in the application:
