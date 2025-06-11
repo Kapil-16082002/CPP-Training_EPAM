@@ -1,7 +1,7 @@
 
 🔍 What is the Future-Promise Mechanism?
-std::promise<T> allows one thread to produce a value (or an exception) at some point in the future.
-std::future<T> allows another thread to wait for that value.
+std::promise<T>  class allows one thread to produce a value (or an exception) at some point in the future.
+std::future<T> class allows another thread to wait for that value.
 Its like a single-use channel from one thread (producer) to another (consumer).
 
 🧠 Real-world Analogy
@@ -12,7 +12,7 @@ Until the chef delivers the food, the customer just waits.
 
 #include <iostream>
 #include <thread>
-#include <future>
+#include <future>// there is no <promise> header in the C++ Standard Library. The std::promise class is part of the <future> header. To use std::promise, you need to include the <future> header in your code.
 #include <chrono>
 
 void producer(std::promise<int> p) {
