@@ -36,7 +36,7 @@ bool ready = false;
 void worker() {
 	std::cout << "Worker thread is started\n";
 	std::unique_lock<std::mutex> lock(mtx);
-	cv.wait(lock, [] { return ready; });
+	cv.wait(lock, [] { return ready; });//This line unlocks the mutex and puts the thread to sleep until cv.notify_one() is called and the lambda returns true.
 	//cv.wait(lock, GetReadyStatus);
 	std::cout << "Worker thread is end\n";
 }
