@@ -121,7 +121,6 @@ public:
         return totalArea;
     }
 };
-
 int main() {
     // Create shapes
     std::shared_ptr<Shape> rectangle = std::make_shared<Rectangle>(5.0, 10.0);
