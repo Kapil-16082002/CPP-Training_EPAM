@@ -5,10 +5,7 @@
 A semaphore is a synchronization primitive used to control access to a shared resource by multiple threads.
 
 Semaphore is simply a variable which is non-negative and shared between threads. 
-This variable is used to solve the critical section problem and to achieve process synchronization in the multiprocessing environment.
-Think of it like a counter:
-It allows a certain number of threads to acquire (enter).
-When a thread is done, it releases (exits), increasing the counter.
+This variable is used to solve the critical section problem and to achieve synchronization in the multiprocessing environment.
 
 📌 Use Case:
 A counting semaphore is ideal when:
@@ -47,8 +44,14 @@ There are mainly two types of semaphores:
 A binary_semaphore is a synchronization primitive that maintains an internal counter with a maximum value of 1.
 It allows threads to signal and wait, enabling controlled access or communication between threads.
 
-acquire(): Waits until the counter is > 0, then decrements it.
-release(): Increments the counter (up to 1), signaling another waiting thread.
+🔧 Key Operations:
+1. wait() / P() / acquire():
+Decreases the semaphore count by 1.
+If the count becomes negative, the calling thread blocks until a resource is available.
+
+2. signal() / V() / release():
+Increases the semaphore count by 1.
+If threads are blocked, one is unblocked.
 
 💡 Concept:
 Can take only 0 or 1 as value.
@@ -177,43 +180,6 @@ int main() {
 mutex is thread-owned — only the thread that locked it can unlock.
 Here, main() locks it, workerB waits, and workerA tries to unlock — boom 💥 = undefined behavior / crash.
 
-🔧 Example Scenario Where binary_semaphore Shines
-🔔 Thread A signals Thread B:
-✅ Correct Version with binary_semaphore
-#include <iostream>
-#include <thread>
-#include <semaphore>  // C++20
-#include <chrono>
-
-std::binary_semaphore signal(0);  // start locked
-
-void workerA() {
-    std::cout << "Thread A: Doing work...\n";
-    std::this_thread::sleep_for(std::chrono::seconds(1)); // simulate work
-    std::cout << "[A] Work done. Signaling B...\n";
-    signal.release();  // ✅ any thread can call release
-}
-void workerB() {
-    std::cout << "Thread B: Waiting for signal from Thread A...\n";
-    signal.acquire();  // ✅ block until signaled
-    std::cout << "Thread B: Received signal from Thread A, continuing work\n";
-}
-int main() {
-    std::thread t1(workerA);
-    std::thread t2(workerB);
-
-    t1.join();
-    t2.join();
-}
-✅Output:
-Thread B: Waiting for signal from Thread A...
-Thread A: Doing work...
-[A] Work done. Signaling B...
-Thread B: Received signal from Thread A, continuing work
-
-binary_semaphore is not thread-owned
-Any thread can acquire or release
-Acts like a notification gate (like condition_variable, but simpler)
 */
 🔧 Example Scenario Where binary_semaphore Shines
 🔔 Thread A signals Thread B:
@@ -325,7 +291,7 @@ We are doing two things:
 1. 2 is the maximum number of permits (set by <2>)
 This tells the semaphore: "At most, I can allow 2 threads at a time."
 
-2. The constructor sem(2) sets the initial count to 2.
+2. The constructor sem(2) sets the initial count to 2(available resources).
 This means: "Right now, I have 2 permits available for threads to acquire."
 2 is both:
 The maximum count (capacity).
