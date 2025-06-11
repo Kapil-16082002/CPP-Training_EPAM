@@ -14,7 +14,6 @@ You have a bounded buffer (e.g., size 5), so Producer must wait if it’s full, 
 
 const int BUFFER_SIZE = 5;
 std::queue<int> buffer;
-
 // Semaphores
 std::counting_semaphore<BUFFER_SIZE> empty_slots(BUFFER_SIZE); // initially, all slots are empty
 std::counting_semaphore<BUFFER_SIZE> full_slots(0);            // initially, no full slots
