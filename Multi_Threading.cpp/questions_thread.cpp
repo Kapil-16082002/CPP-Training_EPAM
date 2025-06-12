@@ -106,9 +106,153 @@ std::thread t(myFunction); // ✅ joinable
 // Now t is a running thread, and no one is managing it yet
 So, this thread is considered joinable (i.e., "waiting for someone to manage it"). */
 
-//---------------------------------------------------------------------------------------------------------------
+
+//==================================================================================================================
+✅ Odd Even Code Using Only One Thread:
+
+#include <iostream>
+#include <thread>
+#include <mutex>
+
+class EvenOddChecker {    
+private:
+    int number;
+    std::mutex mtx; // A mutex to synchronize access to shared outputs (std::cout)
+public:
+    EvenOddChecker(int number) : number(number) {}
+
+    void checkNumber() {
+        std::unique_lock<std::mutex> lock(mtx); // Lock the mutex for thread-safe output
+        if (number % 2 == 0) {
+            std::cout << "The number " << number << " is Even." << std::endl;
+        } 
+        else {
+            std::cout << "The number " << number << " is Odd." << std::endl;
+        }
+    }
+};
+int main() {
+    int number;
+    std::cout << "Enter a number: ";
+    std::cin >> number;
+
+    EvenOddChecker checker(number); // Create an instance of EvenOddChecker
+    std::thread workerThread(&EvenOddChecker::checkNumber, &checker); // Create and launch a single thread to check the number
+    workerThread.join();
+    return 0;
+}
+-----------------------------------------------------------------------------------------------------------------
+#include <iostream>
+#include <thread>
+#include <mutex>
+
+std::mutex mtx; // A mutex to synchronize access to shared outputs (std::cout)
+
+void checkOddEven(int number) {
+    std::unique_lock<std::mutex> lock(mtx); // Lock the mutex for thread-safe output
+    if (number % 2 == 0) {
+        std::cout << "The number " << number << " is Even." << std::endl;
+    } 
+    else {
+        std::cout << "The number " << number << " is Odd." << std::endl;
+    }
+}
+int main() {
+    int number;
+    std::cout << "Enter a number: ";
+    std::cin >> number;
+
+    std::thread workerThread(checkOddEven, number); // Create and launch a single thread to check the number
+    workerThread.join(); // Wait for the thread to complete
+}
 
 
+
+
+//==================================================================================================================
+
+Using two threads:
+
+#include <iostream>
+#include <thread>
+#include <mutex>
+
+class EvenOddChecker {
+    
+private:
+    int number;
+    std::mutex mtx;  // A mutex (mtx) is used to synchronize access to shared outputs (std::cout) 
+public:
+    EvenOddChecker(int number) : number(number) {}
+    void checkEven() {
+        // This thread checks if the number is even
+        if (number % 2 == 0) {
+            std::unique_lock<std::mutex> lock(mtx);
+            std::cout << "The number " << number << " is Even." << std::endl;
+        }
+    }
+    void checkOdd() {
+        // This thread checks if the number is odd
+        if (number % 2 != 0) {
+            std::unique_lock<std::mutex> lock(mtx);
+            std::cout << "The number " << number << " is Odd." << std::endl;
+        }
+    }
+};
+int main() {
+    int number;
+    std::cout << "Enter a number: ";
+    std::cin >> number;
+
+    EvenOddChecker checker(number);  // Create an instance of the EvenOddChecker
+
+    // Create two threads: one for checking even and one for checking odd
+    std::thread evenThread(&EvenOddChecker::checkEven, &checker); // evenThread: Calls checkEven on the checker object.
+    std::thread oddThread(&EvenOddChecker::checkOdd, &checker);   // oddThread: Calls checkOdd on the checker object.
+ 
+    // Wait for both threads to complete
+    evenThread.join();
+    oddThread.join();
+
+    return 0;
+}
+-------------------------------------------------------------------------------------------------------------------
+
+#include <iostream>
+#include <thread>
+#include <mutex>
+
+std::mutex mtx; // A mutex to synchronize access to shared resources (e.g., std::cout)
+
+void checkEven(int number) {
+    if (number % 2 == 0) {
+        std::unique_lock<std::mutex> lock(mtx); // Lock the mutex for safe access to std::cout
+        std::cout << "The number " << number << " is Even." << std::endl;
+    }
+}
+void checkOdd(int number) {
+    if (number % 2 != 0) {
+        std::unique_lock<std::mutex> lock(mtx); // Lock the mutex for safe access to std::cout
+        std::cout << "The number " << number << " is Odd." << std::endl;
+    }
+}
+int main() {
+
+    int number;
+    std::cout << "Enter a number: ";
+    std::cin >> number;
+
+    // Create two threads: one for checking even, one for checking odd
+    std::thread evenThread(checkEven, number); // Pass the number to be checked for even
+    std::thread oddThread(checkOdd, number);   // Pass the number to be checked for odd
+
+    // Wait for both threads to complete execution
+    evenThread.join();
+    oddThread.join();
+    
+
+    return 0;
+}
 
 
  
