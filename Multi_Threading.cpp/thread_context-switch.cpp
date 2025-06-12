@@ -1,10 +1,16 @@
-✅A thread is a lightweight unit of execution inside a process. 
+✅A thread is a smallest (lightweight) unit of execution inside a process. 
  Multiple threads can run concurrently within a single process and share memory (like global variables or heap memory). 
  This makes threading fast but also risky due to race conditions.
 Multithreading in C++ refers to the ability of a program to execute multiple threads concurrently.
 
 In C++ (OOPs approach), we create threads using std::thread (from the <thread> library), which enables multi-threading in C++.
 
+✅Process:  A process is an independent program in execution.
+Multiple processes can run concurrently on a system, but they generally operate independently of one another.
+Key Features of a Process:
+1.Independent Memory Space: Each process has its own separate memory space (address space).
+2.Inter-process Communication (IPC):
+Since processes run in separate memory spaces, they must communicate via mechanisms such as pipes, sockets, shared memory, or message queues.
 
 1. Synchronous Programming
 In synchronous programming, tasks are executed sequentially, one after the other. 
@@ -318,13 +324,11 @@ void sum() {
     for (int i = 0; i <= 10; i++)  cout << i << endl;
     mtx.unlock();
 }
-
 void print() {
     mtx.lock();
     for (int i = 20; i <= 29; i++) cout << i << endl;
     mtx.unlock();
 }
-
 int main() {
     thread th(sum);
     thread pr(print);
@@ -406,5 +410,46 @@ void process_data() {
     lock.unlock(); // Unlock manually , not necessary
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+✅What is try_lock()?
+try_lock() is a method provided by the std::mutex class in C++. 
+It allows a thread to attempt to lock a mutex without blocking (i.e., waiting) if the mutex is already locked by another thread.
+If the mutex is:
+Available (unlocked): try_lock() locks it and returns true.
+Unavailable (already locked by another thread): try_lock() immediately returns false without blocking the thread.
 
+Usecase:
+This is especially useful in scenarios where you want your thread to continue doing other work if a resource is already being used by another thread, instead of waiting indefinitely for the mutex.
+
+#include <iostream>
+#include <thread>
+#include <mutex>
+#include <chrono>
+
+std::mutex mtx;  // Shared mutex to protect a critical section
+
+void critical_section(int thread_id) {
+    if (mtx.try_lock()) {  // Try to lock the mutex
+        // If successful:
+        std::cout << "Thread " << thread_id << " has locked the mutex.\n";
+    
+        mtx.unlock(); // Unlock the mutex after work is done
+        std::cout << "Thread " << thread_id << " has unlocked the mutex.\n";
+    } 
+    else {
+        // If unable to lock:
+        std::cout << "Thread " << thread_id << " could not lock the mutex. Doing other work.\n";
+    }
+}
+int main() {
+    // Launch two threads
+    std::thread t1(critical_section, 1);
+    std::thread t2(critical_section, 2);
+
+    // Wait for threads to finish
+    t1.join();
+    t2.join();
+
+    return 0;
+}
