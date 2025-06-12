@@ -412,12 +412,13 @@ void process_data() {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-✅What is try_lock()?
-try_lock() is a method provided by the std::mutex class in C++. 
-It allows a thread to attempt to lock a mutex without blocking (i.e., waiting) if the mutex is already locked by another thread.
+
+✅What is std::mutex::try_lock()?
+try_lock() is a method(member function) of std::mutex class and works with only single mutex.
+It allows a thread to lock a mutex without blocking (i.e., waiting) if the mutex is already locked by another thread.
 If the mutex is:
-Available (unlocked): try_lock() locks it and returns true.
-Unavailable (already locked by another thread): try_lock() immediately returns false without blocking the thread.
+unlocked: try_lock() locks it and returns true.
+locked (already locked by another thread): try_lock() immediately returns false without blocking the thread.
 
 Usecase:
 This is especially useful in scenarios where you want your thread to continue doing other work if a resource is already being used by another thread, instead of waiting indefinitely for the mutex.
@@ -453,3 +454,14 @@ int main() {
 
     return 0;
 }
+
+//=================================================================================================================
+
+✅What is std::try_lock()?
+std::try_lock() is a standard library function (free function) and works with multiple mutexes simultaneously.
+Try to lock multiple mutexes in a deadlock-free manner without blocking.
+Returns:
+-1 , if all mutexes were successfully locked.
+The index of the first mutex that could not be locked (0-based index) if locking fails.
+If any mutex fails to lock, it will automatically unlock all previously locked mutexes.
+Useful for deadlock prevention when trying to lock multiple mutexes at once.
