@@ -28,7 +28,6 @@ int calculateSum(int a, int b) {
     std::cout << "🧠 [Worker] Calculating " << a << " + " << b << "\n";
     return a + b;
 }
-
 int main() {
     std::cout << "🚀 Starting async task...\n";
 
@@ -113,7 +112,6 @@ void producer(int id) {
         cv.notify_all();
     }
 }
-
 // Consumer function: takes data from the buffer
 void consumer(int id) {
     for (int i = 0; i < 5; ++i) {
@@ -134,7 +132,7 @@ void consumer(int id) {
 
 int main() {
 
-    auto producer_future = std::async(std::launch::async, producer, 1);//tarts the producer function asynchronously in the background.
+    auto producer_future = std::async(std::launch::async, producer, 1);//starts the producer function asynchronously in the background.
     auto consumer_future = std::async(std::launch::async, consumer, 1);
     
     // Wait for both producer and consumer to finish
