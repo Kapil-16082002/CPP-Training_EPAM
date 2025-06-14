@@ -1,4 +1,4 @@
-#1. Constructor
+✅#1. Constructor
 A constructor is a special member function that is automatically called when an object of a class is created. 
  Its main purpose is to initialize the objects attributes.
 
@@ -115,3 +115,71 @@ Destructor Called!     // Destructor for temporary object (immediate destruction
 Constructor Called!    // Constructor for a
 Destructor Called!     // Destructor for a (end of main)
 Destructor Called!     // Destructor for d (end of main)
+
+//==================================================================================================================
+
+✅Key C++ Object Initialization Order:
+When a class object is created:
+First: The base class constructors (if any) are called.
+Second: The member variables(like: m1,m2) constructors are called (in the order they're declared in the class; not the order in which they are initialized in the body of the constructor).
+Lastly: The constructor of the class itself (e.g., Test) is called. 
+
+#include <iostream>
+
+class Base {
+public:
+    Base() {
+        std::cout << "Base class constructor" << std::endl;
+    }
+    ~Base() {
+        std::cout << "Base class destructor" << std::endl;
+    }
+};
+class Member1 {
+public:
+    Member1() {
+        std::cout << "Member1 constructor" << std::endl;
+    }
+    ~Member1() {
+        std::cout << "Member1 destructor" << std::endl;
+    }
+};
+class Member2 {
+public:
+    Member2() {
+        std::cout << "Member2 constructor" << std::endl;
+    }
+    ~Member2() {
+        std::cout << "Member2 destructor" << std::endl;
+    }
+};
+class Derived : public Base {
+private:
+    Member1 m1; // Member variables
+    Member2 m2;
+public:
+    Derived() {
+        std::cout << "Derived class constructor" << std::endl;
+    }
+    ~Derived() {
+        std::cout << "Derived class destructor" << std::endl;
+    }
+};
+
+int main() {
+    std::cout << "Creating Derived object..." << std::endl;
+    Derived d; // Create a Derived object
+    std::cout << "Derived object created." << std::endl;
+    return 0;
+}
+Output:
+Creating Derived object...
+Base class constructor
+Member1 constructor
+Member2 constructor
+Derived class constructor
+Derived object created.
+Derived class destructor
+Member2 destructor
+Member1 destructor
+Base class destructor
