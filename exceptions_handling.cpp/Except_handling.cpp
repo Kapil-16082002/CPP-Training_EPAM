@@ -1,12 +1,16 @@
-Exception handling in C++ provides a mechanism to handle runtime errors and unexpected conditions in a program.
+Exception handling in C++ provides a way to handle runtime errors and unexpected behaviour in a program.
 
 Keywords in C++ Exception Handling:
 try → Defines a block of code that might throw an exception.
 throw → Used to throw an exception.
 catch → Handles exceptions thrown by the try block.
 /*Catch-All Handler
-Use catch(...) to handle all exceptions when the type is unknown or irrelevant.  */
+Use catch(...) to handle all exceptions when the type is unknown or irrelevant.  
 
+catch (const std::exception&e)
+std::exception&e will catch only those exceptions that are derived from the std::exception class.
+Example, std::runtime_error, std::logic_error, or create a custom exception class.
+*/
 
 Scenarios in Exception Handling:
 1. Divide by Zero (Mathematical Errors) -> can lead to undefined behavior
@@ -15,7 +19,7 @@ Scenarios in Exception Handling:
 4. File Handling Errors -> While working with files, exceptions can arise if the file is not found, cannot be opened, or there's a read/write failure.
 
 ✅Types of Exceptions:
-1.Standard exceptions (std::exception, std::runtime_error, etc.).
+1.Standard exceptions (std::exception, std::runtime_error, std::logic_error etc.).
 2.User-defined exceptions (custom exception classes).
 3.System-generated exceptions (e.g., division by zero, out of memory).
 
@@ -31,12 +35,13 @@ This feature was removed in modern C++ because it was difficult to enforce at ru
 
 //----------------------------------------------------------------------------------------------------------------
 
-Basic Example of Exception Handling 
+Basic Example of Exception Handling:
 #include <iostream>
 using namespace std;
 void divide(int a, int b) {
     if (b == 0)
-        throw "Division by zero error!";  // Throwing a string exception
+        throw "Division by zero error!";  // Throwing a string literal as const char* i.e pointer to char array
+        //throw string("Division by zero error!");  // Throwing a string exception
     cout << "Result: " << a / b << endl;
 }
 int main() {
@@ -47,23 +52,29 @@ int main() {
     catch (const char* msg) {  // Catching the exception
         cout << "Exception caught: " << msg << endl;
     }
+    //catch (std::string msg)   will string exception
     return 0;
 }
 Output
 Result: 5
 Exception caught: Division by zero error!
+/*Since the exception being thrown is of type const char*, the corresponding catch block must also match the type const char* for the handler to work. 
+
+catch (std::string msg)
+This will not work because the type of the exception being thrown (const char*) does not match the type being caught (std::string). 
+C++ does not automatically convert exceptions of type const char* into std::string*/
 
 // =------------------------     throw exception in constructor      ----------------------------------------------
 
 When an Exception is Thrown in a Constructor
 In C++, if a constructor of a class throws an exception, the destructor for the object being created will NOT be called, because the object is considered incomplete at the time of the exception.
-However:
-Any objects that have already been fully constructed (e.g., objects for member variables, base classes) will have their destructors called.
+However:Any objects that have already been fully constructed (e.g., objects for member variables, base classes) will have their destructors called.
 The destructor for the object itself (the one whose constructor threw the exception) is not called, because the object was never fully constructed.
 
 
 ✅Case 1: Destructor of the Object Itself Is NOT Called
-If an exception is thrown in the constructor of a class, the destructor for the object itself will not be called because the object is considered incomplete—its lifetime did not officially begin.
+If an exception is thrown in the constructor of a class, the destructor for the object itself will not be called 
+because the object is not fully constructed — its lifetime did not officially begin.
 
 #include <iostream>
 #include <stdexcept>
@@ -91,7 +102,7 @@ Caught exception: Exception in constructor
 
 Explanation:
 The ~Test() destructor is NOT called because the exception was thrown before the object t was fully constructed.
-The lifetime of t never started since the object construction failed.
+The lifetime of the object t never started since the object construction failed.
 
 //---------------------------------------------------------------------------------------------------------------
 
@@ -116,7 +127,7 @@ private:
 public:
     Test() {
         std::cout << "Constructor: Test" << std::endl;
-        throw std::runtime_error("Exception in constructor");
+        //throw std::runtime_error("Exception in constructor");
     }
     ~Test() {
         std::cout << "Destructor: Test" << std::endl;
@@ -191,7 +202,7 @@ The destructor for the base class (~Base()) is called to clean up the successful
 The destructor for the Derived class (~Derived()) is NOT called because the Derived object was never fully constructed.
 
 
-//---------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------
 
 ✅When a constructor throws an exception:
 
@@ -303,9 +314,9 @@ private:
     std::string resource1;
     std::unique_ptr<std::string> resource2; // Use smart pointer
 public:
-    MyClass(const std::string& init)
-        : resource1(init), resource2(std::make_unique<std::string>("Dynamically allocated resource")) {
+    MyClass(const std::string& init): resource1(init), resource2(std::make_unique<std::string>("Dynamically allocated resource")) {
         std::cout << "Constructing MyClass with resource: " << resource1 << std::endl;
+        //resource2 = std::make_unique<std::string>("Dynamically allocated resource");
         if (init.empty()) {
             throw std::runtime_error("Input string is empty! Constructor failed.");
         }
@@ -320,3 +331,139 @@ Smart Pointers Manage Memory Automatically:
 When an exception is thrown, the std::unique_ptr for resource2 ensures its memory is automatically released.
 No Need for Manual Cleanup:
 With smart pointers, you don’t need to manually delete resource2 in case of an exception.
+
+//=================================================================================================================
+
+#include <iostream>
+#include <exception>
+#include <string>
+class MyClass {
+private:
+    std::string* resource2;
+public:
+    MyClass() :  resource2(nullptr) {
+        std::cout << "Constructing MyClass with resource: " << resource1 << std::endl;
+        resource2 = new std::string("Dynamically allocated resource");
+        throw std::runtime_error("Input string is empty! Constructor failed.");
+       
+        std::cout << "MyClass successfully constructed!" << std::endl;
+    }
+    ~MyClass() {
+        std::cout << "Destructor called. Cleaning up resources..." << std::endl;
+        delete resource2; // Clean up dynamic memory
+    }
+};
+int main() {
+    try {
+        std::cout << "Creating object ..\n";
+        MyClass obj1();
+    }
+    catch (const std::exception& e) {
+        // Catch exceptions thrown by constructors
+        std::cerr << "Exception caught: " << e.what() << std::endl;
+    }
+    std::cout << "Program continues after handling exception." << std::endl;
+}
+
+In the constructor of MyClass, you allocate dynamic memory (resource2) but you immediately throw an exception after allocation. This creates a problem:
+1.The destructor (~MyClass) will not be called because the object is not fully constructed due to the exception. 
+In C++, destructors only run for fully constructed objects.
+2.When resource2 is not deallocated due to the absence of a destructor call, the allocated memory for "Dynamically allocated resource" remains in the heap, resulting in a memory leak.
+
+✅How to Fix This Memory Handling Issue?
+
+1. Use Smart Pointers (std::unique_ptr or std::shared_ptr)
+Smart pointers automatically manage memory and ensure clean-up even if an exception occurs. This is the recommended modern C++ approach.
+
+#include <iostream>
+#include <exception>
+#include <string>
+#include <memory>
+
+class MyClass {
+private:
+    // Use std::unique_ptr for automatic memory management
+    std::unique_ptr<std::string> resource2;
+public:
+    MyClass() : resource2(nullptr) {
+        std::cout << "Constructing MyClass..." << std::endl;
+        resource2 = std::make_unique<std::string>("Dynamically allocated resource");
+        throw std::runtime_error("Constructor failed.");
+    }
+    ~MyClass() {
+        std::cout << "Destructor called. Cleaning up resources..." << std::endl;
+        // No need to explicitly delete resource2; std::unique_ptr will handle it.
+    }
+};
+int main() {
+    try {
+        std::cout << "Creating object...\n";
+        MyClass obj1;
+    }
+    catch (const std::exception& e) {
+        // Catch exceptions thrown by constructors
+        std::cerr << "Exception caught: " << e.what() << std::endl;
+    }
+    std::cout << "Program continues after handling exception." << std::endl;
+
+    return 0;
+}
+What Happens Here:
+std::make_unique<std::string> creates a smart pointer that automatically frees the allocated memory when the object is destroyed (or even if construction fails due to an exception).
+No explicit delete is needed because std::unique_ptr handles the cleanup.
+
+
+//-----------------------------------------------------------------------------------------------------------------
+
+✅2. Handle Cleanup in an Auxiliary Function or Wrapper
+You can manually catch and clean up resources before propagating(re-throwing) the exception. 
+This approach is not ideal but can be used for legacy codebases where smart pointers are not available.
+
+#include <iostream>
+#include <exception>
+#include <string>
+
+class MyClass {
+private:
+    std::string* resource2;
+public:
+    MyClass() : resource2(nullptr) {
+        try {
+            std::cout << "Constructing MyClass..." << std::endl;
+            resource2 = new std::string("Dynamically allocated resource");
+            throw std::runtime_error("Constructor failed.");
+        } catch (...) {
+            // Catch any exception and clean up manually
+            delete resource2;
+            throw; // Re-throw the exception
+        }
+    }
+    ~MyClass() {
+        std::cout << "Destructor called. Cleaning up resources..." << std::endl;
+        delete resource2; // Clean up dynamic memory
+    }
+};
+int main() {
+    try {
+        std::cout << "Creating object...\n";
+        MyClass obj1;
+    }
+    catch (const std::exception& e) {
+        // Catch exceptions thrown by constructors
+        std::cerr << "Exception caught: " << e.what() << std::endl;
+    }
+    std::cout << "Program continues after handling exception." << std::endl;
+
+    return 0;
+}
+Explanation:
+The try-catch block inside the constructor ensures that resources are cleaned up (delete resource2) before re-throwing the exception.
+✅What Happens Without Re-Throw in Constructors:
+If you do not re-throw the exception, The calling code (main) will assume  that object has been fully constructed.
+Any operations on the invalid or incomplete object will lead to undefined behavior, crashes, or logical errors, as the object (MyClass) is in an invalid or incomplete state.
+
+✅Behavior If Exception Is Re-Thrown:
+The throw re-propagates the exception to the caller (main), which catches it.
+The program correctly handles the failure in construction, and the partially constructed object (MyClass) is not misused.
+
+
