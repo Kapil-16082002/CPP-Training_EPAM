@@ -1,6 +1,6 @@
 Custom Exception Handling:
 Custom exception handling allow creating user-defined exceptions to handle specific error scenarios in a program. 
-By defining our own exception classes, we can handle errors and can provide meaningful feedback and would not dpend on standard library exceptions. 
+By defining our own exception classes, we can handle errors and can provide meaningful feedback(can provide more functionality) and would not dpend on standard library exceptions. 
 This allows developers to handle domain-specific errors based on their application logic.
 
 #include <iostream>
@@ -16,6 +16,15 @@ public:
         return error_msg;
     }
 };
+/*  
+Overriding: When a function in a derived class has the same name, return type, and parameters as a function in its base class, the derived class's function is replaced by the base class's function when object of the derived type is called.
+The what() function overrides the what() function from the base class std::exception. This is where overriding is used to provide custom functionality (i.e., returning the error message error_msg).
+
+Base Class (std::exception) Definition for what():
+In the standard library, the base class std::exception declares the what() method like this:
+
+virtual const char* what() const throw();
+*/
 /*If an exception is thrown, the catch block catches the exception.
 Inside the catch block, the what() method of the thrown exception object is called automatically when e.what() is written.*/
 
