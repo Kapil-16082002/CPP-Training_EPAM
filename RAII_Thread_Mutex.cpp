@@ -1,17 +1,19 @@
-Resource Acquisition Is Initialization (RAII) in C++ ->
+✅Resource Acquisition Is Initialization (RAII) in C++ ->
 RAII (Resource Acquisition Is Initialization) is a C++ programming technique where resource management (such as memory, file handles, or locks) is tied to object lifetime. 
-A resource is acquired in a constructor and released in the destructor, ensuring automatic cleanup when the object goes out of scope.
+Resources are occupied during construction of object and released during the destruction of the object and ensures automatic resource management.
 
 RAII helps in prevention of resource leakage and makes code safer and more maintainable.
 Resources are released when the object goes out of scope (stack unwinding).
 Ensures proper cleanup even in case of exceptions.
 
 Use Cases of RAII :
-Memory Management (Smart Pointers)
-File Handling
-Mutex Locking
-Database Connection Management
-Network Socket Management
+1.Automatic Memory Management (Smart Pointers)
+2.Avoids Dangling Issues: using  Smart Pointers
+3.Improved Exception Safety: using  Smart Pointers
+4.File Handling
+5.Mutex Locking
+6.Database Connection Management
+7.Network Socket Management
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
