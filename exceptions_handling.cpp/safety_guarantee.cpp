@@ -1,10 +1,11 @@
-Exception safety guarantee in C++ refers to a set of programming guidelines and guarantees that ensures that if an exception is thrown an object's or application's behavior remains well-defined and consistent.
+Exception safety guarantee in C++ refers to a set of programming guidelines and guarantees that ensures that if an exception is thrown an object or application behavior remains well-defined and consistent.
 These guarantees are designed to maintain program correctness, resource management, and data consistency.
 
-In C++, exception safety guarantees are typically classified into three levels of guarantees (or four, including one for functions with no exceptions). Here's an explanation of each level of guarantee:
+In C++, exception safety guarantees are typically classified into three levels of guarantees (or four, including one for functions with no exceptions).
+Here's an explanation of each level of guarantee:
 
 1. No-Throw Guarantee (Strongest):
-A function that provides this guarantee will never throw an exception. 
+A function that provides this guarantee will never throw an exception and object or application behavior remains well-defined and consistent.
 It is also referred to as the noexcept guarantee because functions marked with noexcept in C++ explicitly promise not to throw exceptions.
 
 Characteristics:
@@ -29,12 +30,14 @@ int main() {
 }
 If an exception ever emanates from a noexcept function, the program will call std::terminate().
 
-//------------------------------------------------------------------------------------------------------------------
+//=================================================================================================================
 
 2. Strong Guarantee:
-A function providing the strong guarantee ensures that, in case of an exception, the program’s state is completely unchanged (rollback semantics). 
+A function providing the strong guarantee ensures that, if any exception is thrown, the program’s state remains unchanged (rollback semantics). 
 Either the operation completes successfully, or the program state is restored to what it was before the operation began.
 Example : Transaction
+1. Either whole transaction will be completed successfully.
+2. or Not at all
 
 Characteristics:
 Provides transactional behavior: "all or nothing."
@@ -43,72 +46,97 @@ Often involves making a copy of data before modifications, so changes can be dis
 
 #include <iostream>
 #include <vector>
+void safeOperation(std::vector<int>& vec, const int value) {
 
-class Test {
-public:
-    void addToVector(std::vector<int>& vec, int value) {
-        // Strong exception safety using a temporary for rollback
-        std::vector<int> temp = vec;  // Create a copy
-        temp.push_back(value);        // Modify the copy
-        vec = std::move(temp);        // Commit changes
-    }
-};
+    std::vector<int> temp(vec); // Use a temporary copy of the vector
+    temp.push_back(value);      // This might throw
+    temp.push_back(value * 2);  // This might throw
+    
+    // If everything succeeds, swap the result into the original vector
+    vec.swap(temp); // Commit the changes (no-throw guaranteed)
+}
 int main() {
-    std::vector<int> vec = {1, 2, 3};
-    Test t;
-
     try {
-        t.addToVector(vec, 4); // Push back successfully
-        std::cout << "Vector after change: ";
-        for (int v : vec) std::cout << v << " ";
+        std::vector<int> myVec = {1, 2, 3};
+        safeOperation(myVec, 10);
+        for (int val : myVec)
+            std::cout << val << " ";
     } catch (...) {
-        // If an exception is thrown, vec will remain unchanged.
-        std::cout << "\nException occurred. State is unchanged.";
+        std::cout << "An exception occurred. Program state remains unchanged!" << std::endl;
     }
-
     return 0;
 }
 Here, if push_back(value) throws an exception, the original vector remains unchanged because of the use of a temporary copy.
 
-//--------------------------------------------------------------------------------------------------------------
+//================================================================================================================
 
 3. Basic Guarantee:
-A function providing the basic guarantee ensures that if an exception is thrown, the program:
-
-Does not leak resources (such as dynamic memory, open files, etc.).
-Remains in a valid (but not necessarily unchanged) state.
-This means that the program would not crash or exhibit undefined behavior, but the program state may be altered and partially completed.
+The basic exception safety guarantee ensures that:
+1.Resources will not leak, even if an exception is thrown.
+2.The program will not crash or will not give undefined behavior, but the program state may remains unchanged or may be altered. 
 
 #include <iostream>
 #include <vector>
-
-class SafeVector {
-private:
-    std::vector<int> vec;
-public:
-    void addElement(int value) {
-        vec.push_back(value); // Exception might occur (e.g., during memory allocation).
-    }
-    void print() const {
-        std::cout << "Vector contents: ";
-        for (int v : vec) std::cout << v << " ";
-        std::cout << "\n";
-    }
-};
+#include <exception>
 int main() {
-    SafeVector sv;
-
+    std::vector<int> myVec;  // Simple vector of integers
     try {
-        sv.addElement(10);
-        sv.addElement(20); // If this throws, previous state ("10") is valid.
-    } catch (...) {
-        std::cout << "Exception occurred. Vector remains valid but may be altered.\n";
+        // Adding 10 to the vector
+        try {
+            myVec.push_back(10);  // May throw (e.g., memory allocation failure)
+            std::cout << "Successfully added: 10" << std::endl;
+        } catch (const std::exception& e) {
+            // Basic exception safety: If `push_back` throws, the state is valid but no rollback
+            std::cout << "Exception occurred while adding 10: " << e.what() << std::endl;
+        }
+
+        // Adding 20 to the vector
+        try {
+            myVec.push_back(20);  // Same as above
+            std::cout << "Successfully added: 20" << std::endl;
+        } catch (const std::exception& e) {
+            std::cout << "Exception occurred while adding 20: " << e.what() << std::endl;
+        }
+
+        // Simulate an exception after some successful modifications
+        throw std::runtime_error("Simulated exception after adding elements.");
+
+        // Adding 30 to the vector (this line will not execute)
+        try {
+            myVec.push_back(30);
+            std::cout << "Successfully added: 30" << std::endl;
+        } catch (const std::exception& e) {
+            std::cout << "Exception occurred while adding 30: " << e.what() << std::endl;
+        }
+
+    } 
+    catch (const std::exception& e) {
+        // Catch any other exception thrown in `main`
+        std::cerr << "Caught exception in main: " << e.what() << std::endl;
     }
 
-    sv.print();
+    // Final state of the vector
+    std::cout << "Final contents of the vector: ";
+    for (int val : myVec) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl;
+
     return 0;
 }
-If an exception occurs during addElement, the vector remains in a valid state (e.g., no memory leaks), but its content may be partially complete.
+Output:
+Successfully added: 10
+Successfully added: 20
+Caught exception in main: Simulated exception after adding elements.
+Final contents of the vector: 10 20
+
+/* 
+Why push_back May Throw Exceptions:
+std::vector::push_back() dynamically allocates memory when the capacity of the vector is exceeded. 
+If memory allocation fails (e.g., due to low system memory), it throws std::bad_alloc.
+*/
+
+//==================================================================================================================
 
 4. No Guarantee (Weakest):
 A function or operation providing no guarantee makes no promises about the effect of an exception. 
@@ -137,9 +165,9 @@ Perform mutations on a copy. If the mutation is successful, swap the temporary o
 
 3.Avoid Raw Memory Management:
 Use smart pointers (e.g., std::unique_ptr, std::shared_ptr) instead of raw pointers.
-noexcept:
 
-Mark functions as\][ ] noexcept if you are confident that they would not throw. 
+noexcept:
+Mark functions as noexcept if you are confident that they would not throw. 
 This prevents exceptions in critical operations like destructors or move operations.
 Example Code Illustrating All Guarantees:
 
