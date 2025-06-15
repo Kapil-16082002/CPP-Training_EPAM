@@ -30,6 +30,8 @@ The goal of stack unwinding is to clean up responsibly even in the face of an un
 #include <iostream>
 #include <stdexcept>
 class Test {
+private:
+    std::string name;
 public:
     Test(const std::string& name) : name(name) {
         std::cout << "Constructor: " << name << std::endl;
@@ -37,8 +39,6 @@ public:
     ~Test() {
         std::cout << "Destructor: " << name << std::endl;
     }
-private:
-    std::string name;
 };
 void functionC() {
     Test c("C");
@@ -60,9 +60,9 @@ Output:
 Constructor: A
 Constructor: B
 Constructor: C
-Destructor: C
-Destructor: B
-Destructor: A
+// Destructor: C   
+// Destructor: B
+// Destructor: A
 terminate called after throwing an instance of 'std::runtime_error'
 what(): Exception thrown in functionC
 
@@ -102,6 +102,8 @@ Therefore, the program terminates after stack unwinding is complete.
 //----------------------------------------------------------------------------------------------------------------
 #include <iostream>
 class Test {
+private:
+    std::string name;
 public:
     Test(const std::string& name) : name(name) {
         std::cout << "Constructor: " << name << std::endl;
@@ -109,10 +111,7 @@ public:
     ~Test() {
         std::cout << "Destructor: " << name << std::endl;
     }
-private:
-    std::string name;
 };
-
 void functionC() {
     Test c("C");
     throw std::runtime_error("Exception thrown in functionC");
@@ -129,7 +128,6 @@ void functionA() {
         std::cout << "Caught exception: " << e.what() << std::endl;
     }
 }
-
 int main() {
     functionA();
     return 0;
