@@ -10,7 +10,6 @@ For example: closing files, deallocating via a pool allocator, releasing sockets
 3.Special memory management: When managing arrays, or if delete is not suitable for an object (e.g., it needs a special library function to free memory).
 
 
-
 ✅1. std::shared_ptr for arrays
 Unlike std::unique_ptr, std::shared_ptr does not have direct support for managing arrays (prior to C++20). 
 However, you can use it with arrays by providing a custom deleter during its creation.
