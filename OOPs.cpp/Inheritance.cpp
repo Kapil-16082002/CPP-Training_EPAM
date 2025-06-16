@@ -12,7 +12,7 @@ Private members of a base class are never directly accessible in derived classes
 Use inheritance only where it logically fits (e.g., "is-a" relationship).
 
 
-// Diamond problem: virtual inheritance??
+// Diamond problem: virtual inheritance?? pre-post increment difference which better?
 
 ✅1. Single Inheritance
 In this type, a single derived class inherits from a single base class.
