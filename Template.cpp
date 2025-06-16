@@ -9,20 +9,36 @@ They enable functions and classes to work with different data types without code
 ✅ 4. Template Specialization
 ✅ 5. Template Non-Type Parameters
 
+✅Advantages:
+1. Code Reusability
+Example: Instead of writing multiple versions of a function for int, float, double, etc., you can use templates:
+template <typename T>
+T add(T a, T b) {
+    return a + b;
+}
+2. Reduced Code Size
+By using templates, you avoid writing redundant code for similar functionalities that differ only by data type.
+
+3. Type Safety:  Templates ensure type safety at compile time
+4. Performance:  Templates are implemented at compile-time, which eliminates the overhead of runtime type checking
+5.Generic Containers:
+Templates are heavily used in the implementation of generic containers, such as C++ Standard Template Library (STL), including std::vector, std::list, and std::map. 
+
 Disadvantages of Template->
 .cpp               .obj                  .exe
 Source code        Object code           executable code
             ----->>             ------>>
            Compiler             Linker
-Templates in C++ increase the size of the object code because each template instantiation generates a separate version of the code for every different type used. 
+Templates in C++ increase the size of the object code because each template instantiation generates a separate version of the code for every different data_type used. 
 This leads to code bloat and a larger .obj (object file) size.
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 1️⃣ Function Templates
-A function template allows creating a function that works with any data type.
+A function template allows defining a function that can works with any data type.
 
 🔹 Syntax:
-template <typename T>
+template <typename T>     // Declares a template type T. The T is called a template type parameter( or placeholder for a data type)
+
 T add(T a, T b) {
     return a + b;
 }
@@ -47,9 +63,10 @@ Addition (double): 30.8
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 How to Decide the Return Type of a Template Function?
-In template functions with multiple types (T1, T2), the return type depends on how the compiler deduces the result type of an expression. Lets break this down.
+In template functions with multiple types (T1, T2), the return type depends on how the compiler deduces the result type of an expression. 
+Lets break this down.
 
-🔹 1. Implicit Return Type (Compiler Deduction)
+✅1. Implicit Return Type (Compiler Deduction)
 template <typename T1, typename T2>
 T1 add(T1 a, T2 b) {
     return a + b;
@@ -59,21 +76,44 @@ Problem: If T1 is int and T2 is double, the result will be truncated (loss of pr
 ✅ Example:
 cout << add(10, 20.5); // Output: 30 (instead of 30.5) because T1 is int
 
-🔹 2. Using decltype to Infer Correct Return Type
+✅2. Using decltype to Infer Correct Return Type
 To return the correct type based on a + b, use decltype(a + b):
+
 template <typename T1, typename T2>
 auto add(T1 a, T2 b) -> decltype(a + b) {
     return a + b;
 }
-decltype(a + b) automatically detects the correct return type.
+decltype(a +b) deduces the type of (a + b) at compile time and uses it as the return type.
 If a is int and b is double, the return type will be double.
 No loss of precision or truncation issues.
 ✅ Example: cout << add(10, 20.5); // Output: 30.5 (correct!)
+
+
+✅3.std::common_type<T1, T2>::type  (C++11 introduced )
+ It determines a common return type based on available types.
+#include <iostream>
+#include <type_traits>
+
+template<typename T1, typename T2>
+typename std::common_type<T1, T2>::type subtract(T1 a, T2 b) {
+    return a - b;
+}
+
+int main() {
+    std::cout << subtract(5.5, 2) << std::endl;  // Common type is double
+    std::cout << subtract(10, 3.6) << std::endl; // Common type is double
+    return 0;
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 2️⃣ Class Templates
 A class template allows defining a class with generic data types.
+
+Common Use Cases for Class Templates
+1.Custom Data Structures:Templates are commonly used to create generic data structures such as LinkedList, Stack, Queue, and BinaryTree.
+2.Type-Safe Containers:Containers like std::vector, std::map, and std::set in the Standard Template Library (STL) are implemented using templates.
 
 🔹 Example: Generic Class for a Pair
 #include <iostream>
@@ -99,10 +139,41 @@ int main() {
 🔹 Output:
 First: 10, Second: 5.5
 First: Hello, Second: A
+
+Class Template with Default Types
+You can specify default template arguments, which are used if no specific type is provided during instantiation.
+
+#include <iostream>
+using namespace std;
+
+template<typename T = int>
+class MyClass {
+private:
+    T data;
+public:
+    MyClass(T value) : data(value) {}
+
+    T getData() { return data; }
+};
+int main() {
+    MyClass<> obj1(10);      // Default type is int
+    MyClass<float> obj2(3.14f);
+
+    cout << "Default type (int): " << obj1.getData() << endl;
+    cout << "Explicit type (float): " << obj2.getData() << endl;
+
+    return 0;
+}
+Output:
+Default type (int): 10
+Explicit type (float): 3.14
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 3️⃣ Variadic Templates (C++11)
 Variadic templates allow passing any number of arguments to a function or class template.
+
 🔹 Example: Variadic Template Function
 #include <iostream>
 using namespace std;
@@ -119,16 +190,42 @@ int main() {
 🔹 Output:
 1 2.5 Hello A
 
+✅What typename... Args  Means?
+used to define a variadic template in the language (introduced in C++11).
+...  The ellipsis (...) signifies that this is a parameter pack, and it can accept multiple (or no) template arguments.
+Args is the name of the parameter pack.
+
+constexpr:
+A compile-time conditional introduced in C++17.
+It ensures that the expression evaluated at compile time.
+
+
+#include <iostream>
+#include <utility> // for std::index_sequence
+using namespace std;
+// Variadic template function
+template <typename... Args>
+void print(Args... args) {
+    // Use a fold expression to iterate over the parameter pack
+    ((cout << args << " "), ...); // Fold expression applies the operation to all arguments
+    cout << endl; // Add a newline at the end
+}
+int main() {
+    print(1, 2.5, "Hello", 'A'); // Passing variadic arguments
+    return 0;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 4️⃣ Template Specialization
 Template specialization allows writing a specific implementation for a particular type.
+Full specialization allows writing a custom, type-specific implementation for a template.
 
 #include <iostream>
 using namespace std;
 // Generic Template Function
-template <typename T>
-void print(T value) {            // Takes 1 Argument
+template <typename T>  //primary template for print.
+void print(T value) {         
     cout << "Generic Value: " << value << endl;
 }
 // Full Specialization for string
@@ -146,6 +243,8 @@ int main() {
 template <> → This indicates that the function is a full specialization of a previously defined function template. 
 The empty angle brackets (<>) mean that no additional template parameter is being introduced.
 void print<string>(string value) → This defines a special version of the print function specifically for the string type.
+
+A full specialization must match exactly the structure of the primary template.
 Primary Template and Full Specialization Must Have the Same Number of Arguments.
 
 
@@ -157,47 +256,63 @@ If the compiler does not find a primary template print<T>, it won’t know what 
 
 🔹 Example: Specialized Template for 
 #include <iostream>
+using namespace std;
+
+template <typename T>     // Generic template
+class Printer {
+public:
+    void print(T value) {
+        cout << "General template: " << value << endl;
+    }
+};
+template <>   // Full specialization for type `int`
+class Printer<int> {
+public:
+    void print(int value) {
+        cout << "Specialized for int: " << value << endl;
+    }
+};
+int main() {
+    Printer<double> obj1;  
+    obj1.print(3.14);  // Calls generic template
+
+    Printer<int> obj2;  
+    obj2.print(42);  // Calls specialized template
+    return 0;
+}
+
+
+#include <iostream>
 #include <string>
 using namespace std;
 
-template <typename T1,typename T2>
+template <typename T1, typename T2>
 class Printer {
 public:
-    static void print(T1 value1,T2 value2) {
-        cout << "Value: " << value1+value2 << endl;
-    }
-};
-// Specialized version for std::string
-template <> 
-class Printer<string> {      // this specialization applies ONLY when T = string.
-public:
-    static void print(string value) {
-        cout << "String Value: " << value << endl;
+    static void print(T1 value1, T2 value2) {
+        cout << "Value: " << value1 + value2 << endl;
     }
 };
 
+// Specialized version when T1 = string and T2 = string
+template <>
+class Printer<string, string> {  // Now matches the structure of the primary template
+public:
+    static void print(string value1, string value2) {
+        cout << "Concatenated String Value: " << value1 + value2 << endl;
+    }
+};
 int main() {
-    Printer<int>::print(10,20);       // Calls the generic template
-    Printer<double>::print(10.5);  // Calls the generic template
-    Printer<string>::print("Hello"); // Calls the specialized version
+    Printer<int, int>::print(10, 20);       // Calls the generic template
+    Printer<double, double>::print(10.5, 20.5); // Calls the generic template
+    Printer<string, string>::print("Hello", " World"); // Calls the specialized version
 
     return 0;
 }
 🔹 Output:
-Value: 10
-Value: 10.5
-String Value: Hello
-
-Explanation:
-1️⃣ template <>
-This declares a template specialization.
-The empty angle brackets <> mean this is a full specialization, not a generic template.
-Unlike normal templates (template <typename T>), here we don’t have a generic type because we are specializing for a specific type (string).
-
-2️⃣ class Printer<string>
-class Printer<string> {
-This defines a specialized version of the Printer class only for string (which is std::string).
-Normally, templates allow us to use Printer<T> for different data types (int, double, etc.), but this is a special case that only applies when T = string.
+Value: 30
+Value: 31
+Concatenated String Value: Hello World
 
 /* This code will not work ->  
 
@@ -223,6 +338,7 @@ Without a primary template, the compiler does not know what Printer<T> is for ot
 
 */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 5️⃣ Template Non-Type Parameters
 Templates can also take constant values as parameters.
 
@@ -267,8 +383,8 @@ Function Template Specialization – Specializes a function template for a speci
 Member Function Specialization – Specializes a specific member function of a template class.
 Variable Template Specialization (C++14) – Specializes template variables.
 
-2. Full Specialization
-Full specialization completely overrides the general template for a particular type.
+2. Full Specialization:
+Full specialization completely overrides the primary template for a particular type.
 
 📌 Example: Full Specialization of a Class Template
 #include <iostream>
@@ -321,7 +437,6 @@ class Pair<T, T> {
 public:
     void show() { cout << "Partial specialization: Same type" << endl; }
 };
-
 int main() {
     Pair<int, double> obj1;
     obj1.show();  // Calls general template
@@ -442,8 +557,30 @@ Type manipulations (type traits, type transformations)
 Conditional branching (similar to if-else, but at compile time)
 Recursion-based loops (no actual loops, recursion is used)
 
-2️⃣ Basic Example of Template Metaprogramming
-Here’s a compile-time factorial calculation using TMP.
+
+Example: Here’s a compile-time factorial calculation using TMP.
+
+#include <iostream>
+using namespace std;
+
+// Primary template function for factorial computation
+template <int N>
+constexpr int Factorial() {
+    return N * Factorial<N - 1>();
+}
+
+// Specialization for the base case
+template <>
+constexpr int Factorial<0>() {
+    return 1;
+}
+int main() {
+    // Compute Factorial of 5
+    cout << "Factorial of 5: " << Factorial<5>() << endl;
+    return 0;
+}
+
+
 
 #include <iostream>
 using namespace std;
@@ -461,7 +598,9 @@ int main() {
 }
 ✅ Output:
 ✔ Factorial is computed at compile time, so there is no runtime overhead.
+
 //-------------------------------------------------------------------------------------------------------------
+
 #include <iostream>
 using namespace std;
 // Primary template for factorial computation
