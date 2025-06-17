@@ -1,17 +1,5 @@
-//what are design principles?? why design principle??
-
-✅What is Creational Design Pattern?
-Creational design patterns are a category of design patterns in software development that generally focus on the process of object creation. 
-They ensure that the creation of objects is flexible, reusable, and scalable while hiding the object creation logic from the client code.
 
 
-✅Key Benefits of Creational Design Patterns:
-Encapsulation of Object Creation: Hides the details of how objects are created, providing flexibility to change the creation process later.
-Decoupling: Decouples the client code from the specific classes it uses, allowing the code to work with abstractions rather than concrete implementations.
-Scalability: Enables the system to handle complex object creation logic efficiently.
-Code Reusability: Promotes reusable and modular object creation logic.
-
-///-------------------------    Factory Method Design Pattern   ------------------------------------------------
 
 
 ✅The Factory Method Design Pattern is part of the Creational Design Patterns family. 
@@ -57,18 +45,18 @@ public:
 class TransportFactory {
 public:
     virtual ~TransportFactory() {}
-    virtual std::unique_ptr<Transport> createTransport() const = 0; // Factory Method
+    virtual std::unique_ptr<Transport> createTransport_object() const = 0; // Factory Method
 };
 // Step 4: Implement Concrete Creators (Factories)
 class CarFactory : public TransportFactory {
 public:
-    std::unique_ptr<Transport> createTransport() const override {
+    std::unique_ptr<Transport> ccreateTransport_object() const override {
         return std::make_unique<Car>(); // Creates a Car
     }
 };
 class BoatFactory : public TransportFactory {
 public:
-    std::unique_ptr<Transport> createTransport() const override {
+    std::unique_ptr<Transport> createTransport_object() const override {
         return std::make_unique<Boat>(); // Creates a Boat
     }
 };
@@ -76,7 +64,7 @@ public:
 void clientCode(const TransportFactory& factory) {
     // The client does not know which specific transport it deals with.
     // It uses the factory to create the product.
-    auto transport = factory.createTransport();
+    auto transport = factory.createTransport_object();
     transport->deliver();
 }
 // Main Function
