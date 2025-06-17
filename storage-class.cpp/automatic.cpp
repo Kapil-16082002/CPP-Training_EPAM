@@ -9,8 +9,8 @@ Mutable (mutable) (specific to C++)
 
 1.Automatic Storage Class-
 The auto storage class is the default storage class for local variables in C. 
-Memory is allocated when the variable is declared and deallocated when it goes out of scope.
-It is only accessible within the function or block in which it is declared.
+Memory: Memory is allocated when the variable is declared and deallocated when it goes out of scope.
+Scope: It is only accessible within the function or block in which it is declared.
 
 These variables are stored in the stack memory and have automatic duration.
 
