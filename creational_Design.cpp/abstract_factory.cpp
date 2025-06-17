@@ -1,11 +1,11 @@
 
-The Factory Design Pattern and the Abstract Factory Design Pattern are both part of the Creational Design Patterns that deal with object creation processes.
+✅The Factory Design Pattern and the Abstract Factory Design Pattern are both part of the Creational Design Patterns that deal with object creation processes.
 
 1. Factory Method Design Pattern
 The Factory Method Design Pattern provides a way to create objects using a single factory method, where the subclasses determine the type of object to create. 
 It focuses on one product type and allows the creation of variations of that product.
 
-Key Characteristics:
+✅Key Characteristics:
 It aims to create one type of object or class of products at a time.
 The factory method is usually implemented in an abstract class or interface, while the subclasses implement the logic to decide which specific object to instantiate.
 Client code only calls the factory method and doesn't directly use new to create objects.
