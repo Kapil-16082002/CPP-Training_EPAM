@@ -96,3 +96,13 @@ Internally, the C runtime (crt0.o) is responsible for setting up the environment
 3.Calls main().
 4.Program executes.
 5.Returns an exit code (return 0;).
+
+.cpp file -->(preprocessing) ----> .i file----->> (compiler)------>.s file(assembly language file)-------->>>
+
+------->(assembler)--------.... .obj file ------>( .linker )-------> .exe file ----->OS load into memory -----> above steps
+
+
+Preprocessed file (.i)	
+Compilation	Assembly file (.s)
+Assembly	Object file (.o)	
+Linking	Executable file (.exe)
