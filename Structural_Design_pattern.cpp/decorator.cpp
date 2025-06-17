@@ -15,7 +15,7 @@ Proxy Pattern
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ✅Decorator Design Pattern in C++:
-The Decorator Design Pattern is a structural design pattern that allows behavior or responsibilities to be dynamically added to an object, without altering its structure, by wrapping it in decorator objects. 
+The Decorator Design Pattern is a structural design pattern that allows functionalities(behavior) or responsibilities to be dynamically added to an object, without altering its structure, by wrapping it in decorator objects. 
 The decorator pattern follows the principle of composition instead of inheritance for extending functionality.
 
 When to Use the Decorator Pattern:
@@ -103,7 +103,6 @@ public:
     }
 };
 // *** STEP 4: Concrete Decorators ***
-
 // Decorator for Cheese
 class CheeseDecorator : public PizzaDecorator {
 public:
@@ -145,7 +144,6 @@ public:
         return decoratedPizza->getCost() + 1.0; // Add cost of Olives
     }
 };
-
 int main() {
     // Start with a plain pizza
     Pizza* plainPizza = new PlainPizza();
