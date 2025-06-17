@@ -1,10 +1,15 @@
-The register storage class is used to suggest that a variable should be stored in the processor's register instead of RAM.
+✅The register storage class is used to suggest that a variable should be stored in the processor's register instead of RAM.
 Because Accessing register variable is much faster than accessing variables stored in RAM
+
+✅Why register Variables Cannot Be Global:
+A register variable cannot have external linkage, because CPU registers only exist at runtime for specific active functions, so their scope is tied to the function in which they are declared.
+
 
 ✅ Characteristics of the register Storage Class
 The register storage class has unique properties:
 Scope:
-Same as a normal automatic (auto) variable, i.e., block scope.
+
+Same as a normal automatic (auto) variable, i.e.,function or block scope.
 
 Lifetime:
 Exists only as long as the block/function in which it is defined is active (automatic storage duration).
