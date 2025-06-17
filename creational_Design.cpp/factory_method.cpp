@@ -64,7 +64,7 @@ public:
 void clientCode(const TransportFactory& factory) {
     // The client does not know which specific transport it deals with.
     // It uses the factory to create the product.
-    auto transport = factory.createTransport_object();
+    auto transport = factory.createTransport_object(); // will return any transport
     transport->deliver();
 }
 // Main Function
