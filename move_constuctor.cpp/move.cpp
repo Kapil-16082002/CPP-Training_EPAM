@@ -112,9 +112,6 @@ Essential for modern C++: Used in std::vector, std::string, smart pointers, etc.
 
 ✅ 1. Move Semantics with std::vector
 🔧 Code Example:
-cpp
-Copy
-Edit
 #include <iostream>
 #include <vector>
 #include <string>
@@ -136,9 +133,7 @@ int main() {
 }
 🔍 What's Happening:
 vec1's internal data is moved into vec2.
-
 vec1 is now empty (but valid).
-
 This avoids a deep copy of all strings.
 
 ✅ 2. Move Semantics in a Class Containing std::vector
@@ -147,7 +142,6 @@ Let’s say you have a custom class that holds a vector:
 class FruitBasket {
 public:
     std::vector<std::string> fruits;
-
     FruitBasket(std::vector<std::string> f) : fruits(std::move(f)) {
         std::cout << "Constructor with move\n";
     }
