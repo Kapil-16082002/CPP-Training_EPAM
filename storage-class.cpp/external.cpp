@@ -121,10 +121,12 @@ because the function has internal linkage and is not visible outside file1.cpp.
 
 How to Solve the Problem?
 
-In C++, a static function has internal linkage, meaning it is restricted to the file where it is declared and defined. Specifically, when a function is declared as static, it cannot be accessed from other files. This behavior makes static functions ideal for creating private, file-local functions that are not exposed as part of a global API.
+In C++, a static function has internal linkage, meaning it is restricted to the file where it is declared and defined. Specifically, when a function is declared as static, it cannot be accessed from other files. 
+This behavior makes static functions ideal for creating private, file-local functions that are not exposed as part of a global API.
 
 Key Point:
-A static function in one file cannot directly be accessed from another file. This is by design to support encapsulation and limit scope to the file where the function is declared.
+A static function in one file cannot directly be accessed from another file. 
+This is by design to support encapsulation and limit scope to the file where the function is declared.
 
 Problem:
 If you try to access a static function declared in file1.cpp from file2.cpp, you will get a linker error because the function has internal linkage and is not visible outside file1.cpp.
@@ -132,8 +134,6 @@ If you try to access a static function declared in file1.cpp from file2.cpp, you
 Here’s an example of what happens:
 
 file1.cpp:
-cpp
-
 
 #include <iostream>
 
@@ -141,8 +141,6 @@ static void myStaticFunction() {
     std::cout << "Static function in file1.cpp" << std::endl;
 }
 file2.cpp:
-cpp
-
 
 extern void myStaticFunction();  // This is invalid and will cause a linker error
 
@@ -153,7 +151,8 @@ int main() {
 The attempt to call myStaticFunction() in file2.cpp will fail because myStaticFunction() has internal linkage and is not visible in file2.cpp.
 
 How to Solve the Problem?
-Since the static keyword inherently restricts the visibility of the function to the file where it is defined, there are no workarounds to directly access it from another file. If you genuinely need to use this function in multiple files, you must remove the static keyword so that the function has external linkage. Alternatively, you can provide an interface or abstraction to achieve what you are trying to do.
+Since the static keyword inherently restricts the visibility of the function to the file where it is defined, there are no workarounds to directly access it from another file. 
+If you genuinely need to use this function in multiple files, you must remove the static keyword so that the function has external linkage. Alternatively, you can provide an interface or abstraction to achieve what you are trying to do.
 
 Here are a few ways to accomplish this:
 
@@ -298,7 +297,7 @@ const int counter = 100;  // Global constant (cannot be modified)
 #include <iostream>
 using namespace std;
 
-extern const int counter;  // Read-only access
+extern const int counter;  // Read-only access, but can not modified.
 int main() {
     cout << "Counter value: " << counter << endl;
     // counter++;  // ❌ Error: Cannot modify a const variable
