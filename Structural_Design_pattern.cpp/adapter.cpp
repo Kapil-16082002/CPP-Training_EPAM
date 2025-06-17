@@ -1,3 +1,16 @@
+✅Structural Design Patterns in C++:
+Structural Design Patterns are design patterns that deal with the composition of objects and classes to form larger and more functional structures. 
+Their purpose is to simplify relationships between entities and make the code more maintainable, reusable, and organized.
+
+List of Common Structural Design Patterns:
+Adapter Pattern
+Bridge Pattern
+Composite Pattern
+Decorator Pattern
+Facade Pattern
+Flyweight Pattern
+Proxy Pattern
+
 ✅Adapter Design Pattern :
 The Adapter Design Pattern is a structural pattern that allows two incompatible interfaces to work together. 
 It acts as a bridge between two systems by converting one interface into another that the client expects. 
