@@ -1,6 +1,7 @@
 union in C: 
 A union in C is a special data type that allows storing different types of data in the same memory location. 
 Unlike structures, where each member gets separate memory, all members of a union share the same memory.
+//struct and union are user-defined data types in both C and C++
 
 A union is a user-defined data type similar to a structure, but only one of its members can hold a value at a time 
  because they share the same memory location.
