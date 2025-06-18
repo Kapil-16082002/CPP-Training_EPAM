@@ -102,7 +102,6 @@ struct Student {
     int age;
     struct Address *addr;  // Pointer to another structure
 };
-
 int main() {
     struct Student s1;
     s1.name = (char *)malloc(50 * sizeof(char)); // Allocate memory for name 
