@@ -20,7 +20,6 @@ struct Student {
     int age;
     float marks;
 };
-
 int main() {
     struct Student s1; // Declare and initialize structure
     strcpy(s1.name, "Kapil");  // Assign values
