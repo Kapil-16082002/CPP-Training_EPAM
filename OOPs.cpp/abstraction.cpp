@@ -1,6 +1,5 @@
 ✅#Abstraction:
-It is the process of hiding the complex implementation details and showing only the essential or necessary 
- information of an object. 
+It is the process of hiding the complex implementation details and showing only the essential or necessary information of an object. 
 
 how does abstraction differ from encapsulation?
 
