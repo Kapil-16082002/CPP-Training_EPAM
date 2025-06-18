@@ -1,7 +1,7 @@
 #Padding_in_Structures -
-   Padding is extra unused bytes added between structure members to align them to memory boundaries (usually 2, 4, or 8 bytes).
-    The goal is to make memory access faster on some architectures.
-    The size of a structure may be larger than the sum of its members due to padding.
+Padding is extra unused bytes added to the structure members to align them to memory boundaries (usually 2, 4, or 8 bytes).
+The goal is to make memory access faster on some architectures.
+The size of a structure may be larger than the sum of its members due to padding.
 
 #Example: Structure with #Padding
 #include <stdio.h>
