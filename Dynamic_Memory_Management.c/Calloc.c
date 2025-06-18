@@ -129,6 +129,7 @@ int main() {
 Output:
 String: Hello, calloc!
 ✅ Key Takeaway: calloc() ensures all characters are initialized to \0, making it ideal for dynamic strings.
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 5. Using calloc() for a Structure
 #include <stdio.h>
