@@ -17,9 +17,21 @@ int main() {
 Output
 Pointer is NULL
 Use Case: Prevents dangling pointers and is useful in error handling.
+/*NULL (Pre-C++11):
+Type: It is typically defined as an integer constant (usually 0).
+Limitation: Can lead to ambiguity because 0 could be interpreted as an integer or a null pointer constant.
+It was used in C and early versions of C++ for null pointer representation.
+2. nullptr (Introduced in C++11):
+Type: It is a keyword that represents a null pointer constant (of type std::nullptr_t).
+Advantage: Eliminates ambiguity by specifically denoting a null pointer rather than an integer.
 
- NULL: NULL is a macro that represents a null pointer constant.
-       NULL is a pointer constant with a value of zero.
+Key Difference in Example:
+
+void func(int x) { std::cout << "Integer function\n"; }
+void func(char* x) { std::cout << "Pointer function\n"; }
+
+func(NULL);    // Ambiguous: `NULL` is treated as `0`, could call either version.
+func(nullptr); // Unambiguous: Calls the pointer version.  */
       
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
