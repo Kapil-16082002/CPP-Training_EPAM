@@ -1,4 +1,4 @@
-A memory leak occurs when a program continuously allocates memory dynamically  without releasing it, leading to increased memory usage over time. 
+✅A memory leak occurs when a program continuously allocates memory dynamically without releasing it, leading to increased memory usage over time. 
 This can cause performance degradation and even crashes if the system runs out of memory.
 
 Example: Memory Leak in C
@@ -59,7 +59,7 @@ void memoryLeakFixed() {
 
 //---------------------------------------------------------------------------------------------------------------
 
-Memory Leak Using Dangling Pointer in C++
+✅Memory Leak Using Dangling Pointer in C++
 A dangling pointer occurs when a pointer still refers to memory that has already been deallocated. 
 If the memory is not properly managed, it can cause undefined behavior, including memory leaks.
 
