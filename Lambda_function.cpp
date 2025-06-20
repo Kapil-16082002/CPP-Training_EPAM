@@ -23,7 +23,7 @@ int main() {
 ✅ Output:
 Sum: 8
 ✔ The lambda behaves like a function but is defined inline.
-
+//auto keyword allows the type of sum to be deduced automatically by the compiler.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 3️⃣ Capturing Variables in Lambda
@@ -66,6 +66,28 @@ int main() {
 Modified x: 15
 ✔ Lambda modifies the actual variable because it was captured by reference.
 
+#include <iostream>
+using namespace std
+int x = 10;
+int main() {
+    auto modifyX = []() { x += 5; };  //  ‘x’ is captured
+    modifyX();  
+    cout << "Modified x: " << x << endl;  
+    return 0;
+}
+output: 15 , x is modifiable
+
+
+
+#include <iostream>
+using namespace std;
+int main() {
+    int x = 10;
+    auto modifyX = []() { x += 5; }; //  error: ‘x’ is not captured 
+    modifyX();  
+    cout << "Modified x: " << x << endl;  
+    return 0;
+}   
 //---------------------------------------------------------------------------------------------------------------
 🔹 3. Mixed Capture ([=, &y])
 Some variables by value, some by reference.
