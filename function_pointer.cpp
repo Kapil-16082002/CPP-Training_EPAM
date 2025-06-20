@@ -318,7 +318,6 @@ Output:
 Number: 42
 In this case, the std::function<void(int)> wraps a function taking an integer and returning void.
 
-
 3. Wrapping a Lambda Expression
 Lambda functions (introduced in C++11) are anonymous functions that are often concise and inline.
 
