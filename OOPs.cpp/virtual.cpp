@@ -8,7 +8,8 @@ When a class contains virtual functions:
 Each class has its own VTable (if it contains virtual functions), and all objects of that class share the same VTable.
 
 NOTE:
-The VTable allows the program to decide which function implementation to execute dynamically at runtime, rather than determining the function to be called at compile time. This is central to achieving runtime polymorphism.
+The VTable allows the program to decide which function implementation to execute dynamically at runtime, rather than determining the function to be called at compile time. 
+This is central to achieving runtime polymorphism.
 
 
 ✅Virtual Pointer (VPTR)
