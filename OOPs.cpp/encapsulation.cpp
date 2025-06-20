@@ -16,7 +16,6 @@ In this case, he is not allowed to directly access the data of the sales section
 He will first have to contact some other officer in the sales section and then request him to give the particular data.
 This is what Encapsulation is. Here the data of the sales section and the employees that can manipulate them are wrapped under a single name “sales section”. 
 */
-
 Key Features of Encapsulation:
 1.Data Hiding: The internal state of an object is hidden from outside interference and misuse. 
   Only the class's own methods can directly access and modify its fields.
