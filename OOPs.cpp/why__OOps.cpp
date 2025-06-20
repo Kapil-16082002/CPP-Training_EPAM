@@ -10,7 +10,7 @@ to interact with the internal states of an object, improving security and reduci
 #3.Real world Mapping -> OOP mimics real world entities and have relationships by using objects,
 For instance, an "Animal" class can have different derived classes like "Dog" and "Cat," having specific behaviors 
 but following a general pattern.
-#4.Abstraction -> OOPs hide complex implementation(un-necessary ) details  from user and shows only  necessary details.
+#4.Abstraction -> OOPs hide complex implementation(un-necessary ) details  from user and shows only necessary details.
 
 #Difference between OOps and Traditional(procedural) Programming-
 #1.
