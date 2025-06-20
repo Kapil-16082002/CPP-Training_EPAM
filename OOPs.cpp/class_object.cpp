@@ -5,7 +5,7 @@
 2. A class is a blueprint or template for creating objects. 
 
 ✅# OBJECTS
-1. An object is an instance of a class. It holds the actual data and can use the methods defined by the class.
+1. An object is an instance of a class. It holds the actual data and can use the methods and variables defined by the class.
 2. Multiple objects can be created from the same class, each with different data.
 
 Objects represent real-world entities with:
@@ -166,7 +166,7 @@ Slower to allocate/deallocate than stack objects due to heap overhead.
 A static data member is a class variable that is shared among all objects of the class.
 It belongs to the class, not individual objects.
 It is declared using the static keyword inside the class but must be defined outside the class.
-It gets memory allocation only once and retains its value across all objects.
+It gets memory allocation only once and retains(persists) its value across all objects.
 
 6.1 Compile-time Input
 class Car {
