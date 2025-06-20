@@ -6,14 +6,14 @@ we can define polymorphism as the ability of a message to be displayed in more t
 
 Polymorphism in C++ is mainly divided into two types:
 
-1.Compile-time Polymorphism (also known as Static Polymorphism) or (Static Binding)
+1.Compile-time Polymorphism (also known as Static Polymorphism) or (Static or early Binding)
 In compile-time polymorphism, the function to be called is determined at compile time. 
 This is achieved by function overloading and operator overloading.
 
     1.Function Overloading
     2.Operator Overloading,
 
-2.Run-time Polymorphism (also known as Dynamic Polymorphism)    or (Dynamic Binding)
+2.Run-time Polymorphism (also known as Dynamic Polymorphism)    or (Dynamic or late Binding)
 In Run-time polymorphism, the function to be called is determined at run time. 
     1.Function Overriding
     2.Virtual Function
@@ -161,6 +161,51 @@ int main(){
 Output
 12 + i9
 
+/* 
+#include <iostream>
+using namespace std;
+
+class Box {
+private:
+    int length;
+    int breadth;
+public:
+    // Constructor to initialize length and breadth
+    Box(int l = 0, int b = 0) : length(l), breadth(b) {}
+
+    // Function to overload the '+' operator
+    Box operator+(const Box& b) {
+        Box temp;
+        temp.length = length + b.length; 
+        temp.breadth = breadth + b.breadth; 
+        return temp; // Returning the result as a new object
+    }
+
+    // Function to display the dimensions of the box
+    void display() {
+        cout << "Length: " << length << ", Breadth: " << breadth << endl;
+    }
+};
+
+int main() {
+    Box box1(5, 10); // Create first box
+    Box box2(3, 7);  // Create second box
+
+    Box box3 = box1 + box2; // Add two boxes using overloaded '+' operator
+
+    cout << "Box 1: ";
+    box1.display(); // Display Box 1
+
+    cout << "Box 2: ";
+    box2.display(); // Display Box 2
+
+    cout << "Resultant Box (Box1 + Box2): ";
+    box3.display(); // Display the result of the addition
+
+    return 0;
+}
+
+*/
 #Difference between Operator Functions and Normal Functions
 Operator functions are the same as normal functions. 
 The only differences are, that the name of an operator function is always the operator keyword followed
@@ -184,10 +229,10 @@ Relational	                             >, < , = =, <=, >=
 But, among them, there are some operators that cannot be overloaded. They are
 
 1.Scope resolution operator (::)                           
-3.Class member access operators i.e  *(pointer)  .(dot)
-5.Conditional operator(?:)
-6.Sizeof operator  sizeof()
-7.typeid Operator
+2.Class member access operators i.e  *(pointer)  .(dot)
+3.Conditional operator(?:)
+4.Sizeof operator  sizeof()
+5.typeid Operator
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #2. Run-Time Polymorphism:
 
