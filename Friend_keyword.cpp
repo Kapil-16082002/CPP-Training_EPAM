@@ -78,7 +78,6 @@ public:
     Engine(int hp) : horsepower(hp) {}
     friend void Car::showPower(Engine e); // Friend member function of Car
 };
-
 class Car {
 public:
     void showPower(Engine e) {
