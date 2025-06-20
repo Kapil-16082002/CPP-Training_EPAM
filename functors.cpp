@@ -11,7 +11,8 @@ The Execution of Functors Happens at Runtime:
 Functors are just objects, and the invocation is resolved like any other function call during the execution of the program.
 
 2.Functors Are Defined at Compile-Time:
-The creation of the functor object and its type must be known at compile-time, as the compiler needs to instantiate the class and ensure type safety. For example:
+The creation of the functor object and its type must be known at compile-time, as the compiler needs to instantiate the class and ensure type safety. 
+For example:
 struct Multiply {
     int operator()(int x, int y) const {
         return x * y;
