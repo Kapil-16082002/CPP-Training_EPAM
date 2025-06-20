@@ -78,6 +78,7 @@ int main() {
     std::cout << "x: " << x << ", y: " << y << std::endl;
     return 0;
 }
+
 ✅ Characteristics:
 No identifiable memory address.
 Cannot be assigned another value (because it is temporary).
