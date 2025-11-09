@@ -1,5 +1,6 @@
+
 What is realloc()?
-realloc() (reallocate) is used to resize previously allocated memory dynamically. 
+realloc() (reallocate) is used to resize previously allocated memory dynamically.
 It allows us to expand or shrink memory without losing the existing data.
 
 Syntax of realloc() in C
@@ -16,19 +17,17 @@ How realloc() Works?
     If a new memory block is allocated, the old data is copied.
 
 /* 
-If the current block can accommodate the new size:
-
+1.If the current block can accommodate the new size:
 The memory block is resized in place, and the same pointer is returned.
-If the current block cannot accommodate the new size:
 
+2.If the current block cannot accommodate the new size:
 realloc allocates a new memory block large enough to satisfy the request.
 It copies the contents from the old block to the new block (up to the minimum of the old and new sizes).
 The old block is freed, and the new block's pointer is returned.
-If realloc fails (e.g., insufficient memory to satisfy the request):
 
+3.If realloc fails (e.g., insufficient memory to satisfy the request):
 It returns NULL.
 The original memory block remains unchanged and must eventually be freed manually (to prevent memory leaks).
-
 */    
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
