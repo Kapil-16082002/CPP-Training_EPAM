@@ -59,11 +59,13 @@ void memoryLeakFixed() {
 
 //---------------------------------------------------------------------------------------------------------------
 
-✅Memory Leak Using Dangling Pointer in C++
-A dangling pointer occurs when a pointer still refers to memory that has already been deallocated. 
-If the memory is not properly managed, it can cause undefined behavior, including memory leaks.
+✅ Undefine behavior or program crash Using Dangling Pointer in C++
+A dangling pointer is a pointer that still refers to memory that has already been deallocated. 
+If the memory is not properly managed, it can cause undefined behavior.
+👉 In simple words:
+The pointer still holds an old address, but that memory is no longer valid.
 
-Example 1: Dangling Pointer Causing Memory Leak
+Example 1: Dangling Pointer causing  Undefine behavior or program crash
 #include <iostream>
 void memoryLeak() {
     int* ptr = new int(10);  // Dynamically allocated memory
@@ -187,7 +189,7 @@ If too much memory is swapped, the system starts thrashing, where it spends more
 The program slows down drastically.
 
 ✅System May Crash (Out of Memory - OOM Kill)
-If the program keeps allocating memory and swap space is also exhausted, the OS terminates processes to free memory.
+If the program keeps allocating memory and swap space is also exhausted, the OS will terminate processes to free memory.
 In Linux, the OOM Killer (Out-of-Memory Killer) forcibly stops memory-hogging processes.
 On Windows, the system may freeze or force close applications.
 
