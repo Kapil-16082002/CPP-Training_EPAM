@@ -103,9 +103,9 @@ struct Student {
     struct Address *addr;  // Pointer to another structure
 };
 int main() {
-    struct Student s1;
+    struct Student s1; // static memory for Student
     s1.name = (char *)malloc(50 * sizeof(char)); // Allocate memory for name 
-    s1.addr = (struct Address *)malloc(sizeof(struct Address)); // Allocate memory for address
+    s1.addr = (struct Address *)malloc(sizeof(struct Address)); // dynamic memory for address
     s1.addr->city = (char *)malloc(50 * sizeof(char));
 
     if (s1.name == NULL || s1.addr == NULL || s1.addr->city == NULL) {
