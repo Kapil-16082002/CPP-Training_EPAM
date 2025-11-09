@@ -1,5 +1,5 @@
 union in C: 
-A union in C is a special data type that allows storing different types of data in the same memory location. 
+A union in C is a user-defined data that allows storing different types of data in the same memory location. 
 Unlike structures, where each member gets separate memory, all members of a union share the same memory.
 //struct and union are user-defined data types in both C and C++
 
@@ -129,6 +129,36 @@ Saves memory by not storing both simultaneously.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 🔹 6. Anonymous Union
 An anonymous union doesn’t require a name and can be used without a variable name.
+
+#include <stdio.h>
+// Declare anonymous union globally
+union {
+    int i;
+    float f;
+    char ch;
+};  // No name given
+int main() {
+    i = 10;        // store integer
+    printf("i = %d\n", i);
+
+    f = 12.5;      // store float (overwrites i)
+    printf("f = %.2f\n", f);
+
+    ch = 'K';      // store char (overwrites f)
+    printf("ch = %c\n", ch);
+
+    return 0;
+}
+🧠 Explanation:
+in above code The anonymous union is declared outside main() — this makes it global.
+Its members i, f, and ch are also global variables now.
+You can directly use i, f, or ch inside any function in the same file — no need to prefix with a name.
+
+⚠️ Important Notes:
+Only one anonymous union is allowed at the same scope.
+All members share the same memory (like a normal union).
+Declaring it globally makes all its members global variables, so use carefully to avoid naming conflicts.
+
 
 📌 Example: Anonymous Union
 #include <stdio.h>
