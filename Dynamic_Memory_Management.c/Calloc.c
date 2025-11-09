@@ -1,8 +1,16 @@
 What is calloc()? (Contiguous Allocation)
-calloc()  is a function in C used for dynamic memory allocation. 
+calloc()  is a function in C used for dynamic memory allocation.
+/*Both malloc() and calloc() allocate one continuous block of memory in RAM.
+However:
+malloc() treats that block as raw uninitialized memory.
+calloc() conceptually divides it into N elements (blocks) of equal size and initializes them to 0.
+
+So when we say "calloc() allocates multiple blocks,"
+we mean it logically divides the memory into N parts, not that it allocates N separate physical memory regions.
+*/
 It is similar to malloc(), but with two key differences:
 
-    1.Allocates multiple blocks of memory instead of a single block.
+    1.Allocates multiple blocks of memory instead of a single block(each of equal size).
     2.Initializes all allocated memory to zero (unlike malloc(), which leaves memory uninitialized).
     //It initializes each block with a default value ‘0’.
 Syntax:
@@ -12,7 +20,6 @@ Syntax:
 For Example: 
 ptr = (float*) calloc(25, sizeof(float));
 This statement allocates contiguous space in memory for 25 elements each with the size of the float.
-
 
 
 ✅Key Differences Between malloc and calloc:
@@ -76,7 +83,6 @@ int main() {
         printf("Memory allocation failed\n");
         return 1;
     }
-
     printf("Enter %d numbers:\n", n);
     for (int i = 0; i < n; i++) {
         scanf("%d", &arr[i]);
