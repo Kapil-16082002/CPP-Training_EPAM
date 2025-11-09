@@ -7,6 +7,7 @@ int printf(const char *format, ...);
    format – A string containing text and format specifiers.
 ... (ellipsis) – Represents variable arguments.
 
+
 Number of Arguments in printf()-//////////////////////
 The number of arguments passed to printf() depends on:
    At least one argument is required (the format string).
@@ -53,7 +54,9 @@ Conclusion
 printf() requires at least one argument (the format string).
 The number of additional arguments depends on the format specifiers.
 Theoretically unlimited, but practical limits depend on compiler and system.
+
 /////////////////////////////////////////////////////////////////////////////////////////////////
+
 Return Value of printf() - 
     printf() returns the number of characters printed.
 
@@ -84,6 +87,13 @@ Output:
 324.000000
 Characters Printed:10
 
+//////////////////////////
+
+int count = printf("Hello:%d%d%c%s",1,1,'c',"ka");
+printf("\nCharacters Printed: %d\n", count);
+Output:
+Hello:11cka
+Characters Printed: 11
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Format Specifiers in printf() - 
@@ -92,22 +102,81 @@ Format specifiers define how values should be printed.
 Specifier	      Type	                            Example
 %d / %i	          Integer	                        printf("%d", 10); → 10
 %f	              Float	                            printf("%f", 3.14); → 3.140000 up to 6 decimal places
+%lf          	  Double	                        printf("%lf", 3.14159); // By default, %lf (or %f) prints 6 digits after the decimal point.
+/* 
+Controlling float  Decimal Places — %.nf
+int main(void) {
+    printf("%.0f\n", num);  // No decimal places
+    printf("%.2f\n", num);  // 2 decimal places
+    return 0;
+}
+Control  double Decimal Places — %.nlf
+int main(void) {
+    double pi = 3.14159265358979;
+    printf("%.2lf\n", pi); // 3.14
+    printf("%.5lf\n", pi); //  3.14159
+    printf("%.10lf\n", pi); //  3.1415926536
+    return 0;
+}
+
+Field Width + Precision — %m.nlf
+
+int main(void) {
+    double val = 123.456;
+
+    printf("%10.2lf\n", val);   // total width = 10, 2 decimals   ✅ %10.2lf → right aligned, total width = 10
+    printf("%-10.2lfEnd\n", val); // left aligned                 ✅ %-10.2lf → left aligned
+    return 0;
+}
+Output:   
+        123.46
+123.46    End
+
+
+
+%f vs %lf — Important Difference
+| Function   | `%f`                     | `%lf`                    | Notes                                                                          |
+| ---------- | ------------------------ | ------------------------ | ------------------------------------------------------------------------------ |
+| `printf()` | ✅ Same behavior for both | ✅ Same behavior for both | Because of **default argument promotion** (all `float` values become `double`) |
+| `scanf()`  | ❌ Wrong for double       | ✅ Correct for double     | `scanf("%f", &f)` for `float`, `scanf("%lf", &d)` for `double`                 |
+
+✅ Always use:
+%f for float in scanf
+%lf for double in scanf
+Either %f or %lf in printf (both same)
+*/
 %c	              Character	                        printf("%c", 'A'); → A
 %s	              String	                        printf("%s", "C"); → C
 %hhd	          signed char	1 byte
 
 %u	              Unsigned int	                    printf("%u", 100); → 100
+/* 
+What is unsigned int?
+In C/C++,
+int → can store both positive and negative numbers.
+unsigned int → can store only positive numbers (and zero), but with double the positive range.
+
+✅ %u prints an unsigned int in base 10 (decimal) — without any sign.
+int main(void) {
+    int x = -1;
+    printf("%u\n", x);  //  4294967295 (on 32-bit system)
+}
+
+✅ Explanation:
+-1 in binary (2’s complement, 32-bit) = 11111111 11111111 11111111 11111111
+Interpreted as unsigned, that’s 2^32 - 1 = 4294967295.
+💡 %u doesn’t know about signs — it just prints the bit pattern as an unsigned value.
+*/
 %ld         	  Long int	                        printf("%ld", 123456789L);
 %lld	          long long int	8 bytes
 %llu	          unsigned long long int  8 byte
 %hhu	          unsigned char           1 byte
 %hhd	          signed char	1 byte
-%lf          	  Double	                        printf("%lf", 3.14159);
 %x / %X      	  Hexadecimal	                    printf("%x", 255); → ff
 %o	              Octal	                            printf("%o", 255); → 377
 %p	              Pointer	                        printf("%p", ptr);
 %e / %E	          Scientific notation	            printf("%e", 12345.6); → 1.234560e+04
-%g / %G	          Shortest of %e or %f	            printf("%g", 123.456); → 123.456
+%g / %G	          Shortest of %e or %f	            printf("%g", 123.456000); → 123.456  by default will print 6 significant digits and remove trailing zeros
 %%	              Percent sign	                    printf("%%"); → %
 
 Explanation of Hexadecimal, Octal, and Other Specifiers
@@ -119,8 +188,8 @@ Explanation of Hexadecimal, Octal, and Other Specifiers
 
 %o: Prints the integer in octal (base 8).
     printf("%o", 255); → 377
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-1. %e / %E - Used to print floating-point numbers in scientific (exponential) notation.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+1. %e / %E - Used to print int and floating-point numbers in scientific (exponential) notation.
     The format is:
     %e prints lowercase exponent (e), and %E prints uppercase exponent (E).
     #include <stdio.h>
@@ -140,6 +209,7 @@ Explanation of Hexadecimal, Octal, and Other Specifiers
     %E works the same way, except the e is replaced with E (1.234560E+04).
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 2. %g / %G - Shortest of %e or %f
     Prints the number in the most compact form between:-
         Fixed-point notation (%f)
@@ -161,7 +231,8 @@ Explanation of Hexadecimal, Octal, and Other Specifiers
     Since 123.456 can be fully represented in normal decimal notation, %g chooses %f.
     No scientific notation is needed.
 
-    Example 2 (Large Floating-Point Number)
+
+    Example 2 (Large Floating-Point Number): %g switches to scientific notation for a shorter representation.
     int main() {
         double num = 0.00001234;
         printf("Shortest representation: %g\n", num);// 1.234e-05
@@ -244,7 +315,9 @@ Precision 8: |00000123|
 Explanation:
 %.5d → Ensures at least 5 digits, filling with leading zeros.
 If the number is larger than precision, prints normally.
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 Width & Precision Together
 #include <stdio.h>
 int main() {
@@ -261,7 +334,9 @@ Width 10, Precision 0: |        12|
 Explanation:
 %10.2f → Reserves 10 spaces, rounds to 2 decimal places.
 %10.0f → Reserves 10 spaces, no decimal places.
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 Example: Width & Precision with Integers
 #include <stdio.h>
 int main() {
@@ -283,6 +358,18 @@ Width = 8, so it right-aligns.
 4. Left-Align with - (Minus Sign)
 By default, printf() right-aligns output.
 Use %- to left-align.
+
+/*   
+To find -1 in binary (8-bit):
+
+Start with +1: 00000001
+Invert all bits (1’s complement): 11111110
+Add 1: 11111110
+       +      1 
+
+11111111
+✅ So, **-1 = 11111111**
+*/
 
 
 
