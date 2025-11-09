@@ -5,6 +5,9 @@ malloc() (Memory Allocation) is a function in the C standard library (stdlib.h) 
 It allocates a specified number of bytes in the heap and returns a pointer to the allocated memory.
 malloc() allocates raw, uninitialized, contiguous memory from the heap.
 
+Allocates a single block of memory of size n * sizeof(int).
+Memory is not initialized — contains garbage values.
+
 Syntax of malloc() in C
 ptr = (cast-type*) malloc(byte-size)
 
@@ -33,7 +36,7 @@ without requiring the programmer to specify an explicit cast.
 
 2. In C++:
 Casting the return value of malloc() is mandatory because C++ does not allow implicit conversion from void* to another pointer type.
-Also C++ isquite  stricter about type safety compared to C.
+Also C++ is quite stricter about type safety compared to C.
 C++ will not allow direct assignment of a void* to a pointer of any other type.
 Example:
 int* ptr = (int*)malloc(sizeof(int));  // Explicit cast required in C++
@@ -47,7 +50,7 @@ std::vector, std::unique_ptr, std::shared_ptr: These Standard Library features h
 ✅Common Problems with Heap Memory: malloc , calloc, new etc...
 1.Memory Leaks:
 If you forget to free() memory after use, the allocated memory remains inaccessible, wasting resources.
-int* ptr = (int*) malloc(10 * sizeof(int)); 
+int* ptr = (int*) malloc(10 * sizeof(int));
 ptr = NULL; // Memory leak: Lost reference to the allocated memory
 
 2.Double-Free Errors:
@@ -97,7 +100,9 @@ int main(){
 malloc() allocates uninitialized memory.
 Always check if malloc() returns NULL.
 Use free(ptr) to prevent memory leaks.
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 1. Allocating Memory for an Integer
 #include <stdio.h>
 #include <stdlib.h>
@@ -154,7 +159,7 @@ int main() {
 Output:
 Array Elements:
 10 20 30 40 50
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 4. Allocating Memory for a Character Array (String)
 #include <stdio.h>
 #include <stdlib.h>
