@@ -1,5 +1,5 @@
 #Padding_in_Structures -
-Padding is extra unused bytes added to the structure members to align them to memory boundaries (usually 2, 4, or 8 bytes).
+Padding is extra unused bytes added to the structure members to align them to the memory boundaries (usually 2, 4, or 8 bytes).
 The goal is to make memory access faster on some architectures.
 The size of a structure may be larger than the sum of its members due to padding.
 
