@@ -1,3 +1,4 @@
+
 The size of pointers in C is - 
 This size of pointers in C only depends on the system architecture.
     8 bytes for a 64-bit System.
