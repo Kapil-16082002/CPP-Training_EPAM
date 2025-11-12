@@ -9,7 +9,6 @@ using namespace std;
 void modifyValue(int x) {  // x is a copy of the actual argument
     x = x + 10;  // Modifies the local copy, not the original
 }
-
 int main() {
     int num = 5;
     modifyValue(num);  // Passes a copy of num
@@ -20,7 +19,7 @@ Output: 5
 Value of num after function call: 5
 
 2. Call by Reference
-In Call by Reference, the function receives a reference to the actual argument.
+In Call by Reference, a reference of the actual argument is passed to the function.
 Any changes made inside the function also affect the original variable.
 Avoids unnecessary copying, making it more efficient.
 Example of Call by Reference:
