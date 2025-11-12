@@ -1,14 +1,16 @@
 
-The size of pointers in C is - 
+✅A pointer is a variable that stores(holds) the memory address of another variable.
+
+The size of pointers in C is : 
 This size of pointers in C only depends on the system architecture.
     8 bytes for a 64-bit System.
     4 bytes for a 32-bit System.
 	On a 32-bit system, memory addresses are 4 bytes (32 bits), so all pointers are 4 bytes.
 	On a 64-bit system, memory addresses are 8 bytes (64 bits), so all pointers are 8 bytes.
 	
-	The reason for the same size is that the pointers store the memory addresses, no matter what type they are. 
-	As the space required to store the addresses of the different memory locations is the same, 
-	the memory required by one pointer type will be equal to the memory required by other pointer types.
+The reason for the same size is that the pointers store the memory addresses, no matter what type they are.
+As the space required to store the addresses of the different memory locations is the same, 
+  the memory required by one pointer type will be equal to the memory required by other pointer types.
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -61,13 +63,26 @@ int main()
 	 pp=(char*)p; // typecasting required(because PP is pointer to character and P is pointer to integer)
 	 cout<<"value of pp  "<<(int)*pp<<endl; // output: 15 , 15 =00001111
 	 cout<<"Adress of pp  "<<(void*)pp<<endl;//  by (void*) memory address will be printed otherwise nothing will be printed
-	1025=00000000  00000000  00000100  00000001 Output:1
-	15= 00000000  00000000  00000000  00001111 Output:15
+	if a= 1025=00000000  00000000  00000100  00000001 Output:1
+	if a= 15= 00000000  00000000  00000000  00001111 Output:15
 	char can store upto 1 byte of memory i.e answer will be 00000001=1
-	/////////////////////////////////////////////////////////////////////////////////////////
+
+	////////////////////////////////////////////////////
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/////////////////////////////////////
 	Void pointer(Genric Pointer)-
-    A void pointer is a general-purpose pointer that can hold the address of any data type, 
-    but it is not associated with any data type.
+    A void pointer is a general-purpose pointer that can hold the address of any data type, but it is not associated with any data type.
 	int a=15;
 	int *p=&a;
 	cout<<"value of p  "<<*p<<endl;
@@ -90,17 +105,19 @@ int main()
 	int **q=&p;
 	int ***r=&q;
 	cout<<"p  Adress of  a "<<p<<endl;
-	cout<<"*p value of   a  "<<*p<<endl;// *p holds value of a
-
-	cout<<"*q  address of a  "<<*q<<endl;// *q holds address of a
+	cout<<"*p value of   a  "<<*p<<endl;// *p will give value of a
+	
+    cout<<"&*q  address of p  "<<&*q<<endl;// &*q holds address of p
+    cout<<"q  address of p  "<<q<<endl;// q holds address of p
+	cout<<"*q  address of a  "<<*q<<endl;// *q holds address of a i.e value inside p is address of a
 	cout<<"&p  Address of p  "<<&p<<endl;// &p holds Address of p
-	cout<<"&*q  address of p  "<<&*q<<endl;// &*q holds address of p
 	cout<<"**q value of   a   "<<**q<<endl;// **q holds value of a
 	
-	cout<<"*r  Adress of  p  "<<*r<<endl;// *r Adress of p
+	
 	cout<<"&q   Address of q  "<<&q<<endl;// &q holds Address of q
 	cout<<"&*r  Adress of  q  "<<&*r<<endl;// &*r Adress of q
-	cout<<"**r address of  a  "<<**r<<endl;// **r address of  a 
+	cout<<"*r  Adress of  p  "<<*r<<endl;// *r Adress of p i.e value inside q is address of p
+	cout<<"**r address of  a  "<<**r<<endl;// **r address of  a
 	cout<<"&**r address of  p  "<<&**r<<endl;// &**r address of  p
 	cout<<"***r value of  a  "<<***r<<endl;// ***r value of  a 
 	cout<<"Address of r  "<<&r<<endl;
