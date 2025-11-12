@@ -3,24 +3,26 @@
    Null Pointers are those pointers that do not point to any memory location.
    A null pointer  explicitly assigned wiht value NULL .
    A pointer of any type can be assigned the NULL value.
-Example
+Example:
 #include <stdio.h>
 int main() {
     int *ptr = NULL;  // Pointer initialized to NULL
     if (ptr == NULL) {
         printf("Pointer is NULL\n");
-    } else {
+    } 
+    else {
         printf("Pointer is not NULL\n");
     }
     return 0;
 }
-Output
+Output:
 Pointer is NULL
 Use Case: Prevents dangling pointers and is useful in error handling.
 /*NULL (Pre-C++11):
 Type: It is typically defined as an integer constant (usually 0).
 Limitation: Can lead to ambiguity because 0 could be interpreted as an integer or a null pointer constant.
 It was used in C and early versions of C++ for null pointer representation.
+
 2. nullptr (Introduced in C++11):
 Type: It is a keyword that represents a null pointer constant (of type std::nullptr_t).
 Advantage: Eliminates ambiguity by specifically denoting a null pointer rather than an integer.
@@ -58,16 +60,17 @@ Advantages:  1. Used in dynamic memory allocation (malloc(), calloc(), etc.) and
 Limitations:
 You can not  do pointers arithmetic with the void pointers because:
 1) Void pointers cannot be dereferenced.
-2) Pointer arithmetic isnt allowed with void pointers in C language.
+2) Pointer arithmetic is not allowed with void pointers in C language.
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 3. Wild Pointer (Uninitialized Pointer)
-A wild pointer is a pointer that has not been initialized and may point to an unpredictable memory location.
+A wild pointer is a pointer that has been declared but not initialized and may point to an unpredictable memory location.
+It contains a garbage (random) address, which means it points to an unknown or invalid memory location.
 #include <stdio.h>
 int main() {
-    int *ptr;  // Uninitialized pointer (wild pointer)   
-    // printf("%d", *ptr);  // Dereferencing leads to undefined behavior
+    int *ptr;   // ❌ Declared but not initialized — WILD pointer  
+    // printf("%d", *ptr);  // if we try to Dereferencing leads to undefined behavior
     return 0;
 }
 Use Case: Always initialize pointers to NULL before using them.
@@ -75,7 +78,7 @@ Use Case: Always initialize pointers to NULL before using them.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 4. Dangling Pointer
-  A dangling pointer is a pointer that points to a memory location that has been deallocated.
+  A dangling pointer is a pointer that points to a memory location that has been already deallocated.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -91,7 +94,9 @@ int main() {
 Output
 Before free: 42
 Use Case: Always set pointers to NULL after free() to avoid dangling pointers.
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 5. Function Pointer
 A function pointer stores the address of a function and can be used to call functions dynamically.
 #include <stdio.h>
@@ -107,6 +112,7 @@ int main() {
 Output
 Hello, World!
 Use Case: Used in callbacks, event handling, and dynamic function calls.
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 9.Constant Pointers
