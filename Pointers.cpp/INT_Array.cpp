@@ -1,4 +1,27 @@
 
+🧩 1D INT Array in C++
+| **Type**                           | **Declaration / Allocation** | **Function Definition**                                                       | **Function Call**  |
+| ---------------------------------- | ---------------------------- | ----------------------------------------------------------------------------- | ------------------ |
+| **Static Allocation**              | `int arr[5] = {1,2,3,4,5};`  | `void func(int arr[], int size)`                                              | `func(arr, 5);`    |
+| **Pass by Copy**                   | `int arr[5] = {1,2,3,4,5};`  | `void func(int arr[5]) { int temp[5]; for(int i=0;i<5;i++) temp[i]=arr[i]; }` | `func(arr);`       |
+| **Pass by Reference (Fixed Size)** | `int arr[5] = {1,2,3,4,5};`  | `void func(int (&arr)[5])`                                                    | `func(arr);`       |
+| **Pass by Template Reference**     | `int arr[5] = {1,2,3,4,5};`  | `template<size_t N> void func(int (&arr)[N])`                                 | `func(arr);`       |
+| **Dynamic Allocation**             | `int *arr = new int[size];`  | `void func(int *arr, int size)`                                               | `func(arr, size);` |
+| **Pass Dynamic Array (Pointer)**   | `int *arr = new int[size];`  | `void func(int *arr, int size)`                                               | `func(arr, size);` |
+
+
+🧩 2D INT Array in C++
+| **Type**                                  | **Declaration / Allocation**                                                | **Function Definition**                                    | **Function Call**        |
+| ----------------------------------------- | --------------------------------------------------------------------------- | ---------------------------------------------------------- | ------------------------ |
+| **Static Fixed Columns**                  | `int arr[3][4] = {{1,2,3,4}, {5,6,7,8}, {9,10,11,12}};`                     | `void func(int arr[][4], int rows)`                        | `func(arr, 3);`          |
+| **Static Fixed Size (Reference)**         | `int arr[3][4];`                                                            | `void func(int (&arr)[3][4])`                              | `func(arr);`             |
+| **Template Reference (Any Size)**         | `int arr[3][4];`                                                            | `template<size_t R, size_t C> void func(int (&arr)[R][C])` | `func(arr);`             |
+| **Pointer to 2D Array (Fixed Columns)**   | `int arr[3][4];`                                                            | `void func(int (*arr)[4], int rows)`                       | `func(arr, 3);`          |
+| **Dynamic 2D Array (Pointer to Pointer)** | `int **arr = new int*[rows]; for(int i=0;i<rows;i++) arr[i]=new int[cols];` | `void func(int **arr, int rows, int cols)`                 | `func(arr, rows, cols);` |
+| **Dynamic 2D Array (1D Block Method)**    | `int *arr = new int[rows*cols];`                                            | `void func(int *arr, int rows, int cols)`                  | `func(arr, rows, cols);` |
+
+
+
 #Pointers with Arrays -  
 An array name itself acts as a pointer to its first element.
 Pointers provide efficient memory access and can be used to modify array elements.
@@ -164,14 +187,17 @@ Output: Array elements: 10 20 30 40 50
 ✅ Explanation:
 arr[] in printArray(int arr[], int size) is actually a pointer (int *arr).
 We must pass array size explicitly since sizeof(arr) inside the function will return the pointer size.
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #2.Passing an Array by Reference (Avoids Pointer Decay)
-When an array is passed normally, it decays into a pointer. To prevent this and keep array size information, use reference to array (int (&arr)[size]).
+When an array is passed normally, it decays into a pointer. 
+To prevent this and keep array size information, use reference to array (int (&arr)[size]).
 
 Example:
 #include <iostream>
 using namespace std;
-void printArray(int (&arr)[5]) { // Reference to an array of size 5
+void printArray(int (&arr)[5]) { // Reference to an array of size 5. Without size code will not compile.
     cout << "Array elements: ";
     for (int i = 0; i < 5; i++) {
         cout << arr[i] << " ";
@@ -188,7 +214,9 @@ Array elements: 1 2 3 4 5
 ✅ Explanation:
 int (&arr)[5] ensures only arrays of size 5 are accepted.
 This prevents array decay and maintains size information.
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////3. Passing a Dynamically Allocated Array
+
+////////////////////   Passing a Dynamically Allocated Array   ///////////////////////////////////////////////////////////
+
 #3Passing a Dynamically Allocated Array
 If an array is created using new, we pass a pointer
 #include <iostream>
@@ -220,7 +248,8 @@ new int[size] dynamically allocates an array.
 printArray(arr, size); passes the pointer to the first element.
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#4.Passing a 2D Array (Fixed Columns)
+
+#4.Passing a 2D Array (Fixed Columns):
 Since 2D arrays are stored row-wise, we must pass the column size explicitly.
 #include <iostream>
 using namespace std;
@@ -244,7 +273,35 @@ Output:
 int arr[][3] requires column size to be known at compile time.
 Row size can be passed as an argument.
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Passing a 2D Array - As a Reference
+#include <iostream>
+using namespace std;
+
+// Function accepts 2D array of size [3][4] by reference
+void display(int (&arr)[3][4]) {
+    cout << "Array elements:\n";
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 4; j++) {
+            cout << arr[i][j] << " ";
+        }
+        cout << endl;
+    }
+    arr[0][0] = 999; // modify original array
+}
+int main() {
+    int nums[3][4] = {
+        {1, 2, 3, 4},
+        {5, 6, 7, 8},
+        {9, 10, 11, 12}
+    };
+    display(nums); // pass by reference
+    cout << "\nAfter function call, nums[0][0] = " << nums[0][0] << endl;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #5. Passing a 2D Array Dynamically
 To pass a 2D array with flexible dimensions, we use pointers.
 #include <iostream>
@@ -294,7 +351,9 @@ Method	                            Syntax	                           Use Case
 Pass by Pointer	            void fun(int *arr, int size)	          Works for both static and dynamic arrays
 Pass by Reference	        void fun(int (&arr)[size])	              Preserves array size information
 Pass Dynamically Allocated	void fun(int *arr, int size)	          Works for arrays created with new
+
 Pass 2D Array (Fixed Size)	void fun(int arr[][cols], int rows)	      Requires known column size
+Pass by Reference	        void fun(int (&arr)[row][col])	          Preserves array size information
 Pass Dynamic 2D Array	    void fun(int **arr, int rows, int cols)	  Supports flexible dimensions
 
 
