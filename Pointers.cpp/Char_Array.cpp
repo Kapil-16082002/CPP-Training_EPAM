@@ -1,4 +1,30 @@
 
+
+🧩 1D Character Array in C++
+| **Type**                           | **Declaration / Allocation**  | **Function Definition**                        | **Function Call**  |
+| ---------------------------------- | ----------------------------- | ---------------------------------------------- | ------------------ |
+| **Static Initialization**          | `char str[6] = "Hello";`      | `void func(char str[], int size)`              | `func(str, 6);`    |
+| **Pass by Reference (Fixed Size)** | `char str[6] = "Hello";`      | `void func(char (&str)[6])`                    | `func(str);`       |
+| **Template Reference (Any Size)**  | `char str[] = "Hello";`       | `template<size_t N> void func(char (&str)[N])` | `func(str);`       |
+| **Dynamic Allocation**             | `char *str = new char[size];` | `void func(char *str, int size)`               | `func(str, size);` |
+| **C-String (const char*)**         | `const char *str = "Hello";`  | `void func(const char *str)`                   | `func(str);`       |
+
+
+🧩 2D Character Array in C++
+| **Type**                                  | **Declaration / Allocation**                                                   | **Function Definition**                                     | **Function Call**        |
+| ----------------------------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------- | ------------------------ |
+| **Static Fixed Columns**                  | `char names[3][10] = {"Ram", "Shyam", "Kapil"};`                               | `void func(char arr[][10], int rows)`                       | `func(names, 3);`        |
+| **Static Fixed Size (Reference)**         | `char names[3][10];`                                                           | `void func(char (&arr)[3][10])`                             | `func(names);`           |
+| **Template Reference (Any Size)**         | `char names[3][10];`                                                           | `template<size_t R, size_t C> void func(char (&arr)[R][C])` | `func(names);`           |
+| **Pointer to 2D Array (Fixed Columns)**   | `char names[3][10];`                                                           | `void func(char (*arr)[10], int rows)`                      | `func(names, 3);`        |
+| **Dynamic 2D Array (Pointer to Pointer)** | `char **arr = new char*[rows]; for(int i=0;i<rows;i++) arr[i]=new char[cols];` | `void func(char **arr, int rows, int cols)`                 | `func(arr, rows, cols);` |
+
+
+/* 
+char arr[] = "Hello";   // Stored in stack (modifiable)
+char *ptr = "World";    // String literal (read-only in most compilers)
+*/
+
 A character array is a sequence of characters stored in contiguous memory, ending with a null character (\0)
 Example:
 int main() {
@@ -58,6 +84,7 @@ Characters using pointer: W o r l d
 ✅ Explanation:
 while (*ptr != '\0') iterates through the string.
 ptr++ moves the pointer to the next character.
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 3. Passing a Character Array to a Function
@@ -79,7 +106,9 @@ Received String: Pointers in C++
 printString(char *str) takes a character pointer as input.
 printString(message); passes the address of the first character.
 The function prints the entire string because it stops at \0.
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 4. Using const with Character Pointers
 If we want to prevent modification of the string, we use const char *.
 
@@ -99,7 +128,9 @@ int main() {
 ✅ Explanation:
 const char *str ensures that str cannot be modified.
 Useful for read-only string literals.
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 char str[] = "Hello";	char *ptr = "Hello";
 int main() {
     char arr[] = "Hello";   // Stored in stack (modifiable)
@@ -116,7 +147,9 @@ int main() {
 ✅ Explanation:
 arr[] is a modifiable character array.
 ptr points to a string literal, which is often stored in read-only memory.
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 6. Dynamically Allocating Character Arrays
 For dynamic strings, we use new.
 Example:
@@ -151,7 +184,9 @@ Modified String: Mello
 ✅ Explanation:
 char *str allows modification.
 The first character changes from 'H' to 'M'.
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 8. (Double Pointers) - 
 A double pointer (char**) is commonly used to handle arrays of strings (character arrays) in C++. 
 This is useful when working with dynamic memory allocation, command-line arguments, and lists of strings.
@@ -221,17 +256,12 @@ Cherry
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Modifying Strings Using char**
 A double pointer allows modifying the original string pointers.
-
-cpp
-Copy
-Edit
 #include <iostream>
 using namespace std;
 
 void modifyStrings(char **ptr) {
     ptr[0] = "Modified";  // Changing first string
 }
-
 int main() {
     char *words[] = {"Hello", "World", "C++"};
 
