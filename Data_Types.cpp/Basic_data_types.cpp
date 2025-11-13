@@ -1,3 +1,16 @@
+📘 Data Types in C++ — Definition
+
+Data types define the type of data a variable can store and determine how much memory it occupies and what kind of operations can be performed on it.
+
+🧩 Types of Data Types in C++
+| **Category**                | **Examples**                                     | **Description**                             |
+| --------------------------- | ------------------------------------------------ | ------------------------------------------- |
+| **1. Built-in (Primitive)** | `int`, `float`, `double`, `char`, `bool`, `void` | Basic data types provided by C++ itself.    |
+| **2. Derived**              | `array`, `pointer`, `function`, `reference`      | Formed from built-in data types.            |
+| **3. User-defined**         | `struct`, `class`, `union`, `enum`, `typedef`    | Defined by the programmer for complex data. |
+
+
+
 1. Integer (int) - Stores whole numbers (positive, negative, zero).
 Types of Integer Data Types in C++ - 
 Data Type           	Size (bytes)	                                   Range (Approx.)
