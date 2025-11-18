@@ -1,9 +1,9 @@
 Inheritance is a fundamental concept of object-oriented programming in C++ that allows one class (derived class) to inherit properties and behaviors (data members and member functions) of another class (base class). 
 This promotes code reuse and helps in building a hierarchical relationship between classes.
 
-Advantages of Inheritance
+Advantages of Inheritance:
 Code Reusability: Common functionality is written once in the base class and reused in derived classes.
-Extensibility: The behavior of existing code can be extended by creating new derived classes.
+Extensibility: Existing code can be extended by creating new derived classes.
 Polymorphism: Enables run-time polymorphism when combined with virtual functions.
 
 Key Notes:
@@ -82,12 +82,11 @@ This is the Child class
 //-----------------------------------------------------------------------------------------------------------------
 
 ✅3. Multiple Inheritance
-In this type, a single derived class inherits from multiple base classes.
+In this type, a single derived class inherits properties and behaviour from multiple base classes.
 
  Base1  |          |  Base2  |
    +---------+          +---------+
         |                    |
-        ------------------------
                    |
             +-------------+
             |   Derived    |
@@ -128,7 +127,7 @@ This is the Derived class
 //-----------------------------------------------------------------------------------------------------------------
 
 ✅4. Hierarchical Inheritance
-In this type, multiple derived classes inherit from a single base class.
+In this type, multiple derived classes inherit properties and behaviour from a single base class.
 
          |   Base   |
          +---------+
@@ -181,7 +180,24 @@ This is the Derived2 class
 
 Hybrid Inheritance is a combination of more than one type of inheritance (e.g., single, multiple, multilevel). 
 It is not necessarily the same as the Diamond Problem, but the Diamond Problem can occur in hybrid inheritance when multiple inheritance is involved.
+                  Base
+                  |
+        -----------------------
+        |                     |
+   Derived1              Derived2
+        \                   /
+         \                 /
+          \               /
+              Hybrid
+   (inherits from both Derived1 and Derived2)
 
+
+         A
+       /   \
+      B     C
+       \   /
+         D
+Here:
 #include <iostream>
 using namespace std;
 
@@ -196,7 +212,6 @@ class Derived2 : public Base {};
 class Hybrid : public Derived1, public Derived2 {  // Hybrid inherits from two Derived classes
     // Causes ambiguity when accessing Base class methods
 };
-
 int main() {
     Hybrid obj;
     // obj.displayBase();  // Error: Ambiguity! Which Base is being referred to?
@@ -244,6 +259,8 @@ A is the Base Class.
 B and C inherit from A.
 D inherits from both B and C.
 Problem: The derived class D now has two copies of A (one from B and one from C), leading to ambiguity when accessing members of A through D.
+// Ambiguity: Which method should be called, B's or C's version of A?
+
 
 #include <iostream>
 using namespace std;
@@ -291,5 +308,25 @@ int main() {
     return 0;
 }
 Virtual Inheritance:
-The keyword virtual ensures that B and C do not create duplicate instances of A(only a single shared instance of the base class exists.). Instead, they share a single instance of A.
+Virtual inheritance is a technique used in C++ to solve the Diamond Problem in multiple inheritance.
+The keyword virtual ensures that only ONE shared copy of the base class will be created, even if multiple parent classes inherit from it.
 This means the class D has only one copy of A, even though it inherits from both B and C.
+
+⭐ 1. What “virtual” does internally?
+
+When you write:
+class B : virtual public A {};
+the compiler will not create a copy of A inside B.
+Instead, the compiler create: a hidden pointer inside B called the virtual base pointer (vbptr).
+
+Similarly for C:  a hidden pointer inside C called the virtual base pointer (vbptr).
+
+
+But these pointers do not point to A yet —
+
+it tells the compiler:
+“If a most-derived class exists,
+place one shared A at the bottom
+and make my vbptr point to it.”
+
+Both B.vbptr and C.vbptr point to the same A inside D.
