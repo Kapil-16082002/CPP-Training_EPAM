@@ -316,7 +316,7 @@ This means the class D has only one copy of A, even though it inherits from both
 
 When you write:
 class B : virtual public A {};
-the compiler will not create a copy of A inside B.
+virtual keyword ensures that compiler will not create a copy of A inside B.
 Instead, the compiler create: a hidden pointer inside B called the virtual base pointer (vbptr).
 
 Similarly for C:  a hidden pointer inside C called the virtual base pointer (vbptr).
