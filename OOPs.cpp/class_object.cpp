@@ -26,8 +26,24 @@ but when it is instantiated (i.e. an object is created) memory is allocated.
 
 // --------------------------- Memory Occupied by object----------------------------------------------------------
 Key Points to Remember:
-1.An empty class is one that has no non-static data members or member functions.
+1.An empty class is one that has no data members or member functions.
 class Empty {};
+⭐ Now consider this:
+class Test {
+public:
+    static int x;
+    static void fun() {}
+};
+✔ Does this affect object size?  NO
+cout << sizeof(Test) << endl; // 1
+
+👉 So is it technically an empty class?
+It behaves like an empty class in memory layout,
+BUT According to C++ definition, it is NOT classified as an "empty class".
+Why?
+Because static members still belong to the class, even though they do NOT contribute to object size.
+
+
 
 2.An object of this empty class will occupy 1 byte in memory:
 
@@ -36,6 +52,7 @@ cout << "Size of obj1: " << sizeof(obj1) << " bytes" << endl;
 cout << ( &obj1 == &obj2 ? "Same address" : "Different addresses") << endl;
 Output:
 Size of obj1: 1 bytes
+Different addresses
 
 3. 1 Byte Memory is allocated to ensure that objects of the class have a unique address. 
 Even in the case of empty classes, distinct instances (obj1 and obj2) must have different addresses.
@@ -66,7 +83,7 @@ Size of static member object: 1 bytes.
 //----------------------------------------------------------------------------------------------------------------
 
 Empty Base Optimization (EBO)
-If an empty class is used as a base class in an inheritance hierarchy, the compiler may optimize and prevent the empty base from occupying memory. 
+If an empty class is used as a base class in an inheritance hierarchy, the compiler may optimize and stop the empty base from occupying memory. 
 This is called Empty Base Optimization (EBO).
 
 Example:
