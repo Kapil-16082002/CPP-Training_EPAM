@@ -5,7 +5,7 @@ Object-oriented programming (OOP) is defined as a programming model (and not a s
 
 #Why OOps-
 #1.Reusability-> Through inheritance, OOPs allow programmers to reuse code agin and again and extend the use of existing classes.
-#2.Enhanced Security -> With encapsulation, critical data is hidden from outside interference, allowing only specific parts of the program 
+#2.Enhanced Security -> With encapsulation, critical or inernal data is hidden from outside interference, allowing only specific parts of the program 
 to interact with the internal states of an object, improving security and reducing unintended side effects.
 #3.Real world Mapping -> OOP mimics real world entities and have relationships by using objects,
 For instance, an "Animal" class can have different derived classes like "Dog" and "Cat," having specific behaviors 
