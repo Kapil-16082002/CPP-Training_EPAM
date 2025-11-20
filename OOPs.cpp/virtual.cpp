@@ -16,6 +16,7 @@ This is central to achieving runtime polymorphism.
 Each object of a class that contains virtual functions has a hidden pointer to the class's VTable. 
 This pointer is called the vptr and set up by the compiler automatically when the object is created.
 
+
 ✅virtual function
 virtual function is a member function of a class that is declared using the virtual keyword. 
 Virtual functions enable function overriding in derived classes and support runtime polymorphism.
@@ -26,7 +27,7 @@ purpose of the virtual keyword :
 
 
 ✅pure virtual function in C++?
-A virtual function that is declared by assigning = 0 in its declaration. 
+A virtual function that is declared by assigning = 0 in its declaration.
 Example:
 class Base {
     virtual void func() = 0;  // Pure virtual function
