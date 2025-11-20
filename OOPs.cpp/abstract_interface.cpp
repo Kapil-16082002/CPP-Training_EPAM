@@ -21,6 +21,7 @@ class AbstractClass {
 Derived classes must override all pure virtual functions to be instantiable.
 
 
+
 ✅Virtual Destructors
 If a class has virtual functions, it is generally a good idea to make its destructor virtual. 
 This avoids undefined behavior when deleting derived class objects via a base class pointer:
@@ -70,7 +71,7 @@ int main() {
 
 //----------------------------------------------------------------------------------------------------------------
 
-When to Use an Abstract Class:
+✅When to Use an Abstract Class:
 You want to provide default implementations for some methods.
 You want to share data or behavior between derived classes.
 You want the ability to store state (member variables) or other common data.
@@ -130,7 +131,7 @@ so it makes sense to use an abstract class that both Dog and Cat can inherit fro
 
 //-----------------------------------------------------------------------------------------------------------------
 
-Use an Interface (Pure Abstract Class) When:
+✅Use an Interface (Pure Abstract Class) When:
 You don't need to provide any implementation—you only want the method signatures (definitions).
 You don't need want to share data or behavior between derived classes.
 
@@ -165,5 +166,33 @@ int main() {
     delete circle;
     delete rectangle;
 
+    return 0;
+}
+//=================================================================================================================
+
+✅can we have pure virtual function outside class?
+we can define a pure virtual function outside the class, BUT only its definition, not the “pure = 0 part”.
+👉 The pure part must be inside the class.
+👉 The definition (body) can be outside.
+#include <iostream>
+using namespace std;
+
+class Shape {
+public:
+    virtual void draw() = 0;  // pure virtual function
+};
+// Definition of pure virtual function outside class
+void Shape::draw() {
+    cout << "Shape default draw()" << endl;
+}
+class Circle : public Shape {
+public:
+    void draw() override {
+        cout << "Circle Draw" << endl;
+    }
+};
+int main() {
+    Shape *s = new Circle();
+    s->draw();   // Calls Circle::draw()
     return 0;
 }
