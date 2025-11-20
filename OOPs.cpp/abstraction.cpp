@@ -1,3 +1,5 @@
+
+
 ✅#Abstraction:
 It is the process of hiding the complex implementation details and showing only the essential or necessary information of an object. 
 
@@ -7,6 +9,7 @@ Aspect	                    Abstraction	                                    Encap
 Description	 Hiding implementation(logic) details.	          Hiding internal  data details and restricting direct access to certain parts of data using access control (e.g., private, protected).
 Purpose	    Focuses on defining WHAT an object does, rather than HOW it does it.	Focuses on controlling HOW the internal behavior or data of an object is accessed or modified.
 Goal	To provide a simplified interface for the user and hide unnecessary details of the implementation.	To restrict unauthorized access and protect the internal state of an object.
+
 
 ✅#Key Features of Abstraction:
 1.Security: Users do not need to know the implementation details of a function or method.
@@ -64,7 +67,7 @@ public:
     }
 };
 int main() {
-    Shape *shape1 = new Circle(5.0);      // Creating an object of Circle
+    Shape *shape1 = new Circle(5.0);         // Creating an object of Circle   
     Shape *shape2 = new Rectangle(4.0, 5.0); // Creating an object of Rectangle
 
     cout << "Area of Circle: " << shape1->area() << endl;    // Output: 78.5398
@@ -72,6 +75,16 @@ int main() {
     // Cleanup
     delete shape1;
     delete shape2;
+    /*
+    Circle circleObj(5.0);        // Object on STACK  
+    Rectangle rectObj(4.0, 5.0);  // Object on STACK
+
+    Shape *shape1 = &circleObj;   // Pointer to base holds stack object
+    Shape *shape2 = &rectObj;
+
+    cout << "Area of Circle: " << shape1->area() << endl;
+    cout << "Area of Rectangle: " << shape2->area() << endl;
+    */
 
     return 0;
 }
@@ -81,13 +94,15 @@ Area of Rectangle: 20
 Explanation:
 The class Shape is an abstract class because it has the pure virtual function area().
 The derived classes (Circle and Rectangle) implement the area() function.
+
 We don't need to know how the area is calculated in each shape; we just call the area() function and get the result.
  This is the essence of abstraction — showing only the necessary details.
 
 1.Instead of using Shape* shape1 = new Triangle(...);, we simply create instances of Triangle and Square directly
  using Triangle triangle(...); and Square square(...);.
 2.Calling Methods Without Pointers:
-Since the objects are not created with pointers, we do not need to use the arrow operator (->). We can directly call the method using the dot operator (.), like triangle.area() and square.area().
+Since the objects are not created with pointers, we do not need to use the arrow operator (->). 
+We can directly call the method using the dot operator (.), like triangle.area() and square.area().
 3.Automatic Memory Management:
 Since we're not using dynamic memory allocation (new), we do not need to manually delete the objects. 
 Memory will be automatically managed, and the objects will be destroyed when they go out of scope (at the end of the main function).
@@ -174,3 +189,4 @@ Advantages of Data Abstraction:
 3.Helps to increase the security of an application or program as only important details are provided to the user.
 4.It reduces the complexity as well as the redundancy of the code, therefore increasing the readability.
 7.New features or changes can be added to the system with minimal impact on existing code.
+
