@@ -114,7 +114,7 @@ Inheritance with empty base classes can use Empty Base Optimization (EBO) to eli
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Object Creation Methods in C++
+Object Creation Methods in C++:
 
 1✅. Stack Allocation (Automatic Storage)
 Objects can be created directly on the stack by declaring them in a function or scope using their type.
