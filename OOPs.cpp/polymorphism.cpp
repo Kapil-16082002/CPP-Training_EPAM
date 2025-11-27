@@ -1,4 +1,5 @@
-The word “polymorphism” means having many forms. 
+
+The word “polymorphism” means having many forms.
 we can define polymorphism as the ability of a message to be displayed in more than one form.
   A real-life example of polymorphism is a person who at the same time can have different characteristics. 
   A man at the same time is a father, a husband, and an employee. 
