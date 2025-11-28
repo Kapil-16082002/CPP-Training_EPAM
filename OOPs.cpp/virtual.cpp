@@ -23,7 +23,7 @@ Virtual functions enable function overriding in derived classes and support runt
 
 purpose of the virtual keyword :
 1. Virtual functions enable function overriding in derived classes and support runtime polymorphism.
-2.It ensures that the most derived version of a function is called when the function is invoked through a base class reference or pointer.
+2.It also ensures that the most derived implementation of a function is called when the function is invoked through a base class reference or pointer.
 
 
 ✅pure virtual function in C++?
@@ -43,15 +43,17 @@ Non-virtual functions are resolved at compile-time (early binding), while virtua
 
 
 ✅How the Virtual Table Works:
-For every class containing virtual functions, the compiler generates a vtable.
-The table stores pointers to the class's virtual functions, and when a derived class overrides a virtual function, its implementation replaces the corresponding entry in the vtable.
-Each object of the class contains a virtual pointer (vptr) that points to the vtable. At runtime, the vptr is used to determine which function implementation to call.
+When a class contains virtual functions:
+1.The compiler creates a data structure called the Virtual Table (VTable).
+2.The VTable is an array of function pointers where each pointer points to the most derived implementation of a virtual function for a particular class.
+
+Each object of a class that contains virtual functions has a hidden pointer to the class's VTable. 
+This pointer is called the vptr and set up by the compiler automatically when the object is created.
+At runtime, the vptr is used to determine which function implementation to call.
 
 
 ✅Structure of the VTable
-The VTable is a simple array-like structure, where:
-
-Each entry is a pointer to a virtual function defined in the class or in its derived classes.
+The VTable is an array of function pointers where each pointer points to the most derived implementation of a virtual function for a particular class.
 For pure virtual functions, there’s no actual function pointer, and the compiler often uses special entries to indicate that the class cannot be instantiated directly (abstract class).
 
 #include <iostream>
@@ -67,6 +69,7 @@ public:
     void func1() override { cout << "Derived: func1" << endl; }
     void func2() override { cout << "Derived: func2" << endl; }
 };
+
 Base class VTable:
 Index	Function Pointer
 0	    Address of Base::func1
@@ -97,13 +100,13 @@ Derived: func2
 ✅VTable and Dynamic Dispatch
 
 1.Dispatch Without Virtual Functions:
-Without virtual, function calls are resolved at compile time based on the type of the pointer/reference. 
+Without virtual, function calls are resolved at compile time based on the type of the pointer/reference.
 This is called static binding( Early Binding ):
 
 Base base;
 Derived derived;
 Base* ptr = &derived;
-ptr->func1();  // Calls Base::func1(), because the pointer type is Base*
+ptr->func1();  // Calls Derived::func1()
 
 2.Dispatch with Virtual Functions:
 When a function is marked virtual, calls are resolved at runtime based on the actual type of the object being pointed to (not the type of the pointer itself). 
