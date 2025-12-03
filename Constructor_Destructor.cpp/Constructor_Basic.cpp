@@ -1,6 +1,6 @@
 ✅#1. Constructor
-A constructor is a special member function that is automatically called when an object of a class is created. 
- Its main purpose is to initialize the objects attributes.
+A constructor is a special member function that is automatically called when an object of a class is created.
+Its main purpose is to initialize the objects attributes.
 
 Properties of Constructors:
 Same Name as the Class:       The constructor has the same name as the class.
@@ -72,7 +72,7 @@ This creates a temporary (unnamed) object of type Demo.
 Temporary object is destroyed immediately after creation.so it exists only for the expression in which it is created.
 The destructor is called immediately after the temporary object’s creation completes, since the object is not stored and has no further use beyond its creation.
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//================================================================================================================
 
 #include <iostream>
 using namespace std;
@@ -127,7 +127,6 @@ Second: The member variables(like: m1,m2) constructors are called (in the order 
 Lastly: The constructor of the class itself (e.g., Test) is called. 
 
 #include <iostream>
-
 class Base {
 public:
     Base() {
@@ -167,7 +166,6 @@ public:
         std::cout << "Derived class destructor" << std::endl;
     }
 };
-
 int main() {
     std::cout << "Creating Derived object..." << std::endl;
     Derived d; // Create a Derived object
@@ -185,3 +183,95 @@ Derived class destructor
 Member2 destructor
 Member1 destructor
 Base class destructor
+
+//================================================================================================================
+
+#include <iostream>
+class Base {
+public:
+    int x;
+    Base(int v) {
+        std::cout << v<<" Base class constructor" << std::endl;
+    }
+    ~Base() {
+        std::cout << "Base class destructor" << std::endl;
+    }
+};
+class Member1 {
+public:
+    Member1() {
+        std::cout << "Member1 constructor" << std::endl;
+    }
+    ~Member1() {
+        std::cout << "Member1 destructor" << std::endl;
+    }
+};
+class Member2 {
+public:
+    Member2() {
+        std::cout << "Member2 constructor" << std::endl;
+    }
+    ~Member2() {
+        std::cout << "Member2 destructor" << std::endl;
+    }
+};
+class Derived : public Base {
+private:
+    Member2 m2; // Member variables
+    Member1 m1;
+public:
+    Derived() {
+        std::cout << "Derived class constructor" << std::endl;
+    }
+    ~Derived() {
+        std::cout << "Derived class destructor" << std::endl;
+    }
+};
+int main() {
+    std::cout << "Creating Derived object..." << std::endl;
+    Derived d; // Create a Derived object
+    std::cout << "Derived object created." << std::endl;
+    return 0;
+}
+/* In above code:
+Base does not have a default constructor.
+Derived() does not call Base(int), so the compiler errors: no matching function for call to Base::Base().
+
+1.Solution✅: Give Base a default constructor
+2.Solution✅:Call Base's constructor from the Derived Class(recommended):
+ 
+
+✅Fix A — Call Base's constructor from the Derived Class(recommended):
+
+class Derived : public Base {
+private:
+    Member2 m2; // member declarations
+    Member1 m1;
+public:
+    // call Base(int) from Derived's ctor initializer list
+    Derived() : Base(10) {
+        std::cout << "Derived class constructor" << std::endl;
+    }
+    ~Derived() {
+        std::cout << "Derived class destructor" << std::endl;
+    }
+};
+int main() {
+    std::cout << "Creating Derived object..." << std::endl;
+    Derived d;
+    std::cout << "Derived object created." << std::endl;
+    return 0;
+}
+
+✅Fix B — Give Base a default constructor
+If you prefer not to pass a value, add a default constructor to Base:
+class Base {
+public:
+    int x;
+    Base() : x(0) { std::cout << "Base default constructor" << std::endl; }
+    Base(int v) : x(v) { std::cout << v << " Base class constructor" << std::endl; }
+    ~Base() { std::cout << "Base class destructor" << std::endl; }
+};
+
+
+*/
