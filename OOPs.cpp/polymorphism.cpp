@@ -1,14 +1,14 @@
 
 The word “polymorphism” means having many forms.
 we can define polymorphism as the ability of a message to be displayed in more than one form.
-  A real-life example of polymorphism is a person who at the same time can have different characteristics. 
-  A man at the same time is a father, a husband, and an employee. 
-  So the same person exhibits different behavior in different situations. This is called polymorphism. 
+  A real-life example of polymorphism is a person who at the same time can have different characteristics.
+  A man at the same time is a father, a husband, and an employee.
+  So the same person showing different behavior in different situations. This is called polymorphism.
 
 Polymorphism in C++ is mainly divided into two types:
 
 1.Compile-time Polymorphism (also known as Static Polymorphism) or (Static or early Binding)
-In compile-time polymorphism, the function to be called is determined at compile time. 
+In compile-time polymorphism, the function to be called is determined at compile time.
 This is achieved by function overloading and operator overloading.
 
     1.Function Overloading
@@ -19,7 +19,8 @@ In Run-time polymorphism, the function to be called is determined at run time.
     1.Function Overriding
     2.Virtual Function
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #1. Compile-Time Polymorphism
 (a) Function Overloading
 Function overloading allows multiple functions with the same name but different parameter lists.
@@ -27,7 +28,7 @@ The compiler determines which function to call based on the arguments passed.
 
 Why Use Function Overloading?
 Code Clarity: Using the same name for closely related functions makes the code more readable and logical.
-Improved Modularity: It avoids the need for creating multiple uniquely named functions that perform similar operations.
+Improved Modularity: No need to give multiple function name for the functions that perform similar operations.
 Ease of Maintenance: Changes or updates are easier to manage with overloaded function.
 
 Rules for Function Overloading:
@@ -36,7 +37,6 @@ The functions must differ in terms of:
 Number of parameters.
 Type of parameters.
 Order of parameters.
-
 
 #include <iostream>
 using namespace std;
@@ -122,6 +122,7 @@ int main() {
     return 0;
 }*/
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 (b) Operator Overloading:
    Operator overloading allows giving additional meanings to the operators when they are used with 
    user-defined data types (like objects).
@@ -156,10 +157,15 @@ public:
 };
 int main(){
     Complex c1(10, 5), c2(2, 4);
-    Complex c3 = c1 + c2; // An example call to "operator+"
+    c1.print();
+    c2.print();
+
+    Complex c3 = c1 + c2; // will be interpreted by compiler as  c1.operator+(c2)
     c3.print();
 }
-Output
+Output:
+10 + i5
+2 +  i4
 12 + i9
 
 /* 
@@ -234,7 +240,40 @@ But, among them, there are some operators that cannot be overloaded. They are
 3.Conditional operator(?:)
 4.Sizeof operator  sizeof()
 5.typeid Operator
+
+WHY?
+These operators have special compile-time meaning,and overloading them would break the language principle itself.
+🚫 Example: What would happen if sizeof could be overloaded?
+
+Suppose C++ allowed you to overload sizeof.
+Then you could do something like this:
+
+class A {
+public:
+    int x;
+    int y;
+    // ❌ Hypothetical (not allowed)
+    size_t operator sizeof() const {
+        return 1000;   // imagine we changed the actual size!
+    }
+};
+⚠️ This would break language rules completely.
+🚨 PROBLEM 1: Compiler allocates wrong memory
+Actual object size:
+sizeof(A)  --> 8 bytes (as we 2 integers)
+
+But if we overloaded it:
+A obj;
+size_t s = sizeof(obj);   // would return 1000 instead of 8
+
+❌ This makes no sense!
+Compiler needs real size to allocate memory
+Overloaded result (1000) has nothing to do with object’s real size
+Objects could be partially overwritten → memory corruption
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #2. Run-Time Polymorphism:
 
 Run-time polymorphism is achieved by using inheritance and function overriding.
