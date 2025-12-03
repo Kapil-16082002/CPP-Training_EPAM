@@ -1,3 +1,4 @@
+
 Operator overloading allows giving additional meanings to the operators when they are used with user-defined data types (like objects).
 For example, we can make use of the addition operator (+) for string class to concatenate two strings.
 We know that the task of this operator is to add two operands. 
@@ -8,11 +9,12 @@ Complex c1(3, 4), c2(2, 5);
 Complex c3 = c1 + c2;  // Calls overloaded operator+
 
 ✅🔹 Why Use Operator Overloading?
+
 Increases Reusability - Operators can be defined for multiple data types.
 Enhances Code Readability - Allows natural syntax for objects.
 Encapsulates Behavior - Ensures proper data handling inside the class.
 
-✅Why Use Operator Overloading? 
+✅Why Use Operator Overloading?
 It makes your custom objects interact more naturally. For example, if you define a Vector class:
 Vector v1(1, 2), v2(3, 4);
 Vector result = v1 + v2;  // Overloaded 'operator+'
@@ -66,7 +68,8 @@ Overloaded operators must comply with their usual precedence and associativity.
    ?: (Ternary/Conditional)
    typeid (Type information)
    const_cast, static_cast, etc.
- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ //================================================================================================================
  
  1️⃣ Arithmetic Operator Overloading (+, -, *, /)->
 
@@ -100,7 +103,8 @@ Member function operator+ is called with c1 as the calling object and c2 as the 
 The function returns a new Complex object containing the sum of c1 and c2.
 The returned object is assigned to c3 using the copy constructor.
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//================================================================================================================
+
 2️⃣ Relational Operator Overloading (==, !=, <, >)
 👉 Example: Overloading == for Comparing Objects
 class Complex {
@@ -120,7 +124,9 @@ int main() {
 Final Summary->
 c1 calls the overloaded operator== function.
 c2 is passed as an argument to the function.
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//=================================================================================================================
+
 Overloading the Assignment (=) Operator ->
 the assignment operator (=) is used to copy the values from one object to another. 
 By default, C++ provides a shallow copy for the assignment operator, which can cause issues when dealing with dynamic memory allocation.
@@ -145,12 +151,11 @@ public:
         str = new char[strlen(s) + 1];
         strcpy(str, s);
     }
-    
     void display() { cout << str << endl; }
-
-    ~String() { delete[] str; }  // Destructor
+    ~String() { 
+        delete[] str;  // Destructor
+    }  
 };
-
 int main() {
     String s1("Hello");
     String s2("World");
@@ -259,7 +264,7 @@ int main() {
 ✅ Ensures base class members are copied correctly.
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//=================================================================================================================
 
 3️⃣ Unary Operator Overloading (++, --)
 👉 Example: Overloading Prefix (++obj) & Postfix (obj++)
@@ -311,7 +316,8 @@ Postfix (obj++)   	Counter operator++(int)	                    Return old value 
 ✔ Postfix (obj++) is slower because it creates a temporary object to hold the previous value.
 ✔ Postfix function must take an int dummy parameter to differentiate from the prefix.
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//=================================================================================================================
+
 3️⃣ Unary Operator Overloading ( --)
 
 🔹 Overloading -- Operator (Prefix & Postfix)
