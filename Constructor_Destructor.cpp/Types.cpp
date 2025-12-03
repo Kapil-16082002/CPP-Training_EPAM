@@ -76,6 +76,13 @@ public:
 int main() {
     Number num1(10);  // Normal object creation
     Number num2 = num1;  //also  Number num2(num1);   
+    num1.display();
+    num2.display();
+    return 0;
+}
+Output:
+Value: 10
+Value: 10
 /*
 ✅ Number num2 = num1; → Copy Initialization
 This syntax implicitly calls the copy constructor.
@@ -89,11 +96,4 @@ It explicitly calls the copy constructor.
 More efficient
 More efficient than Number num2 = num1; since no implicit conversion is involved.
 */
-    num1.display();
-    num2.display();
-
-    return 0;
 }
-Output:
-Value: 10
-Value: 10
