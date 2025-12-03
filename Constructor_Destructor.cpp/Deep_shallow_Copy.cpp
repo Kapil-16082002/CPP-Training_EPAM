@@ -9,8 +9,7 @@ When an object is copied to another, its data members (variables) are also copie
 There are two types of copying in C++ Object-Oriented Programming (OOP):
 
 1️⃣ Shallow Copy
-Copies only the memory address (pointer reference).
-Both objects share the same memory.
+Copies only the memory address (pointer reference) means Both objects share the same memory.
 If one object modifies or deletes memory, the other object is affected.
 Leads to dangling pointers and memory corruption.
 
@@ -18,7 +17,8 @@ Leads to dangling pointers and memory corruption.
 Allocates new memory and copies the actual data.
 Each object has its own independent memory.
 Prevents memory corruption and dangling pointer issues.
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//===================================================================================================================
 
 1️⃣ Shallow Copy (Problem Example)
 ❌ Problem: Shared Memory Leads to Double Delete Error
@@ -34,11 +34,11 @@ public:
         cout<<"Inside Default Constructor"<<endl;
     }
     void printX(){
-        cout<<" Value of x: "<<x<<endl;
+        cout<<" Value of x: "<< x <<endl;
         cout<<" Value ptr is pointing to: "<<*ptr<<endl;
     }
     myClass(const myClass &obj){
-        x=obj.x;
+        x=obj.x;//When the object is copied, the value of x is copied — each object gets its own copy of that integer. That cannot cause the shallow-copy / double-delete problem.
         ptr=obj.ptr; // ❌ Shallow Copy (Both objects share the same memory)
         /*
         This does not allocate new memory for ptr.
@@ -54,7 +54,6 @@ public:
         cout<<" Inside Destructor "<<endl;
     }
 };
-
 int main(){
     myClass obj1;
     obj1.printX();
@@ -77,11 +76,12 @@ myClass(const myClass &obj){
     x = obj.x;
     ptr = new int(*(obj.ptr)); // ✅ Deep Copy (Allocates new memory)
 }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 2️⃣ Deep Copy (Solution to Shallow Copy Problem)
 ✅ Corrected Code (Destructor Will Be Called Twice)
-#include <bits/stdc++.h>
-using namespace std;
+#include <bits/stdc++.husing namespace std;
 class myClass {
     int x;
     int* ptr;
@@ -105,14 +105,12 @@ public:
         cout << "Inside Destructor" << endl;
     }
 };
-
 int main() {
     myClass obj1;
     obj1.printX();
     
     myClass obj2(obj1);  // Calls Deep Copy Constructor
     obj2.printX();
-    
     return 0;  // ✅ Both destructors will be called
 }
 Output:  (No Double Delete Error)
@@ -142,7 +140,8 @@ Destructor Issue	    Can cause double delete errors	           No memory issues
 Performance	            Faster (only copies address)	           Slightly slower (allocates new memory)
 Best for?	          Non-pointer members, simple classes	        Classes with pointers or dynamic memory
 
-///////////////////////////////////////////////////////////////////////////
+//===============================================================================================================
+
 🔹 Handling Assignment Operator (Deep Copy) for Integers in C++ OOPs - 
 For integers, we generally don’t face deep copy issues because integers are primitive types stored directly inside objects. 
 However, if we use dynamically allocated integers (int*), we must handle deep copy manually.
@@ -153,6 +152,7 @@ If an object contains a pointer to an integer (int*), then:
 A default assignment operator will copy only the pointer, leading to shallow copy issues.
 When the destructor runs, it frees memory twice (double delete error).
 Changing the value in one object will affect the other, since both share the same memory.
+
 2️⃣ Example: Shallow Copy Issue (Incorrect)
 #include <iostream>
 using namespace std;
@@ -190,6 +190,7 @@ int main() {
 obj2 = obj1; copies only the pointer, so both objects point to the same integer in memory.
 When obj2 is destroyed, it deletes the shared memory.
 When obj1 is destroyed, it tries to delete the same memory again (double delete error).
+
 3️⃣ Correct Deep Copy Assignment Operator
 To fix this, we must: ✔ Check for self-assignment (if (this != &obj)).
 ✔ Delete old memory before assigning new memory.
@@ -255,9 +256,8 @@ Deep& operator=(const Deep& obj) {
     return *this;
 }
 1️⃣ What is this?
-this is a pointer to the current object inside a member function.
+this is a pointer to the current object inside a member function and stores the memory address of the calling object.
 It allows an object to refer to itself.
-this stores the memory address of the calling object.
 Example: Understanding this
 class Example {
 public:
@@ -303,7 +303,6 @@ public:
         str = new char[strlen(s) + 1];
         strcpy(str, s);
     }
-
     // Copy Assignment Operator
     Deep& operator=(const Deep& obj) {
         if (this != &obj) {  // Self-assignment check
@@ -313,11 +312,9 @@ public:
         }
         return *this;  // ✅ Returning a reference to the current object
     }
-
     void show() {
         cout << "String: " << str << " | Address: " << this << endl;
     }
-
     ~Deep() {
         delete[] str;
     }
@@ -350,8 +347,8 @@ Needed in?	    Member functions, to refer to current object	Copy assignment oper
 ✔ Use this-> explicitly if there is a naming conflict (e.g., parameter and member have the same name).
 */
 
+//=================================================================================================================
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ✅ Deep Copy vs Shallow Copy for Character Arrays in C++ - 
 
 1️⃣ Shallow Copy Problem (Character Arrays)
@@ -367,7 +364,6 @@ public:
         str = new char[strlen(s) + 1]; // Allocating memory
         strcpy(str, s);  // Copying string
     }
-
     // ❌ Shallow Copy Constructor (Copying pointer)
     Shallow(const Shallow& obj) {
         str = obj.str;  // ❌ Both objects share the same memory
@@ -378,7 +374,6 @@ public:
         cout << "Destructor called\n";
     }
 };
-
 int main() {
     Shallow obj1("Hello");
     Shallow obj2 = obj1;  // Calls Shallow Copy Constructor
@@ -440,7 +435,9 @@ Destructor called  ✅ (obj1 destroyed)
 ✔ Each object has its own separate memory.
 ✔ No memory corruption or dangling pointers.
 ✔ No double delete errors.
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//================================================================================================================
+
 3️⃣ Handling Assignment Operator (Deep Copy)
 If we use assignment (=) after object creation, we also need to override the copy assignment operator.
 
@@ -496,7 +493,8 @@ Destructor called  ✅ (obj1 destroyed)
 ✔ If your class has dynamically allocated memory (new), always implement a deep copy constructor.
 ✔ Use std::string instead of char* whenever possible to avoid manual memory management.
 ✔ Use smart pointers (std::unique_ptr, std::shared_ptr) for automatic memory handling.
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//================================================================================================================
 
 🔹 Implementing Assignment Operator with Chained Assignment in C++ OOPs
 Chained assignment allows expressions like a = b = c;, where values are assigned from right to left. 
