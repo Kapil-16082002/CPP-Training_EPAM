@@ -57,7 +57,8 @@ public:
         return *this;
     }
     // Move Constructor (Rule of Five)
-    MyClass(MyClass&& other) noexcept : data(other.data) {
+    MyClass(MyClass&& other) noexcept {
+        data = other.data;
         other.data = nullptr;  // Nullify the other object's resource pointer
         std::cout << "Move Constructor called\n";
     }
@@ -72,6 +73,16 @@ public:
 
         return *this;
     }
+
+    /*  you can also write in this way: 
+    // Move assignment
+    LogBuffer& operator=(LogBuffer&& other) noexcept {
+        std::cout << "Move assignment\n";
+        data = std::move(other.data);
+        return *this;
+    }
+    */
+
     // Destructor (Rule of Five)
     ~MyClass() {
         delete data;  // Free the dynamically allocated resource
