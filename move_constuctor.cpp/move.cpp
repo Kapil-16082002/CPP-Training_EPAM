@@ -1,5 +1,8 @@
 
-A move constructor allows the resources of an rvalue (temporary object) to be transferred to a new object instead of performing a deep copy.
+️  Move Constructor → One tool of move semantics
+The move constructor is a specific function inside a class that performs moving when a new object is created.
+
+A move constructor transfer the resources of an rvalue (temporary object) to a new object instead of performing a deep copy.
 The move constructor is designed to improve performance by eliminating unnecessary deep copies of objects.
 
 🧠 Syntax of Move Constructor
@@ -7,7 +10,7 @@ ClassName(ClassName&& other);
 The parameter is an rvalue reference (&&) to another object of the same type.
 It usually steals the resources from the source object and nullifies the source.
 
-💼 Use Cases
+💼 Use Cases:
 1.Returning large objects from functions
 2.Passing large objects to functions by value
 3.Storing objects in STL containers (e.g., std::vector)
@@ -16,7 +19,7 @@ It usually steals the resources from the source object and nullifies the source.
         vec.push_back(MyString("Temp"));  // move constructor used
 STL containers like std::vector, std::map, etc., use move semantics to improve performance when resizing or returning large objects.
 4.Transferring ownership (like std::unique_ptr)
-5. Used when Object is an rvalue or std::move is applied
+5. Used when Object is an rvalue or std::move is applied.
 
 
 #include <iostream>
@@ -51,9 +54,9 @@ public:
         std::cout << (data ? data : "NULL") << "\n";
     }
 };
-MyString createString() {  //This is a function named createString that takes no arguments and returns a MyString object.
+MyString createString() {  // This is a function named createString that takes no arguments and returns a MyString object.
     MyString temp("Hello");   // This line calls the regular constructor, 
-    return temp;  // Temp will be moved, not copied
+    return temp;  // When returning temp, the compiler can treat it as an rvalue.
     /*
 Why This Is a Move and Not a Copy? Reason;
 Reason:1
