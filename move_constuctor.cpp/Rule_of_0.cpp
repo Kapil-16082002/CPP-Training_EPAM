@@ -1,5 +1,5 @@
 ✅The Rule of 0 in C++:
-The Rule of 0 is a design principle that encourages you to rely on automatic resource management (primarily through the use of RAII – Resource Acquisition Is Initialization) 
+The Rule of 0 is a design principle that says you should rely on automatic resource management (primarily through the use of RAII – Resource Acquisition Is Initialization) 
 and does not explicitly define special member functions such as constructors, destructors, and assignment operators.
 
 ✅What Are the "Special Member Functions"?
@@ -19,7 +19,7 @@ This is made easier by using library utilities like smart pointers or containers
 
 
 ✅Why Use the Rule of 0?
-1. C++ Standard Library: Modern C++ provides tools like std::unique_ptr, std::shared_ptr, std::vector, and std::map, which handle memory management and resource allocation safely.
+1. C++ Standard Library: Modern C++ provides tools like std::unique_ptr, std::shared_ptr, std::vector, and std::map, that handles memory management and resource allocation & deallocation safely.
 2.Prevent Errors: Incorrect management of resources (e.g., improper copying, memory leaks, or dangling pointers) is a common source of bugs. 
                   Using standard components ensures exception safety and reduces resource leakage.
 
