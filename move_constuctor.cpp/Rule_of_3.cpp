@@ -26,7 +26,7 @@ If one object is destroyed, the pointer could become dangling, causing undefined
 
 ✅Disadvantages of the Rule of 3:
 1.Requires implementing all three functions even if only one is needed.
-2.Poor implementations of the copy constructor or assignment operator can lead tobugs like partial copying, resource leaks, or undefined behavior.
+2.Poor implementations of the copy constructor or assignment operator can lead to bugs like partial copying, resource leaks, or undefined behavior.
 3. Explicit copying may be more expensive than other modern approaches (e.g., move semantics, smart pointers).
 
 #include <iostream>
