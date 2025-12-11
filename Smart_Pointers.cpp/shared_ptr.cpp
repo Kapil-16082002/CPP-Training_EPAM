@@ -40,7 +40,7 @@ If not accompanied by std::weak_ptr, shared pointers can cause memory leaks in c
 Developers must understand its semantics and usage to avoid misuse (e.g., storing raw pointers outside its scope).
 
 
-/* 
+/*
 1.Reference count keeps track of how many std::shared_ptr instances currently share ownership of the same resource.
 2.When a std::shared_ptr is created and takes ownership of a resource, the reference count is initialized to 1.
 3.When a new std::shared_ptr is created from an existing std::shared_ptr (via copy construction or assignment), the reference count is incremented to indicate that the resource is shared by another owner.
@@ -56,7 +56,7 @@ The reference count is internally managed in a thread-safe manner, which means y
 1.Control Block:    dynamically allocated control block (also called a shared memory block or control structure).
 
 When a std::shared_ptr is created, a control block is allocated dynamically alongside the object being managed. 
-This block contains:
+This control block contains:
 -Reference Count (use_count): Tracks how many std::shared_ptr objects currently share ownership of the managed object.
 -Weak Reference Count (weak_count): Tracks the number of std::weak_ptr objects referring to the same managed object.
 -Custom Deleter (if any): If the std::shared_ptr is constructed with a custom deleter, this deleter is also stored in the control block.
@@ -71,9 +71,8 @@ When a std::shared_ptr is destroyed (or reset), the reference count (use_count) 
 When the reference count reaches 0, the managed object is destroyed.
 
 3.Pointer to the Managed Object:
-The actual pointer to the managed object is stored separately in the control block. 
+The actual pointer to the managed object is stored separately in the control block.
 This prevents ownership issues when multiple std::shared_ptr instances share the same managed object.
-
 
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -82,7 +81,8 @@ This prevents ownership issues when multiple std::shared_ptr instances share the
 Returns the raw pointer to the managed object without affecting the reference count.
 std::shared_ptr<int> ptr = std::make_shared<int>(5);
 int* raw = ptr.get();
-Here, raw is just a raw pointer to the same object that ptr manages. However, raw does not own the resource, so it does not contribute to the reference count.
+Here, raw is just a raw pointer to the same object that ptr manages. 
+However, raw does not own the resource, so it does not contribute to the reference count.
 
 Ownership and Destruction:
 The std::shared_ptr (ptr) still owns the resource (the integer with value 5, in this case).
@@ -125,9 +125,9 @@ int main() {
     car2->drive();
 
     car1.reset(); // Releases car1's ownership of the object
+    //❌ car1.reset(); does not delete the Car object immediately because car2 is still managing it.
     std::cout << "Reference Count: " << car1.use_count() << std::endl; // Output: 0
     std::cout << "Reference Count: " << car2.use_count() << std::endl; // Output: 1
-    //❌ car1.reset(); does not delete the Car object immediately because car2 is still managing it.
   // ✅ The Car object is deleted only after car2.reset();, when the reference count becomes 0.
     car2.reset(); // Releases car2's ownership of the object
     std::cout << "Reference Count: " << car1.use_count() << std::endl; // Output: 0
@@ -198,7 +198,6 @@ class Car {
  private:
     //public: 
     std::shared_ptr<Engine> engine; // Shared ownership
-
 public:
     Car(std::shared_ptr<Engine> eng) : engine(eng) {
         std::cout << "Car Created\n";
@@ -247,12 +246,10 @@ public:
     ~Engine() { std::cout << "Engine Destroyed\n"; }
     void start() { std::cout << "Engine Started\n"; }
 };
-
 class Car {
 //  private:
     public: 
      std::shared_ptr<Engine> engine; // Shared ownership
-
 public:
     Car(std::shared_ptr<Engine> eng) : engine(eng) {
         std::cout << "Car Created\n";
@@ -294,7 +291,8 @@ Reference Count of Car: 1
 Car Destroyed
 Engine Destroyed
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//==================================================================================================================
+
 3️⃣ Passing shared_ptr to Functions
 Using shared_ptr as a function parameter ensures that the object is not destroyed while in use.
 
@@ -354,14 +352,15 @@ int main() {
     std::cout << "After function call, Reference Count: " << myCar.use_count() << std::endl;  // 1
     
     return 0;
-}Output:
+}
+Output:
 Before function call, Reference Count: 1
 Inside function, Reference Count: 1
 Car is being driven.
 After function call, Reference Count: 1
 ✅ Use this when the function only reads data and should not extend object lifetime.
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//=================================================================================================================
 
 5️⃣ Handling Cyclic References with weak_ptr ->:
 When two objects have shared_ptr references to each other, they create a circular reference that prevents proper deletion (destruction) of resources.
@@ -461,7 +460,8 @@ int main() {
     std::cout << "Reference Count of B: " << b.use_count() << std::endl; // Output: 0
     
     return 0; // No memory leak, A & B get properly destroyed
-}Output:
+}
+Output:
 A Created
 Reference Count of A: 1
 B Created
