@@ -1,5 +1,5 @@
 
-Smart pointers in C++ are special objects that automatically manage raw pointers.
+Smart pointers are special C++ objects that automatically manage raw pointers.
 Smart pointers ensure that memory is freed properly when it is no longer needed,so helping in prevent memory leaks, dangling pointers, and double deletion.
 
 ✅Smart pointers automatically handle:
@@ -48,14 +48,14 @@ Problems Caused by Memory Leaks:
 2.Reduced System Performance:
 Excessive memory usage due to leaks can cause the operating system to run out of RAM, and it may use virtual memory (swapping memory to disk). 
 so virtual memory will slow down your computer performance.
-/*virtual memory is significantly slower than RAM. 
-RAM is the main memory where your computer stores data and programs that are actively being used. 
+/*
+virtual memory is significantly slower than RAM. 
+RAM is the main memory where your computer stores data and actively running programs.
 Virtual memory, on the other hand, is a portion of your hard drive (or SSD) that acts as extra RAM when the physical RAM is full. 
 Accessing data from the hard drive is much slower than accessing it from RAM, so virtual memory will slow down your computer performance.
 */
 3.System or Application Crashes:
 When the system or application runs out of memory to allocate, it can crash or terminate unexpectedly.
-
 
 class Sample {
 public:
@@ -173,11 +173,13 @@ public:
         std::cout << "Memory allocated safely.\n";
     }
 };
+
 int main() {
     std::unique_ptr<DoubleDeleteFixed> obj = std::make_unique<DoubleDeleteFixed>();
     return 0; // ✅ No double delete, memory is freed automatically
-}
+
 //----------------------------------------------------------------------------------------------------------------
+
 4️⃣ Exception Safety (Memory Leak on Exception)
 ❌ Problem: Memory leak when an exception occurs
 #include <iostream>
@@ -202,7 +204,10 @@ void riskyFunction() {
 }
 int main() {
     try {
-        riskyFunction();
+        //riskyFunction();
+        ExceptionSafety* obj = new ExceptionSafety();
+        throw std::runtime_error("Error occurred!"); // ❌ Memory leak, delete never called
+        delete obj;
     } catch (const std::exception& e) {
         std::cout << "Exception caught: " << e.what() << "\n";
     }
@@ -230,7 +235,10 @@ void safeFunction() {
 }
 int main() {
     try {
-        safeFunction();
+        //safeFunction();
+        std::unique_ptr<ExceptionSafetyFixed> obj = std::make_unique<ExceptionSafetyFixed>();
+        throw std::runtime_error("Error occurred!"); // ✅ No memory leak, smart pointer deletes memory
+
     } catch (const std::exception& e) {
         std::cout << "Exception caught: " << e.what() << "\n";
     }
