@@ -1,20 +1,20 @@
 
 ✅std::weak_ptr ->
-std::weak_ptr is a type of smart pointer that does not participate in the reference count. 
+std::weak_ptr is a type of smart pointer that does not participate in the reference count.
 std::weak_ptr is a smart pointers to break circular references between std::shared_ptr objects.
 
 Use Case: std::weak_ptr is designed to be used in situations where you want a reference to an object but do not want to extend(or control) the objects lifetime.
 Use Case: Used in scenarios like caching, where you do not want to control object lifetime but need to observe it (e.g., accessing a shared resource without ownership).
 usecase: also checks whether std::shared_ptr<> is destroyed or not by converting wek_ptr to shared_ptr
- std::shared_ptr<MyClass> sp1 = std::make_shared<MyClass>();
- std::weak_ptr<MyClass> wp1 = sp1;  // taking reference to an sp1 object
+
+std::shared_ptr<MyClass> sp1 = std::make_shared<MyClass>();
+std::weak_ptr<MyClass> wp1 = sp1;  // taking reference to an sp1 object
     if (auto sp2 = wp1.lock()) {     // Convert weak_ptr to shared_ptr to access object
         sp2->show();
     } 
     else {
         std::cout << "Object no longer exists\n";
     }
-
 
 ✅How std::weak_ptr Works ->
 A std::weak_ptr does not increase the reference count of the object it observes.
@@ -30,9 +30,9 @@ Important Functions of std::weak_ptr
             Returns true if the object is expired (deleted), otherwise false.
 ✅use_count(): Returns the number of std::shared_ptr instances managing the object. 
 This is useful for debugging and checking how many shared pointers still manage the object.
-#include <iostream>
-#include <memory>
 
+#include <iostream>
+#include <memory> 
 class MyClass {
 public:
     MyClass() { std::cout << "MyClass Constructor\n"; }
