@@ -1,6 +1,6 @@
 
 1. What is std::unique_ptr?
-std::unique_ptr is a smart pointer in C++ that provides exclusive ownership of a dynamically allocated object. 
+std::unique_ptr is a smart pointer in C++ that provides exclusive ownership of a dynamically allocated object i.e Only one unique_ptr can own a Object(resource) at a time.
 std::unique_ptr is a smart pointer in C++ that manages dynamic memory. 
 It ensures that the allocated object is automatically deleted when the unique_ptr goes out of scope, preventing memory leaks.
 
@@ -77,6 +77,7 @@ std::unique_ptr<MyClass> ptr2 = std::move(ptr1);  // Transfers ownership
 🔹 After the move, ptr1 becomes empty.
 
 //-----------------------------------------------------------------------------------------------------------------
+
 3.✅unique_ptr with Class Members:
 
 #include <bits/stdc++.h>
@@ -152,6 +153,7 @@ If an exception is thrown before delete engine;, it causes a memory leak.
 std::unique_ptr solves this issue automatically.
 
 //---------------------------------------------------------------------------------------------------------------
+
 4✅. std::unique_ptr with Arrays
 (C) Managing Arrays
 When using std::unique_ptr with arrays, you must specify [] in the constructor.
@@ -185,13 +187,13 @@ int main() {
 #include <memory>
 #include <vector>
 class Dog {
+private:
+    std::string name;
 public:
     Dog(std::string name) : name(name) {
         std::cout << name << " created\n";
     }
     ~Dog() { std::cout << name << " destroyed\n"; }
-private:
-    std::string name;
 };
 int main() {
     std::vector<std::unique_ptr<Dog>> dogs;
