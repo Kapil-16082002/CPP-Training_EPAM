@@ -1,5 +1,5 @@
 ✅Custom Deleter in C++ Smart Pointers
-A custom deleter is a function (either a function object, a lambda, or a function pointer) that specifies how to clean up resources when a smart pointer (std::unique_ptr or std::shared_ptr) goes out of scope. 
+A custom deleter is a function (either a function object, a lambda, or a function pointer) that tells how to clean up resources when a smart pointer (std::unique_ptr or std::shared_ptr) goes out of scope. 
 By default, smart pointers call delete on the managed object.
 However, a custom deleter allows you to override the default delete behavior for special cleanup tasks (such as freeing arrays, closing file handles, or releasing custom resources).
 
@@ -62,7 +62,6 @@ int main() {
     };
     // Create a unique_ptr with the lambda custom deleter
     std::unique_ptr<int, decltype(customDeleter)> ptr(new int(42), customDeleter);
-    // Access and use the managed object
     std::cout << "Value: " << *ptr << std::endl;
     // The custom deleter is automatically called when the pointer goes out of scope
     return 0;
@@ -79,8 +78,6 @@ void customDeleter(int* ptr) {
 int main() {
     // Create a shared_ptr with the custom deleter
     std::shared_ptr<int> ptr(new int(42), customDeleter);
-
-    // Access and use the managed object
     std::cout << "Value: " << *ptr << std::endl;
 
     // The custom deleter is automatically invoked when no shared_ptr owns the resource
