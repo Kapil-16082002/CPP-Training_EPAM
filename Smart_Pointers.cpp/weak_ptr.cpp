@@ -45,7 +45,7 @@ int main() {
     std::weak_ptr<MyClass> wp1 = sp1;
     if (auto sp2 = wp1.lock()) {     // Convert weak_ptr to shared_ptr to access object
         sp2->show();
-    } 
+    }
     else {
         std::cout << "Object no longer exists\n";
     }
