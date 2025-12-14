@@ -99,7 +99,6 @@ void demo2D_unique_block(int R, int C) {
             cout << arr[i][j] << " ";
         cout << endl;
     }
-
     // Destructor of unique_ptr will:
     // 1. call delete[] on each row
     // 2. call delete[] on arr itself
