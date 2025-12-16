@@ -66,17 +66,22 @@ int main() {
 Modified x: 15
 ✔ Lambda modifies the actual variable because it was captured by reference.
 
+
+
+Global variables are always accessible and modifiable inside a lambda, even without capture.
 #include <iostream>
-using namespace std
-int x = 10;
+using namespace std;
+int x = 10;   // global variable
+
 int main() {
-    auto modifyX = []() { x += 5; };  //  ‘x’ is captured
-    modifyX();  
-    cout << "Modified x: " << x << endl;  
+    auto modifyX = []() { 
+        x += 5;   // modifying global variable
+    };
+    modifyX();
+    cout << "Modified x: " << x << endl;
     return 0;
 }
 output: 15 , x is modifiable
-
 
 
 #include <iostream>
@@ -104,7 +109,8 @@ int main() {
 ✅ Output:
 a: 10, b: 30
 ✔ b was modified, but a remained unchanged.
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//================================================================================================================
 
 4️⃣ Specifying Return Type
 By default, the return type is inferred(return automatic declared by compiler based on expression computation).
@@ -115,7 +121,7 @@ If needed, specify explicitly using -> return_type.
 using namespace std;
 int main() {
     auto divide = [](int a, int b) -> double { return (double)a / b; };  //  2.5
-    auto divide = [](int a, int b) -> int { return (double)a / b; };     //  2
+    //auto divide = [](int a, int b) -> int { return (double)a / b; };     //  2
 
     cout << "Division: " << divide(5, 2) << endl;
     return 0;
@@ -124,7 +130,8 @@ int main() {
 Division: 2.5
 ✔ Ensures floating-point division.
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//================================================================================================================
+
 5️⃣ Lambdas in STL Algorithms
 Lambdas are commonly used in STL algorithms.
 
@@ -136,6 +143,7 @@ using namespace std;
 int main() {
     vector<int> numbers = {5, 2, 8, 1, 3};
     sort(numbers.begin(), numbers.end(), [](int a, int b) { return a > b; });
+    //sort(numbers.begin(), numbers.end(), lamda_function);
     for (int num : numbers) cout << num << " ";
     return 0;
 }
@@ -159,7 +167,7 @@ int main() {
 2 4 6 8 10
 ✔ Applies the lambda to each element.
 
-//--------------------------------------------------------------------------------------------------------------
+//=================================================================================================================
 
 6️⃣ Lambdas with mutable Keyword
 
@@ -173,12 +181,12 @@ using namespace std;
 int main() {
     int x = 10;
     auto modify1 = [x]() mutable { x += 5; cout << "1__Inside lambda: " << x << endl; }; // 15
-  //auto modify1 = [x]()      { x += 5; cout << "1__Inside lambda: " << x << endl; };// give error because x is read only variable
+  //auto modify1 = [x](){ x += 5; cout << "1__Inside lambda: " << x << endl; };// give error because x is read only variable
    modify1(); 
-   cout << "Outside lambda: " << x << endl;
+   cout << "Outside lambda: " << x << endl; // 10
 
 
-    auto modify2 = [=]() mutable { x += 5; cout << "2__Inside lambda: " << x << endl; }; // 15
+    auto modify2 = [=]() mutable { x += 5; cout << "2__Inside lambda: " << x << endl; }; // 15, will modify all variables
   //auto modify3 = [=]()     { x += 5; cout << "3__Inside lambda: " << x << endl; };// give error because x is read only variable
     modify2(); 
     cout << "Outside lambda: " << x << endl;  //  10
@@ -196,11 +204,13 @@ Inside lambda: 15   //  The change is only inside the lambda since x was capture
 Outside lambda: 10
 
 Why Does not a Lambda Capturing by Value ([=]) Modify the Original Variable?
-When a lambda captures a variable by value, it makes a copy of the variable. Any modifications inside the lambda only affect the copied variable, not the original one outside the lambda.
+When a lambda captures a variable by value, it makes a copy of the variable. 
+Any modifications inside the lambda only affect the copied variable, not the original one outside the lambda.
 By default, lambdas treat captured variables as const, meaning you cannot modify them inside the lambda unless you explicitly allow it using the mutable keyword.
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//================================================================================================================
+
 Declaring and Using Lambda Functions Outside main() in C++ 
  Lambda functions in C++ are typically declared inside main(),
  but we can also declare them globally (outside main()) and use them both inside and outside main().
@@ -209,9 +219,9 @@ Declaring and Using Lambda Functions Outside main() in C++
 Since C++ requires lambda functions to be stored in variables, we define them as auto outside main().
 
 Example: Lambda Outside main() and Used Inside & Outside
+
 #include <iostream>
 using namespace std;
- 
 auto add = [](int a, int b) -> int {   // Global lambda function
     return a + b;
 };
@@ -293,7 +303,6 @@ We can use captured variables to store a value and use it across functions.
  void compute(int x, int y) {
      cout << "Multiplication (outside main): " << operation(x, y) << endl;
  }
- 
  int main() {
      compute(4, 5);
      cout << "Multiplication (inside main): " << operation(3, 6) << endl;
