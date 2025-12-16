@@ -3,7 +3,7 @@ A function pointer is a pointer that stores the address of a function.Just like 
 Using a function pointer, you can call the function it points to and even pass it as an argument to other functions. 
 
 Syntax of Function Pointers:
-return_type (*pointer_name)(parameter_list);
+return_type (*function_pointer_name)(parameter_list);
 
 return_type: Type of the function’s return value.
 pointer_name: Name of the function pointer.
@@ -37,7 +37,7 @@ void (*funcPtr)(int);  // Function pointer declaration
 
 2. Assign to a Function
 Assign the address of the function to the pointer:
-funcPtr = &myFunction;  // Assign the function's address
+funcPtr = &myFunction;  // Assign the function's address.
 funcPtr = myFunction;  // Same as above,  & may be omitted when assigning:
 
 
@@ -83,8 +83,16 @@ Difference: 5
 Product: 50
 
 ✅//Where Are Function Pointers Used ?
-
+//==================================================================================================================
 1. Function Pointers as Callback Mechanisms:
+
+Disadvantages:
+1.The function to be executed is not known at compile time but instead is determined at runtime.
+At runtime, the program needs to access the pointer, dereference it, and then call the function.This will make minor performance overhead.
+
+Advantages:
+The function pointer callback allows you to dynamically choose which function to call at runtime, making it more reusable and extensible.
+
 #include <iostream>
 using namespace std;
 
@@ -109,12 +117,7 @@ Output:
 Executing callback...
 Hello, Welcome!
 
-Disadvantages:
-1.The function to be executed is not known at compile time but instead is determined at runtime.
-At runtime, the program needs to access the pointer, dereference it, and then call the function.This will make minor performance overhead.
 
-Advantages:
-The function pointer callback allows you to dynamically choose which function to call at runtime, making it more reusable and extensible.
 
 /*    No Function Pointer (Hardcoded Callback)
 #include <iostream>
