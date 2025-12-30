@@ -1,7 +1,6 @@
 ✅Functors in C++:
-
-A functor (short for function object) in C++ is an object that acts like a function. 
-This is achieved by overloading the operator() (the function call operator) in a class or struct. 
+A functor (short for function object) in C++ is an object that acts like a function.
+This is achieved by overloading the operator() (the function call operator) in a class or struct.
 Functors encapsulate behavior and can store state, making them much more flexible and powerful than regular functions or function pointers.
 
 
@@ -50,7 +49,7 @@ Functors are a good alternative for callbacks, especially in modern C++.
 #include <iostream>
 using namespace std;
 class Print {
-public:
+public:   // if private then not accessible
     void operator()(int x) const {  // Overloading the () operator
         cout << "Printing value: " << x << endl;
     }
