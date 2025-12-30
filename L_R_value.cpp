@@ -32,18 +32,22 @@ int& ref = 10; // ERROR! 10 is an R-value, cannot bind to int&
 /*  Explanation:
 int& ref = x;
 A reference is just another name (alias) for an existing variable.
-declares ref as a reference to x, meaning ref is just another name (alias) for x. Any modification to ref will directly affect x.
+declares ref as a reference to x, meaning ref is just another name (alias) for x. 
+Any modification to ref will directly affect x.
 
 Breaking it Down:
 
-int& → This means ref is a reference to an int type variable.
+int& ref → This means ref is a reference to an int type variable.
 ref = x; → ref is initialized to refer to the existing variable x.
+int& ref is also an l-value.
 Key Points:
-✔ A reference (ref) is NOT a new variable; it's just another name for x.
-✔ Changing ref modifies x directly.
-✔ A reference must be initialized at the time of declaration.
-✔ Once a reference is bound to a variable, it cannot be changed to refer to another variable.
-✔ No need for dereferencing (*).
+👉reference (ref) does not have its own memory.
+👉refers to x permanently.
+👉 A reference (ref) is NOT a new variable; it's just another name for x.
+👉 Changing ref modifies x directly.
+👉 A reference must be initialized at the time of declaration.
+👉 Once a reference is bound to a variable, it cannot be changed to refer to another variable.
+👉 No need for dereferencing (*).
 
 3️⃣ Difference Between Reference and Pointer
 Feature	            Reference (&)	Pointer (*)
@@ -52,17 +56,41 @@ Can be reassigned?	❌ No	      ✅ Yes
 Needs dereferencing?❌ No	      ✅ Yes (*ptr)
 Must be initialized?✅ Yes	      ❌ No (can be nullptr)
 
-Conclusion
+Conclusion:
 Use references (&) when you don't need to change the variable reference.
 Use pointers (*) when you need flexibility (e.g., dynamic memory, nullable variables).
 
 */
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//==================================================================================================================
 
 2️⃣ R-Value (Right-Hand Side Value)
 
 R-values are temporary values that exist only during the execution of an expression and cannot be assigned to variables directly.
+/*Note:
+Yes, r-values can have memory addresses internally
+👉 But you are NOT always allowed to take the address of an r-value
+Even temporary values must live somewhere in memory (stack / registers / optimizations aside).
 
+But sometimes r-values DO have accessible addresses 🤯
+1️⃣ When bound to a const reference
+const int& ref = 10;
+cout << &ref << endl;   // ✅ VALID
+
+✔ The temporary 10:
+Is given a hidden memory location
+Lifetime is extended
+Now has an addressable identity
+
+
+2️⃣ When bound to an r-value reference (&&)
+int&& rref = 20;
+cout << &rref << endl;  // ✅ VALID
+
+✔ Same rule:
+Temporary lives longer
+Has a real address
+
+*/
 ✅ Characteristics:
 No identifiable memory address.
 Cannot be assigned another value (because it is temporary).
