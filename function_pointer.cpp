@@ -84,71 +84,105 @@ Product: 50
 
 ✅//Where Are Function Pointers Used ?
 //==================================================================================================================
+| Scenario          | Address decided | Call resolved              |
+| ----------------- | --------------- | -------------------------- |
+| Normal function   | Compile time    | Compile time               |
+| Function pointer  | Compile time    | Run time                   |
+| Callback function | Compile time    | Run time                   |
+| Virtual function  | Compile time    | Run time (dynamic binding) |
+
+
+
 1. Function Pointers as Callback Mechanisms:
+Callback is a function passed to another function using a function pointer, which is executed inside the receiving function.
+#include <iostream>
+using namespace std;
+
+// Callback function
+void greet() {
+    cout << "Hello from callback!" << endl;
+}
+// Function that accepts a callback
+void execute(void (*func)()) {
+    cout << "Before callback" << endl;
+    func();   // calling back
+    cout << "After callback" << endl;
+}
+int main() {
+    execute(greet);   // pass function as argument
+    return 0;
+}
+/*
+Which callback Function to be executed is not known at compile time but instead is determined at runtime.why??
+Because In callback-based code, the compiler only knows the function signature, not the actual function. 
+The function address is supplied at runtime, so the function executed is determined during execution.
+🔹1️⃣ What the compiler knows at compile time
+When the compiler sees:
+void execute(void (*func)())
+
+It only knows:
+func is a pointer to a function
+That function returns void
+That function takes no parameters
+
+❌ The compiler does NOT know:
+Which function func will point to
+Whether it is greet() or any other function
+
+🔹2️⃣What happens at runtime
+In main():
+execute(greet);
+
+At runtime:
+greet address is passed to execute
+func now points to greet
+
+
+
+
+*/
 
 Disadvantages:
 1.The function to be executed is not known at compile time but instead is determined at runtime.
-At runtime, the program needs to access the pointer, dereference it, and then call the function.This will make minor performance overhead.
+At runtime, at first program will access the pointer, then dereference it, and then call the function.
+ This will make minor performance overhead.
 
 Advantages:
 The function pointer callback allows you to dynamically choose which function to call at runtime, making it more reusable and extensible.
-
+/*  Example
 #include <iostream>
 using namespace std;
 
-// Callback function
+// Callback functions
 void greet() {
-    cout << "Hello, Welcome!" << endl;
+    cout << "Hello from greet() callback!" << endl;
 }
-void farewell() {
-    cout << "Goodbye, see you next time!" << endl;
+void bye() {
+    cout << "Goodbye from bye() callback!" << endl;
 }
 // Function that accepts a callback
-void executeCallback(int x, void (*callback)()) {
-    cout << "Executing callback..." << endl;
-    callback();  // Call the callback function
+void execute(void (*func)()) {
+    cout << "Before callback" << endl;
+    func();   // dynamic callback
+    cout << "After callback" << endl;
 }
 int main() {
-    executeCallback(4,greet);  // Pass the greet function as a callback
-    executeCallback(4,farewell);
+    int choice;
+    cout << "Enter 1 for greet, 2 for bye: ";
+    cin >> choice;
+    void (*callback)();   // function pointer
+
+    // Runtime decision
+    if (choice == 1) callback = greet;
+    else callback = bye;
+        
+    execute(callback);    // chosen at runtime
     return 0;
 }
-Output:
-Executing callback...
-Hello, Welcome!
-
-
-
-/*    No Function Pointer (Hardcoded Callback)
-#include <iostream>
-using namespace std;
-
-// Callback function
-void greet() {
-    cout << "Hello, Welcome!" << endl;
-}
-
-// Function that accepts a callback
-void executeCallback() {
-    cout << "Executing callback..." << endl;
-    // callback();  // Call the callback function
-    greet();
-}
-
-int main() {
-    executeCallback();  // Pass the greet function as a callback
-    return 0;
-}
-
-Disadvantages:
-1.Not Flexible:
-The executeCallback function does not allow you to choose a different callback function. It is always tied to greet.
-
-Advantages:
-The hardcoded callback approach directly calls the greet() function. 
-This means the compiler knows exactly which function to invoke at compile time and can generate efficient code (often an inline function call).
-
 */
+
+//=============================================================================================================================
+
 
 ✅2. Passing Function Pointers as Arguments
 #include <iostream>
@@ -168,7 +202,7 @@ int main() {
     return 0;
 }
 
-//==================================================================================================================
+//=======================================================================================================================================
 
 ✅3. Using Function Pointers with Sorting algorithms like std::sort and std::for_each
 You can use function pointers to dynamically choose the comparison logic for a sorting algorithm.
@@ -228,15 +262,20 @@ int main() {
 //=================================================================================================================
 
 ✅2. std::function
-std::function (introduced in C++11) is a versatile and type-safe way to store and call callable objects, such as function pointers, lambda expressions, or functors. 
+std::function (introduced in C++11) is a type-safe way to store and call callable objects, such as function pointers, lambda expressions, or functors. 
 It’s a part of the <functional> header.
+std::function can store anything that can be called if they match the same signature, such as:
+Normal functions
+Function pointers
+Lambda expressions
+Functors (objects with operator())
 
 Basic Syntax of std::function
 #include <functional> // Required for std::function
 std::function<ReturnType(ArgTypes...)> variable_name;
 
 
-Advantages of std::function:
+✅Advantages of std::function:
 Flexible: Works with plain functions, lambdas, and functors.
 Type-safe: The function signature is strictly enforced.
 Clean and reusable.
@@ -247,7 +286,7 @@ Use Case: Dynamically Selecting Callbacks
 using namespace std;
 
 // Function that accepts a std::function
-void execute(std::function<int(int, int)> operation, int a, int b) {
+void execute_fun(std::function<int(int, int)> operation, int a, int b) {
     cout << "Result: " << operation(a, b) << endl;
 }
 // Plain functions
@@ -256,29 +295,16 @@ int multiply(int x, int y) { return x * y; }
 
 int main() {
     // Pass a plain function
-    execute(add, 5, 3);  // Result: 8
+    execute_fun(add, 5, 3);  // Result: 8
     // Pass a lambda
-    execute([](int x, int y) { return x - y; }, 5, 3);  // Result: 2
+    execute_fun([](int x, int y) { return x - y; }, 5, 3);  // Result: 2
     // Reuse with variables
     std::function<int(int, int)> divide = [](int x, int y) { return x / y; };
-    execute(divide, 10, 2);  // Result: 5
+    execute_fun(divide, 10, 2);  // Result: 5
 
     return 0;
 }
-✅Understanding std::function in C++
-std::function is a part of the <functional> header in C++ Standard Library and is a general-purpose polymorphic function wrapper. 
-It can hold callable objects like:
-Free functions,
-Lambda expressions,
-Member functions,
-Function pointers,
-Functors (objects with operator() defined).
-
-It is highly versatile because it allows dynamic reusability and is type-safe. 
-Essentially, std::function wraps any callable object with a specified signature (return type and parameter list).
-
 Examples of Using std::function
-
 1. Wrapping a Simple Free Function
 A free function is a global or static function that can work independently.
 
