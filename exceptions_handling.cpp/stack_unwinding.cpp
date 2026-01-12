@@ -1,7 +1,7 @@
 
 ✅What is Stack Unwinding in C++?
 Stack unwinding refers to the process of cleaning up the stack when an exception is thrown in a C++ program.
-When an exception occurs, the runtime traverses the call stack (from the point where the exception was thrown) to:
+When an exception occurs, the runtime traverses the call stack (from the point where the exception was thrown) and:
 1.Look for a matching catch block.
 2.Destruct objects (including local variables) in reverse order of their construction (starting from the current scope and moving upward).
 3.Perform proper cleanup of resources (memory, file handles, etc.) during this traversal.
@@ -18,14 +18,14 @@ Files, handles, or database connections must be closed or released during stack 
 3.Undefined Behavior:
 Proper destruction ensures program behaves safely and consistently even during abnormal termination.
 
+
 ✅What Happens During Stack Unwinding:
 While unwinding the stack:
-
 The destructors of all fully constructed objects in the current and previous stack frames are called in reverse order of their creation (LIFO—last in, first out).
 This ensures that resources acquired previously (e.g., memory, files, or other system resources) are properly cleaned up.
 The goal of stack unwinding is to clean up responsibly even in the face of an unhandled exception.
 
-//--------------------------------------------------------------------------------------------------------------
+//===============================================================================================================
 
 #include <iostream>
 #include <stdexcept>
@@ -99,7 +99,8 @@ Therefore, the program terminates after stack unwinding is complete.
 
 
 
-//----------------------------------------------------------------------------------------------------------------
+//================================================================================================================
+
 #include <iostream>
 class Test {
 private:
@@ -147,7 +148,7 @@ functionB() creates b (Test("B")).
 functionC() creates c (Test("C")) and throws an exception.
 Since functionC() threw an exception: c is destroyed first (stack unwinding).//Destructor: C
 b is destroyed next (stack unwinding in functionB()). // Destructor: B
-Control returns to functionA(), where the catch block handles the exception.
+Program Control returns to functionA(), where the catch block handles the exception.
 a is destroyed last before exiting functionA().
 ✅ All destructors are called in proper order (reverse of construction order).
 
