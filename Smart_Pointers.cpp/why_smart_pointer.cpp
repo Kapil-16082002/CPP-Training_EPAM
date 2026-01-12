@@ -9,7 +9,7 @@ Ownership Semantics: Managing ownership of dynamic objects without ambiguity.
 Exception safety - They ensure objects are cleaned up during exceptions.
 Thread safety (in case of std::shared_ptr).
 
-Without Smart Pointers (Manual Memory Management)
+Without Smart Pointers (Manual Memory Management) ?
 #include <iostream>
 class MyClass {
 public:
@@ -113,8 +113,8 @@ public:
 };
 int main() {
     DanglingPointer* obj = new DanglingPointer();
-    delete obj; // Memory freed
-    obj->showData(); // ❌ Accessing deleted memory
+    delete obj; // Memory freed, after delete obj;, obj still holds the same memory address.
+    obj->showData(); // ❌ Accessing deleted memory undefined behavior.
     return 0;
 }
 
@@ -161,6 +161,7 @@ int main() {
     delete obj; // ❌ Second delete -> ERROR
     return 0;
 }
+//After the first delete, obj still holds the same (now invalid) address, so the second delete tries to free the same memory again, causing undefined behavior.
 
 ✅ Solution using std::unique_ptr
 #include <iostream>
