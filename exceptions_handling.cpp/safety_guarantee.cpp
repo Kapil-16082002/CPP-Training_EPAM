@@ -4,7 +4,7 @@ These guarantees are designed to maintain program correctness, resource manageme
 In C++, exception safety guarantees are typically classified into three levels of guarantees (or four, including one for functions with no exceptions).
 Here's an explanation of each level of guarantee:
 
-1. No-Throw Guarantee (Strongest):
+1. No-Throw Guarantee (Strongest  Guarantee):
 A function that provides this guarantee will never throw an exception and object or application behavior remains well-defined and consistent.
 It is also referred to as the noexcept guarantee because functions marked with noexcept in C++ explicitly promise not to throw exceptions.
 
@@ -17,7 +17,7 @@ Any operation that throws an exception would either fail to compile or would inv
 #include <vector>
 
 void noThrowFunc() noexcept {
-    // This function guarantees it won't throw an exception.
+    // This function guarantees it won't throw an exception
     std::cout << "No exception will be thrown here.\n";
 }
 int main() {
@@ -73,7 +73,7 @@ Here, if push_back(value) throws an exception, the original vector remains uncha
 3. Basic Guarantee:
 The basic exception safety guarantee ensures that:
 1.Resources will not leak, even if an exception is thrown.
-2.The program will not crash or will not give undefined behavior, but the program state may remains unchanged or may be altered. 
+2.The program will not crash or will not give undefined behavior, but the program state may remains unchanged or may be changed. 
 
 #include <iostream>
 #include <vector>
@@ -145,7 +145,10 @@ The program state after an exception is thrown may be undefined, leading to bugs
 This level is unacceptable for robust programs and should be avoided. However, functions providing no guarantee might still be usable in highly specific or low-requirement contexts.
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//==================================================================================================================
+
 
 Techniques to Achieve Exception Safety:
 
