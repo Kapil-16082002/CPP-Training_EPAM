@@ -5,7 +5,7 @@ try → Defines a block of code that might throw an exception.
 throw → Used to throw an exception.
 catch → Handles exceptions thrown by the try block.
 /*Catch-All Handler
-Use catch(...) to handle all exceptions when the type is unknown or irrelevant.  
+Use catch(...) to handle all exceptions when the type is unknown or irrelevant.
 
 catch (const std::exception&e)
 std::exception&e will catch only those exceptions that are derived from the std::exception class.
@@ -19,9 +19,32 @@ Scenarios in Exception Handling:
 4. File Handling Errors -> While working with files, exceptions can arise if the file is not found, cannot be opened, or there's a read/write failure.
 
 ✅Types of Exceptions:
-1.Standard exceptions (std::exception, std::runtime_error, std::logic_error etc.).
+1.Standard exceptions 
+ ├── std::logic_error
+ │    ├── invalid_argument
+ │    ├── out_of_range
+ │    └── length_error
+ ├── std::runtime_error
+ │    ├── overflow_error
+ │    ├── underflow_error
+ │    └── range_error
+ ├── std::bad_alloc
+ ├── std::bad_cast
+ └── std::bad_typeid
+
+
 2.User-defined exceptions (custom exception classes).
-3.System-generated exceptions (e.g., division by zero, out of memory).
+
+3.System-generated exceptions:
+system-generated exceptions usually mean exceptions thrown automatically by the C++ runtime / standard library or by system, not explicitly thrown by the programmer.
+
+| `std::bad_alloc`               |
+| `std::bad_cast`                |
+| `std::bad_typeid`              |
+| `std::out_of_range`            |
+| `std::invalid_argument`        |
+| `std::ios_base::failure`       |
+
 
 Multiple Catch Blocks:
 A try block can have multiple catch handlers for different types.
@@ -33,7 +56,7 @@ Exception Specifications (deprecated in C++11):
 throw(type) was used to declare which exceptions a function might throw.
 This feature was removed in modern C++ because it was difficult to enforce at runtime.
 
-//----------------------------------------------------------------------------------------------------------------
+//==================================================================================================================
 
 Basic Example of Exception Handling:
 #include <iostream>
@@ -52,19 +75,75 @@ int main() {
     catch (const char* msg) {  // Catching the exception
         cout << "Exception caught: " << msg << endl;
     }
-    //catch (std::string msg)   will string exception
+    //catch (std::string msg)   will catch string exception
     return 0;
 }
 Output
 Result: 5
 Exception caught: Division by zero error!
-/*Since the exception being thrown is of type const char*, the corresponding catch block must also match the type const char* for the handler to work. 
+/*Since the exception being thrown is of type const char*, the corresponding matching catch block must also match the type const char* for the handler to work. 
 
 catch (std::string msg)
 This will not work because the type of the exception being thrown (const char*) does not match the type being caught (std::string). 
 C++ does not automatically convert exceptions of type const char* into std::string*/
 
-// =------------------------     throw exception in constructor      ----------------------------------------------
+✅In which cases exception handling will NOT happen:
+Exception handling happens only when the thrown type exactly matches (or is convertible to) a catch block; 
+otherwise the program terminates.
+
+❌ Case 1: No matching catch type
+catch (int x) { }   // ❌ does NOT match const char*
+Result:
+Exception is not caught
+Program calls std::terminate()
+
+
+❌ Case 2: No try block at all
+int main() {
+    divide(5, 0);  // no try
+}
+Result:
+Exception propagates
+No handler found
+std::terminate() called
+
+
+❌ Case 3: Exception thrown in destructor during stack unwinding
+~MyClass() {
+    throw runtime_error("error"); // ❌
+}
+Result:
+Immediate std::terminate()
+Exception handling does not occur
+
+//================================================================================================================
+
+✅How exception handling is happening in your code:
+Step:1
+divide(5, 0)
+b == 0
+throw "Division by zero error!" executes
+
+Step:2 
+program Control immediately jumps out of divide()
+No further statements in divide() function will run
+Stack unwinding starts
+
+Step:3
+C++ searches for a matching catch block
+catch (const char* msg)
+Matches exactly (throw type is const char*)
+
+Step:4
+Catch block executes
+Exception caught: Division by zero error!
+
+Step:5
+Program continues normally after catch
+✅ Exception handling IS happening correctly
+
+
+// ==========================    throw exception in constructor  ================================================
 
 When an Exception is Thrown in a Constructor
 In C++, if a constructor of a class throws an exception, the destructor for the object being created will NOT be called, because the object is considered incomplete at the time of the exception.
