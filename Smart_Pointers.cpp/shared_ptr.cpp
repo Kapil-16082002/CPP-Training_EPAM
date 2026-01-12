@@ -2,11 +2,17 @@
 std::shared_ptr is a smart pointer in C++ that allows multiple pointers to share ownership of a dynamically allocated object. 
 When the last shared_ptr that have ownership of an object is destroyed or reset, the object is automatically deleted.
 
+// std::make_shared<>();       intoduced in C++11
+//std::make_shared<int[]>(5);  intoduced in C++17
+
 ✅Declaration and Initialization:
-1.std::shared_ptr<MyClass> ptr = std::make_shared<MyClass>();
+1. std::shared_ptr<int> ptr  = std::make_shared<int>(5);
+std::shared_ptr<int[]> ptr = std::make_shared<int[]>(5); // array of size 5, all elements become 0
+
+2. std::shared_ptr<MyClass> ptr = std::make_shared<MyClass>();
 std::unique_ptr<MyClass[]> myClassArray = std::make_unique<MyClass[]>(size);// array of objects
-  
-2.std::shared_ptr<int> ptr(new int(42)); 
+
+3. std::shared_ptr<int> ptr(new int(42));
 std::shared_ptr<int[]> ptr(new int[42]);
 
 /* 
@@ -17,7 +23,17 @@ ptr[2]= MyClass(3);
 
 std::shared_ptr<MyClass[]> ptr(new MyClass[3] {MyClass(1), MyClass(2), MyClass(3)});
 
+// auto ptr = std::make_shared<int>(5); this will also work
+
 */
+
+
+Why release() is NOT available in std::shared_ptr?
+weak count, shared count
+how internally Reference Counting works? 
+how increment of shared_ptr happens?
+
+
 
 2. Key Features of std::shared_ptr
 ✅ Shared Ownership → Multiple shared_ptr instances can own the same object.
@@ -25,7 +41,7 @@ std::shared_ptr<MyClass[]> ptr(new MyClass[3] {MyClass(1), MyClass(2), MyClass(3
 ✅ Automatic Cleanup(deallocation) → The object is deleted when the last shared_ptr goes out of scope.
 ✅ Safe Memory Management → Prevents memory leaks and dangling pointers.
 ✅ Supports Move Semantics → Ownership can be transferred using std::move().When ownership is moved, the original std::shared_ptr becomes empty (nullptr) because it no longer owns the resource.
-
+std::shared_ptr fully supports copy semantics.
 ✅Use Case: Suitable where multiple objects might need access to the same resource (e.g., in shared data structures).
 
 
@@ -103,7 +119,6 @@ int main() {
 Returns true if the std::shared_ptr is the sole owner of the object (use_count == 1).
 std::shared_ptr<int> ptr1 = std::make_shared<int>(10);
 std::cout << std::boolalpha << ptr1.unique(); // Output: true
-
 */
 
 #include <iostream>
@@ -395,7 +410,6 @@ int main() {
 
     a->bptr =b ; // A now owns B
     std::cout << "After A owns B, Reference Count of B: " << b.use_count() << std::endl; // Output: 2
-
     b->aptr = a ; // B now owns A
     std::cout << "After B owns A, Reference Count of A: " << a.use_count() << std::endl; // Output: 2
     
