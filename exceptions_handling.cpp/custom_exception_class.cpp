@@ -1,5 +1,5 @@
 Custom Exception Handling:
-Custom exception handling allow creating user-defined exceptions to handle specific error scenarios in a program. 
+Custom exception handling allow creating user-defined exceptions  and if user is getting its own defined exception ,user can handle that error scenarios in a program. 
 By defining our own exception classes, we can handle errors and can provide meaningful feedback(can provide more functionality) and would not dpend on standard library exceptions. 
 This allows developers to handle domain-specific errors based on their application logic.
 
