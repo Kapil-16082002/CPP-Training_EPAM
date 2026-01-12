@@ -7,6 +7,15 @@ int* rawPtr = new int(42);
 
 
 ✅Auto pointer:
+| C++ Version   | Status auto_ptr        
+| ------------- | -------------- 
+| C++98 / C++03 | Allowed        
+| C++11         | **Deprecated**(can not use it anymore)
+| C++17         | **Removed**    
+
+
+
+✅Auto pointer:
 std::auto_ptr is a smart pointer included in the C++98 standard for managing dynamic memory automatically.
 It automatically deallocates the object, leaving no risk of memory leaks if used properly.
 
@@ -32,7 +41,7 @@ int main() {
     std::auto_ptr<MyClass> ptr2 = ptr1;         // Ownership transferred to ptr2 (ptr1 is now null)
 
     // Access the owned object using ptr2
-    if (ptr1.get() == nullptr) {
+    if (ptr1.get() == nullptr) {  // get() will return read only raw poiner to the samrt_pointer
         std::cout << "ptr1 is null\n"; // Pointer ownership was transferred
     }
     return 0; // Destructor for MyClass called when ptr2 goes out of scope
@@ -49,8 +58,9 @@ After ownership is transferred, the original auto_ptr is set to nullptr.
 ❌ This breaks normal copy semantics rule.
 Copying should mean both objects remain valid, not one becoming empty.
 
-2. Not Compatible with Standard Containers(_STL_DISABLED_WARNING_C5053):
+2. Not Compatible with Standard Containers:
 Due to the transfer-of-ownership semantics for copy and assignment, std::auto_ptr cannot be used with STL containers (std::vector, std::list, etc.), which require proper copy semantics.
+Because std::auto_ptr transfers ownership on copy, it violates the copy requirements of STL containers. As a result, it cannot be safely used in containers like std::vector or std::list.
 std::vector<std::auto_ptr<int>> vec;
 vec.push_back(std::auto_ptr<int>(new int(42))); // Leads to undefined behavior
 
@@ -89,18 +99,17 @@ std::weak_ptr (C++11):
 2.std::shared_ptr<int> ptr(new int(42)); 
 
 which approach is best??
-std::shared_ptr<MyClass> ptr = std::make_shared<MyClass>() is best approach:
+✅ std::shared_ptr<MyClass> ptr = std::make_shared<MyClass>() is best approach:
 Because:
 1. Efficiency: Internally, std::make_shared dynamically allocated only single memory for both the control block (used to manage reference counting) and the object itself. 
 This reduces the overhead of separate memory allocations.
-
 2.Exception safety:
 If exception  is thrown, you would not  have a dangling pointer or memory leak  because everything is managed atomically by std::make_shared.
 
-why not std::shared_ptr<int> ptr(new int(42)); ???
 
+❌why not std::shared_ptr<int> ptr(new int(42)); ???
 1. Efficiency:
-Here, we are manually allocating dynamic memory  with new int(42) and passing it to the std::shared_ptr constructor.
+Here, we are manually allocating dynamic memory with new int(42) and passing it to the std::shared_ptr constructor.
 This leads to two separate memory allocations—one for the control block of the std::shared_ptr and one for the int object itself. 
 This is less efficient.
 2.Exception Safety Risk: 
