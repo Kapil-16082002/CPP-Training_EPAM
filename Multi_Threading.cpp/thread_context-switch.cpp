@@ -1,7 +1,36 @@
-✅A thread is a smallest (lightweight) unit of execution inside a process. 
- Multiple threads can run concurrently within a single process and share memory (like global variables or heap memory). 
- This makes threading fast but also risky due to race conditions.
+✅A thread is a smallest (lightweight) unit of execution inside a process.
+Multiple threads can run concurrently within a single process and share memory (like global variables or heap memory). 
+This makes threading fast but also risky due to race conditions.
+🔹 Thread Example:
+Suppose there is one employee in the office:
+That employee is doing multiple tasks at the same time:
+
+1.Writing a report 📝
+2.Responding to emails 📧
+3.Attending a call 📞
+Each of these tasks is a THREAD.
+
+
 Multithreading in C++ refers to the ability of a program to execute multiple threads concurrently.
+| Term            | Meaning                                               |
+| --------------- | ----------------------------------------------------- |
+| **Concurrency** | Tasks are in progress at the same time (interleaving) |
+| **Parallelism** | Tasks run at the exact same time on multiple cores    |
+
+
+| Aspect           | **Program**                                                                      | **Process**                                                                   |
+| ---------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| **Definition**   | A **program** is a passive set of instructions stored on disk (executable file). | A **process** is an active instance of a program that is currently executing. |
+| **State**        | Static (not running).                                                            | Dynamic (running or ready to run).                                            |
+| **Existence**    | Exists as a file (e.g., `.exe`, binary).                                         | Exists in main memory (RAM) while executing.                                  |
+| **Execution**    | Cannot execute by itself.                                                        | Executes instructions of a program.                                           |
+| **Memory**       | No memory allocated for execution.                                               | Has its own memory (code, stack, heap, data).                                 |
+| **Resources**    | Does not use CPU, memory, or I/O.                                                | Uses CPU time, memory, files, and I/O resources.                              |
+| **Multiplicity** | One program file can exist only once on disk.                                    | Multiple processes can be created from the same program.                      |
+| **Lifetime**     | Permanent until deleted.                                                         | Temporary (created → executed → terminated).                                  |
+
+
+
 
 In C++ (OOPs approach), we create threads using std::thread (from the <thread> library), which enables multi-threading in C++.
 
@@ -12,9 +41,21 @@ Key Features of a Process:
 2.Inter-process Communication (IPC):
 Since processes run in separate memory spaces, they must communicate via mechanisms such as pipes, sockets, shared memory, or message queues.
 
+🔹Real-Life Example: Office Workspace
+Think of a computer system as an office building 🏢.
+Programs → Job descriptions or task manuals
+Processes → Employees working on those jobs
+
+🔹 Multiple Processes Running Concurrently
+Imagine an office where many employees are working at the same time:
+One employee is writing a report ✍️
+Another is attending an online meeting 🎧
+Another is checking emails 📧
+
+
 1. Synchronous Programming
-In synchronous programming, tasks are executed sequentially, one after the other. 
-The program waits for a task to finish before moving on to the next. 
+In synchronous programming, tasks are executed sequentially, one after the other.
+The program waits for a task to finish before moving on to the next.
 If a task takes a long time (e.g., a file download or database query), the thread executing it is blocked, stopping the programs progression until the task is complete.
 
 2. Asynchronous Programming
@@ -47,17 +88,18 @@ Threads can be categorized based on their purpose or functionality in the applic
   3.std::async Threads: Launch a task asynchronously, returning a std::future to retrieve the result:
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//=================================================================================================================
 
 ✅What is a Race Condition?
 A race condition occurs in multithreaded programming when two or more threads manipulate(access) shared data simultaneously, and the outcome of the program depends on the order in which the threads execute. 
 This unpredictability can lead to inconsistent or unintended results.
 Example of a Race Condition
-Imagine two threads incrementing a shared counter variable without any synchronization. Since both threads run concurrently without coordination, they may interrupt each other, leading to incorrect results.
+Imagine two threads incrementing a shared counter variable without any synchronization. 
+Since both threads run concurrently without coordination, they may interrupt each other, leading to incorrect results.
 #include <iostream>
 #include <thread>
 
-int counter = 0; // Shared resource
+int counter = 0; // Shared resource                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
 void incrementCounter() {
     for (int i = 0; i < 10; i++) {
         counter++; // Critical section
@@ -99,34 +141,279 @@ These techniques ensure that only one thread accesses the critical section (shar
 4. Using std::condition_variable
 5. Using Reader-Writer Locks (Shared Mutex)
 
+//==================       std::thread t(workerFunction)        =================================================
 
+
+std::thread t(workerFunction);
+What happens internally:
+
+🧩 Step 1: std::thread object creation
+std::thread t(...);
+A C++ thread object (t) is created on the current thread’s stack
+At this moment, t is just a handle / wrapper, not the actual OS thread
+
+
+🧩 Step 2: Callable is stored
+workerFunction
+The function pointer / callable is:
+Copied or moved
+Stored inside the std::thread object
+
+Arguments (if any) are decayed and copied
+Example:
+std::thread t(func, x, y);
+➡ x and y are copied into internal storage
+
+
+🧩 Step 3: OS thread is requested
+std::thread internally calls platform-specific APIs
+| OS      | Internal call      |
+| ------- | ------------------ |
+| Linux   | `pthread_create()` |
+| Windows | `CreateThread()`   |
+| macOS   | `pthread_create()` |
+
+
+🧩 Step 4: New call stack is allocated
+
+For the new thread:
+Separate stack memory is allocated
+Separate instruction pointer
+Separate register set
+
+💡 Each thread has:
+Same code section
+Same heap
+Same global/static variables
+Different stack
+
+
+🧩 Step 5: Thread starts execution
+
+OS scheduler decides when the new thread runs
+Execution begins at an internal wrapper function
+
+Wrapper calls:
+workerFunction();
+📌 Execution order is NOT guaranteed
+
+🧩 Step 6: t becomes joinable
+
+After successful creation:
+t.joinable() == true
+
+Meaning:
+The thread is running or ready to run
+Must call:
+t.join() OR  t.detach()
+Otherwise → ❌ std::terminate()
+
+
+
+//=================================================================================================================
+
+Declaration of std:: thread
+
+1️⃣ Local (stack allocation) — MOST COMMON
+void func() {
+    std::thread t(workerFunction);
+}
+📍 t is allocated on the STACK of the calling thread (usually main).
+Lifetime = scope of t
+Destructor runs when t goes out of scope
+
+Main Thread Stack
+└── std::thread t   ← allocated here
+
+
+
+2️⃣ Dynamic (heap allocation)
+std::thread* t = new std::thread(workerFunction);
+
+📍 t object is on the HEAP
+You must call delete t
+Still must call join() or detach() before 
+
+Heap
+└── std::thread object
+
+
+
+3️⃣ Global / static allocation
+std::thread t(workerFunction);   // global
+
+📍 Allocated in static / global memory
+Constructed before main()
+Dangerous if not managed carefully
+
+
+//================================================================================================================
+
+Parameters of std::thread t(workerFunction)
+
+1️⃣ First Parameter – Callable Object
+✅ What can be passed as func
+| Type                          | Example                            | How to pass to `std::thread`                         |
+| ----------------------------- | ---------------------------------- | ---------------------------------------------------- |
+| **Normal function**           | `void func(int, int);`             | `std::thread t(func, 10, 20);`                       |
+| **Lambda**                    | `[](int a, int b){}`               | `std::thread t([](int a,int b){ /*...*/ }, 10, 20);` |
+| **Function pointer**          | `&func`                            | `std::thread t(&func, 10, 20);`                      |
+| **Functor (operator())**      | `struct F { void operator()(); };` | `std::thread t(F{});`                                |
+| **Static member function**    | `Class::staticFunc`                | `std::thread t(Class::staticFunc, 10);`              |
+| **Member function (special)** | `&Class::method`                   | `std::thread t(&Class::method, obj, 10);`            |
+
+
+✅Example:
+void func(int a, int b);
+int main(){
+std::thread t(func, 1, 2);
+std::thread t([](int x){ std::cout << x; }, 10);
+}
+-------------------------------------------------------------------------------------------------------------------
+
+✅ Example: Member Function with std::thread
+Case 1️⃣: Passing object by value
+#include <iostream>
+#include <thread>
+class Worker {
+public:
+    void doWork(int x) {
+        std::cout << "Doing work with value: " << x << std::endl;
+    }
+};
+int main() {
+    Worker obj;
+    // Member function thread
+    std::thread t(&Worker::doWork, obj, 10);
+    t.join();
+    return 0;
+}
+🔍 What happens here?
+&Worker::doWork → pointer to member function
+obj → copied into the thread
+10 → argument to doWork(int)
+
+❌ Problems  1️⃣ By value — obj ❌ (Usually BAD)
+Object is copied
+Changes inside thread do NOT affect original object
+Copy constructor must exist
+Expensive for large objects
+
+---------------------------------------------------------------------------------------------------------------
+
+✅ Case 2️⃣Using pointer to object
+
+int main() {
+    Worker obj;
+    std::thread t(&Worker::doWork, &obj, 10);
+    t.join();
+    return 0;
+}
+2️⃣ By pointer — &obj ⚠️ (Works, but risky)
+⚠️ Issues:
+Changes inside thread affects original object because thread works on the same object in memory.
+No ownership semantics
+Easy to create dangling pointer
+Less expressive
+Manual lifetime responsibility
+
+💥 Dangerous case:
+void startThread() {
+    Worker obj;
+    std::thread t(&Worker::doWork, &obj, 10);
+    t.detach();   // 💥 obj destroyed, thread still running
+}
+→ Undefined Behavior
+
+-------------------------------------------------------------------------------------------------------------
+✅ Case 3️⃣: : Passing object by reference
+int main() {
+    Worker obj;
+    // Pass object by reference
+    std::thread t(&Worker::doWork, std::ref(obj), 10);
+    t.join();
+    return 0;
+}
+🔍 Why std::ref(obj)?
+By default, std::thread copies arguments,std::ref() ensures no copy, real object is used
+
+3️⃣ By reference — std::ref(obj) ✅ (BEST PRACTICE)
+✅ Advantages
+No copy
+Same object shared
+Safer than raw pointer
+Works naturally with RAII + join()
+
+
+✅ With std::cref
+std::thread t(func, std::cref(value));  // no copy, read-only object.
+
+Difference:
+std::ref passes an object as a non-const reference allowing modification, 
+whereas std::cref passes it as a const reference enforcing read-only access. 
+Both prevent copying when used with std::thread, but neither provides thread safety.
+------------------------------------------------------------------------------------------------------------------
+
+
+
+
+2️⃣ Remaining Parameters – Arguments to Callable
+All parameters after the callable are passed to the function.
+
+std::thread t(func, x, y);
+means internally:  func(x, y);
+
+
+3️⃣ How Arguments Are Passed (VERY IMPORTANT)
+
+🔹 By value (default)
+int x = 5;
+std::thread t(func, x);   // copy of x
+Changes inside thread ❌ do NOT affect x.
+
+
+🔹 By reference (use std::ref)
+int x = 5;
+std::thread t(func, std::ref(x));
+Changes inside thread ✅ affect x.
+
+
+🔹 By const reference, use  std::cref(x)
+void func(const int& x);
+std::thread t(func, std::cref(x));
 
 //===================================================================================================================
+
 ✅Mutex:
 A mutex (mutual exclusion) 
-Mutual Exclusion  -> only one thread can access a shared resource (critical section) at a time. 
+Mutual Exclusion  -> only one thread can access a shared resource (critical section) at a time.
 -> This prevents race conditions and ensures data consistency.
 -> used to prevent multiple threads from accessing a shared resource simultaneously.
 
-🔒 Mutex Lock
+🔒 Mutex Lock:
 When a thread locks a mutex, it gains exclusive access to a shared resource (like a variable, file, or database). 
 While the mutex is locked:
    No other thread can access that resource.
    If another thread tries to lock the same mutex, it will wait (block) until the mutex is unlocked.
 Purpose: Prevent race conditions, where multiple threads try to modify the same resource at the same time, which could lead to inconsistent or unpredictable results.
 
-🔓 Mutex Unlock
+🔓 Mutex Unlock:
 When a thread no longer using the shared resource, it unlocks the mutex:
 This releases the lock, allowing other waiting threads to acquire it and access the resource.
 Failing to unlock a mutex can cause deadlocks, where threads are stuck waiting forever.
 
-//-----------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
 
 🔧  thread.join()?
 join() is a function you call on a std::thread object to wait for that thread to finish execution.
+join() ensures that the child thread will finish execution before main program ends.
 
 std::thread t(worker);
-t.join();  // wait for thread t to finish before continuing
+t.join();  // wait for thread t to finish execution before continuing
+
+🔹 What happens to the main thread ? When t.join() is called:
+✅ Main thread gets BLOCKED
+The main thread stops executing and waits until workerFunction finishes execution.
 
 🕓 Timeline:
 Main Thread:  |------wait for t------|----continue after t---->
@@ -138,10 +425,75 @@ Thread t:     |--- running worker() ---|
 The main thread pauses at t.join() and waits until thread t finishes.
 Ensures the thread completes before the program continues.
 
-🧠 Why use join()?
-✅ Ensures the thread finishes before the program moves forward.
-✅ Prevents the program from exiting while a thread is still running.
-✅ Helps avoid undefined behavior (like destructing a thread object that’s still running)
+
+🧠✅ Advantages of using join():
+
+1️⃣ Ensures thread completion
+join() ensures that the child thread will finish execution before main program ends.
+📌 Without join():
+Program may terminate early.
+Threads may be abruptly stopped.
+
+
+2️⃣ Prevents undefined behavior:
+/*
+if main() thraed ends before child thread, then
+Before main() ends:
+1. Local objects are destroyed
+2. t (std::thread object) destructor is called
+std::thread destructor checks:
+
+~thread() {
+    if (joinable()) {
+        std::terminate();
+    }
+}
+❌ t is still joinable
+💥 std::terminate() is called immediately
+*/
+If a thread object is destroyed without join() or detach(), the program calls std::terminate().
+std::thread t(task);
+// No join() or detach()
+❌ Program crashes
+✅ Using join() avoids this.
+/*
+🧠 Why does std::terminate() get called ?
+According to the C++ standard:
+If a std::thread object is destroyed while it is still joinable, the program calls std::terminate().
+
+🔍 Internally (conceptual view)
+~thread() {
+    if (joinable()) {
+        std::terminate();
+    }
+}
+🚫 IMPORTANT CONSEQUENCE
+The program never reaches a state where main() ends while the child thread keeps running.
+The program is terminated immediately by std::terminate().
+
+✅ Correct Comparison Table:
+| Situation                      | Result                      |
+| ------------------------------ | --------------------------- |
+| No `join()` & no `detach()`    | 💥 `std::terminate()`       |
+| `detach()` + destroyed objects | ❌ Undefined Behavior        |
+| `join()`                       | ✅ Safe                      |
+| `main()` returns               | Process exits, threads stop |
+
+*/
+3️⃣ Enables safe access to shared resources:
+Ensures worker threads complete their updates
+Main thread can safely read results after join()
+t.join();
+// Safe to use shared data now
+
+4️⃣ Provides synchronization
+
+join() acts as a synchronization point
+Helps coordinate execution order between threads
+🧠 Example:
+Thread A finishes → join() → Thread B continues
+
+
 
 //--------------------------------------------------------------------------------------------------------------
 
@@ -152,6 +504,12 @@ When a thread is detached using std::thread::detach(), it means the thread is se
 It tells the system:
 "Let this thread run on its own, I don’t want to wait for it or manage it anymore."
 
+std::thread::~thread() {
+    if (joinable()) {   // false after t.detach(), this conditon always false for detach()
+        std::terminate();
+    }
+    // destructor exits normally
+}
 std::thread t(myFunction);
 t.detach();  // Now runs independently
 
@@ -163,12 +521,19 @@ Thread t:     |--- running in background ---|
 The main thread doesn’t wait for thread t at all.
 thread t runs in the background — this is fire-and-forget style.
 
+/* 
+The destructor of std::thread simply checks joinable() and calls std::terminate() if true. 
+After detach(), the thread is no longer joinable, so the destructor does nothing. 
+Any undefined behavior after detach() is due to accessing objects whose lifetime has ended, not because of the destructor itself.
+*/
+
+
 Limitations:
 If the main thread finishes execution (i.e., the main() function returns) too quickly, the entire program will terminate, also will not check whether the thread running in background has completed its work or not. 
 Once the program terminates, the operating system cleans up all resources, including resources occupied by detached threads that have not completed yet.
 
 
-//-------- difference between detach() and join()  -----------------------------------------------------------====
+//-------- difference between detach() and join()  -----------------------------------------------------------
 
 🧍‍♂️ Real-Life Analogy:
 Imagine you give your friend a task:
@@ -222,15 +587,19 @@ Whats happening here?
 counter is a shared resource.
 Two threads (t1, t2) are incrementing it.
 Without the mutex, both threads could try to update counter at the same time, causing incorrect results (like skipped increments).
+
 std::lock_guard<std::mutex> lock(mtx); locks the mutex before modifying the counter.
 When the thread is done with the critical section (modifying counter), the mutex is automatically released.
 
 So what is mtx doing?
+➡️ Only one thread modifies counter at a time.
 mtx is acting like a traffic light:
 It lets only one thread at a time into the critical section (the part modifying shared data).
 Other threads wait until the mutex is available.
 
-mtx ensures that only one thread at a time can access or modify shared data (counter, in this case), preventing bugs due to race conditions. Without it, your program might behave unpredictably when run on multiple threads.
+mtx ensures that only one thread at a time can access or modify shared data (counter, in this case), preventing bugs due to race conditions. 
+Without it, your program might behave unpredictably when run on multiple threads.
+
 //---------------------------------------------------------------------------------------------------------------
 
 #include <bits/stdc++.h>
@@ -351,42 +720,107 @@ You must make sure the thread has enough time to finish (hence the sleep).
 Don’t access local resources after detaching, or it may crash.
 
 
-//=================================================================================================================
+//========================  ✅std::lock_guard<std::mutex>  =======================================================
 
-✅Key Differences:   std::lock_guard<std::mutex>:     Manual mtx.lock() and mtx.unlock():
 
-✅1.std::lock_guard<std::mutex>:
+🔴Problems with Manual lock() / unlock() (BAD Practice)
+❌ Problem 1: Exception Safety
+mtx.lock();
+throw std::runtime_error("oops"); //🔴 Mutex will stay locked forever → deadlock
+mtx.unlock();
+
+
+❌ Problem 2: Early Return
+mtx.lock();
+if (condition) return;  // unlock skipped ❌
+mtx.unlock();
+
+
+
+✅ std::lock_guard<std::mutex>:
 1.Automatic Resource Management:(No Explicit Lock/Unlock):
 std::lock_guard is a RAII (Resource Acquisition Is Initialization) wrapper around a mutex. 
 When the lock_guard object is created, it automatically locks the mutex, and when the object goes out of scope, it automatically unlocks the mutex.
 
 2.Exception Safety:
 RAII guarantees the mutex will be unlocked when the lock_guard object goes out of scope, even if an exception is thrown.
+
 3.Deadlock Prevention:
 Because the unlocking is guaranteed, it minimizes the risk of programmer error leading to deadlocks.
+
 4.Non-Movable:
 Objects of std::lock_guard cannot be moved or assigned.
 
+//-------------------------------------------------------------------------------------------------------------------
+
+2️⃣ What Happens Internally:
+std::lock_guard<std::mutex> lock(mtx);
+
+🔹 Step 1: Object Creation (Stack Allocation)
+lock is a local object
+Allocated on the stack
+Constructor is called immediately
 
 
-✅2. Manual mtx.lock() and mtx.unlock():
-mtx.lock();
-// Critical section
-mtx.unlock();
-1. Manual Management Required:
-You are responsible for explicitly locking and unlocking the mutex. If exception is thrown, the mtx.unlock() may not be called, leading to a deadlock.
-2.Error-Prone:
-Forgetting to call mtx.unlock() after mtx.lock() can cause undefined behavior and hangs. 
-Similarly, double-locking the mutex will result in undefined behavior.
+🔹 Step 2: Mutex is Locked:
+Inside lock_guard constructor:
+explicit lock_guard(Mutex& m) : mutex(m) {
+    mutex.lock();
+}
+✔ Mutex is locked
+✔ Thread now owns the critical section
+✔ Other threads trying to lock the same mutex will block
 
 
-✅3.std::unique_lock<std::mutex>
+🔹 Step 3: Scope-Based Ownership
+The mutex remains locked as long as lock exists
+Lock lifetime = scope lifetime
+Example:
+{
+    std::lock_guard<std::mutex> lock(mtx);
+    // critical section
+} // scope ends → destructor called
+
+
+🔹 Step 4: Destructor Automatically Unlocks
+When scope ends (even due to exception):
+~lock_guard() {
+    mutex.unlock();
+}
+✔ Mutex is always unlocked
+✔ No chance of forgetting to unlock
+
+
+3️⃣ Simplified Internal Implementation:
+template <typename Mutex>
+class lock_guard {
+    Mutex& mtx;
+public:
+    explicit lock_guard(Mutex& m) : mtx(m) {
+        mtx.lock();
+    }
+    ~lock_guard() {
+        mtx.unlock();
+    }
+    // Copying is disabled
+    lock_guard(const lock_guard&) = delete;
+    lock_guard& operator=(const lock_guard&) = delete;
+};
+4️⃣ Why Copy is Disabled?
+lock_guard(const lock_guard&) = delete;
+Reason:
+Two objects unlocking the same mutex = ❌ disaster
+Mutex ownership must be unique
+
+
+//======================  ✅3.std::unique_lock<std::mutex>  ======================================================
+
 1.std::unique_lock is also a RAII (Resource Acquisition Is Initialization) wrapper around a mutex.
 When a std::unique_lock object is created, it will not lock the mutex immediately upon creation but if desired it can automatically lock the mutex upon creation
 means it provide defered locking(flexibility of locking) upon object creation.
 
 2.Unlocking allows:
-You can manually unlock and relock the mutex while the unique_lock object is in scope.
+You can manually relock and unlock the mutex while the unique_lock object is in scope.
 
 2.Exception Safety:
 RAII guarantees the mutex will be unlocked when the lock_guard object goes out of scope, even if an exception is thrown.
@@ -395,6 +829,8 @@ RAII guarantees the mutex will be unlocked when the lock_guard object goes out o
 Because the unlocking is guaranteed, it minimizes the risk of programmer error leading to deadlocks.
 4..Movable:
 std::unique_lock objects can be moved, making it possible to transfer ownership of the lock between different scopes or threads.
+
+5. ❌ std::unique_lock is not copyable
 
 Example:
 std::lock_guard<std::mutex> guard(mtx); // Mutex locked for the critical section
@@ -409,19 +845,57 @@ void process_data() {
     // Critical operations
     lock.unlock(); // Unlock manually , not necessary
 }
+/*
+1️⃣What is std::defer_lock Doing?
+🔹 Meaning of std::defer_lock
+std::defer_lock tells std::unique_lock: “Associate with this mutex, but do NOT lock it in the constructor.”
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+2️⃣ What If You DON’T Use std::defer_lock?
+
+std::unique_lock<std::mutex> lock(mtx); // locks immediately
+What happens internally?
+Constructor locks the mutex immediately
+Thread owns the mutex right away
+lock.owns_lock() == true
+
+*/
+
+✅Internal Working of unique_lock with defer_lock :    
+template<typename Mutex>
+class unique_lock {
+    Mutex* mtx;
+    bool owns;
+public:
+    unique_lock(Mutex& m, std::defer_lock_t)  : mtx(&m), owns(false) {
+        // mutex NOT locked
+    }
+    void lock() {
+        mtx->lock();
+        owns = true;
+    }
+    void unlock() {
+        mtx->unlock();
+        owns = false;
+    }
+    ~unique_lock() {
+        if (owns)
+            mtx->unlock();
+    }
+};
+
+
+//================== std::mutex::try_lock() =============================================================
 
 
 ✅What is std::mutex::try_lock()?
 try_lock() is a method(member function) of std::mutex class and works with only single mutex.
-It allows a thread to lock a mutex without blocking (i.e., waiting) if the mutex is already locked by another thread.
+if the mutex is already locked by another thread, It allows a thread to lock a mutex without blocking (i.e., waiting).
 If the mutex is:
 unlocked: try_lock() locks it and returns true.
 locked (already locked by another thread): try_lock() immediately returns false without blocking the thread.
 
 Usecase:
-This is especially useful in scenarios where you want your thread to continue doing other work if a resource is already being used by another thread, instead of waiting indefinitely for the mutex.
+This is especially useful in scenarios where you want your thread to continue doing other task if a resource is already being used by another thread, instead of waiting indefinitely for the mutex.
 
 #include <iostream>
 #include <thread>
@@ -455,13 +929,161 @@ int main() {
     return 0;
 }
 
-//=================================================================================================================
+//============================  std::try_lock()  =====================================================================
 
 ✅What is std::try_lock()?
 std::try_lock() is a standard library function (free function) and works with multiple mutexes simultaneously.
 Try to lock multiple mutexes in a deadlock-free manner without blocking.
-Returns:
--1 , if all mutexes were successfully locked.
-The index of the first mutex that could not be locked (0-based index) if locking fails.
-If any mutex fails to lock, it will automatically unlock all previously locked mutexes.
+
+std::try_lock is a non-blocking locking algorithm ,try to lock multiple mutexes in a deadlock-free manner without blocking.
 Useful for deadlock prevention when trying to lock multiple mutexes at once.
+
+✅ Function Signature:
+template<class Mutex1, class Mutex2, class... Mutexes>
+int std::try_lock(Mutex1& m1, Mutex2& m2, Mutexes&... ms);
+/* 
+template<class... MutexTypes>
+int std::try_lock(MutexTypes&... m);
+
+*/
+
+Returns:
+| Return value | Meaning                             |
+| ------------ | ---------------------------------   |
+| `-1`         | ✅ All mutexes locked successfully  |
+
+| `0`          | ❌ Failed to lock first mutex      |
+| `1`          | ❌ Failed to lock second mutex     |
+| `N`          | ❌ Failed to lock Nth mutex        |
+// 0-based Indexing
+All mutexes before index n are:
+      🔓 automatically unlocked
+      Mutexes after index i were never attempted
+
+-------------------------------------------------------------------------------------------------------------------
+
+❌Why Do We Need std::try_lock ?
+❌ Problem with naive locking (deadlock)
+
+std::mutex m1, m2;
+// Thread 1
+m1.lock();
+m2.lock();   // waits here
+
+// Thread 2
+m2.lock();
+m1.lock();   // waits here
+💥 Deadlock!
+🔴 What happens?
+Thread 1 holds m1, waits for m2
+Thread 2 holds m2, waits for m1
+Neither releases → 💥 DEADLOCK
+This happens because each thread holds one lock while waiting for the other.
+
+
+
+✅Simple Example:
+#include <iostream>
+#include <mutex>
+
+std::mutex m1, m2;
+void task() {
+    int result = std::try_lock(m1, m2);
+
+    if (result == -1) {
+        std::cout << "Both mutexes locked\n";
+
+        // critical section
+        m1.unlock();
+        m2.unlock();
+    } 
+    else {
+        std::cout << "Failed to lock mutex index: " << result << "\n";
+    }
+}
+int main() {
+    task();
+}
+
+✅Step-by-step logic (simplified):
+try {
+    lock m1 (non-blocking)
+    if fails → return 0
+
+    lock m2
+    if fails → unlock m1 → return 1
+
+    lock m3
+    if fails → unlock m1, m2 → return 2
+
+    ...
+    return -1
+}
+
+
+🔐 How std::try_lock Removes Deadlock
+
+1️⃣ First: What Causes Deadlock?
+Deadlock happens when all 4 Coffman conditions are satisfied:
+Mutual exclusion – mutexes allow only one owner
+Hold and wait – thread holds one lock and waits for another
+No preemption – locks can’t be forcibly taken
+Circular wait – thread A waits for B, B waits for A
+
+👉 The real killer is #2 + #4 (hold-and-wait + circular wait).
+
+
+2️⃣Core Idea Behind std::try_lock
+
+📌Important rule:
+If it cannot lock all mutexes, it releases everything it already locked.
+
+std::try_lock never allows “hold one and wait for another”.
+This is the key deadlock prevention rule.
+
+3️⃣ How This Prevents Deadlock?
+🔑 Deadlock needs: “Thread holds A and waits for B”
+❌ std::try_lock behavior: “If B isn’t available, release A and back off”
+👉 So hold-and-wait is broken.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//================================================================================================================
+
+✅ std::try_lock vs mutex::try_lock()
+
+| Feature                 | `mutex::try_lock()` | `std::try_lock()` |
+| ----------------------- | ------------------- | ----------------- |
+| Locks how many mutexes? | One                 | Multiple          |
+| Return type             | `bool`              | `int`             |
+| Deadlock prevention     | ❌ No                | ✅ Yes          |
+| Auto unlock on failure  | ❌ No                | ✅ Yes          |
+
+
+✅Difference: try_lock vs lock
+
+| Feature         | `std::lock` | `std::try_lock` |
+| --------------- | ----------- | --------------- |
+| Blocking        | ✅ Yes       | ❌ No            |
+| Deadlock-safe   | ✅ Yes       | ✅ Yes           |
+| Returns status  | ❌ No        | ✅ Yes           |
+| CPU usage       | Efficient   | Can spin        |
+| Waits for mutex | Yes         | Never           |
