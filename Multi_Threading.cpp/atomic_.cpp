@@ -1,4 +1,4 @@
-\
+
 🧠 What is std::atomic?
 std::atomic is a template class in C++ that ensures atomic (indivisible) operations on a variable.
 That means no two threads can interfere with each other during a read-modify-write operation.
