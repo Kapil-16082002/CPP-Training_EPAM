@@ -1,6 +1,12 @@
 ✅Resource Acquisition Is Initialization (RAII) in C++ ->
 RAII (Resource Acquisition Is Initialization) is a C++ programming technique(Idiom) where resource management (such as memory, file handles, or locks) is tied to object lifetime. 
-Resources are occupied during construction of object and released during the destruction of the object and ensures automatic resource management.
+Resources are acquired during construction of object and released during the destruction of the object and ensures automatic resource management.
+
+Simple meaning:
+When an object is created, it acquires a resource.
+When the object is destroyed, it automatically releases that resource.
+No manual new/delete, open/close, lock/unlock calls should be in code.
+
 
 RAII helps in prevention of resource leakage and makes code safer and more maintainable.
 Resources are released when the object goes out of scope (stack unwinding).
@@ -95,7 +101,10 @@ Smart Pointer	Ownership	       Auto Deletion	                    Use Case
 std::unique_ptr	Single Ownership   Yes (when out of scope)	            For managing exclusive resources like file handles, sockets, etc.
 std::shared_ptr	Shared Ownership   Yes (when last owner is destroyed)	For shared resources, e.g., caches or graphs where multiple objects share nodes.
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//===============================================================================================================
+
+
 A thread in C++ is a separate execution path that allows a program to run multiple tasks concurrently, improving efficiency and performance.
 In C++ (OOPs approach), we create threads using std::thread (from the <thread> library), which enables multi-threading in C++.
 #include <iostream>
