@@ -3,15 +3,15 @@
 std::async is a high-level way to run a function asynchronously and get the result later using a std::future.
 It’s simpler and safer than manually using std::thread, std::promise, and std::future.
 
-(run a function asynchronously means:)-> 
-Execute a function in a separate thread so the main program can continue doing other things without waiting for that function to finish immediately.
+(run a function asynchronously means:)->
+Execute a function in a separate thread so that main program can continue doing other things without waiting for that function to finish immediately.
 
 Advantages of std::async:
 Automatic Thread Management: You don’t need to manage thread creation or joining manually.
 Exception Handling: If a thread throws an exception, it can be caught via the future.get() method.
 
 
-✨ Syntax
+✨ Syntax:
 std::future<ReturnType> future = std::async(std::launch::async, your_function, args...);
 std::launch::async → forces the function to run in a new thread
 future.get() blocks until the function returns
@@ -30,13 +30,12 @@ int calculateSum(int a, int b) {
 }
 int main() {
     std::cout << "🚀 Starting async task...\n";
-
     std::future<int> result = std::async(std::launch::async, calculateSum, 10, 20);
     /* 
-    Async with Lambda
+Async with Lambda
 auto future = std::async(std::launch::async, [] {
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    return 99;
+std::this_thread::sleep_for(std::chrono::seconds(1));
+return 99;
 });
 std::cout << "Result: " << future.get() << "\n";
     */
@@ -73,7 +72,81 @@ Manages thread	     ✅ (auto)	                              ❌ (manual)
 Exception forwarding ✅ Built-in	                              ✅ Manual
 One-liner usage	     ✅	                                      ❌
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+🧠🏗️ Step-by-Step Internal Working
+🔹 STEP 1: When std::async is called,it does three main things:
+1. Creates a shared state
+2. Starts executing your_function on a new thread (because std::launch::async)
+3. Returns a std::future connected to that shared state
+
+
+Before any thread is started, the library creates a shared state.
+This shared state contains:
+The return value (or exception)
+A readiness flag
+Synchronization primitives (mutex / condition variable)
+Reference count (how many objects share it)
+Conceptually:
+┌───────────────────────────────┐
+│ Shared State                  │
+│  - result (empty)             │
+│  - exception (empty)          │
+│  - ready flag = false         │
+│  - mutex + condition_variable │
+└───────────────────────────────┘
+
+🔹 STEP 3: Binding function + arguments
+Internally something like this happens:
+
+auto task = bind(your_function, args...);
+This creates a callable object that can be executed later.
+Important:
+Arguments are copied or moved
+Perfect forwarding is used
+Lifetimes are guaranteed
+
+
+
+🔹 STEP 4: Thread creation (because launch::async)
+Because you explicitly said:
+std::launch::async
+
+The implementation must:
+Create a new thread
+Start executing your_function(args...)
+
+
+
+🔹 STEP 5: Function executes in worker thread
+Inside the new thread:
+Case 1️⃣ Function return normally,
+Then:
+result is stored in shared state
+ready = true
+condition variable is notified
+
+Case 2️⃣ Function throws exception
+throw std::runtime_error("error");
+Then:
+exception is captured using std::current_exception()
+stored in shared state
+ready = true
+condition variable is notified
+
+🚨 Exception never crashes the program
+It is transferred safely to the future.
+
+
+🔹 STEP 6: std::future object is created
+This future:
+holds a reference to the shared state
+does NOT contain the value itself
+is move-only (unique ownership)
+✅ The future will NOT go out of scope until the async task finishes
+
+
+//=================================================================================================================
+
 Producer-Consumer Problem Using std::async
 Overview:
 Producer: Generates data and places it in a shared buffer (queue).
@@ -129,7 +202,6 @@ void consumer(int id) {
         std::this_thread::sleep_for(std::chrono::milliseconds(150));
     }
 }
-
 int main() {
 
     auto producer_future = std::async(std::launch::async, producer, 1);//starts the producer function asynchronously in the background.
