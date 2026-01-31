@@ -12,6 +12,15 @@ It prevents race conditions on simple types without needing locks.
 ✅ Better performance (no kernel-level context switching)
 ❌ Only works well for simple data types like int, bool, pointers  
 
+
+
+std::atomic<int>  means:
+An integer variable that can be accessed safely by multiple threads without using a mutex.
+So instead of:  int counter;// ❌ NOT thread-safe
+you get:  std::atomic<int> counter;  // ✅ thread-safe
+
+
+
 🔥 Example Without Atomic (Race Condition)
 #include <iostream>
 #include <thread>
@@ -48,7 +57,7 @@ The final value of counter could be anywhere between 10 and 20, depending on how
 #include <thread>
 #include <atomic>
 
-std::atomic<int> counter(0);  // atomic variable
+std::atomic<int> counter(0);  // atomic variable std::atomic<int> counter = 0;  
 void increment() {
     for (int i = 0; i < 10; ++i) {
         ++counter;  // safe atomic operation
