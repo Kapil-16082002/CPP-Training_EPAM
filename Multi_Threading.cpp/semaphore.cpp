@@ -1,10 +1,18 @@
 //what is synchronization
-// what is concurrency
+Synchronization means coordinating multiple threads so they safely access shared data and execute in the correct order
+Synchronization ensures that:
+only one thread accesses critical data at a time.
 
-🔐 What is a Semaphore?
+// what is concurrency
+Concurrency means dealing with multiple tasks at the same time, where tasks make progress overlapping in time, but not necessarily executing at the exact same instant.
+
+
+
+🔐 What is a Semaphore? 
+📌 Semaphores were officially introduced in C++20.
 A semaphore is a synchronization primitive used to control access to a shared resource by multiple threads.
 
-Semaphore is simply a variable which is non-negative and shared between threads. 
+Semaphore is simply a variable which is non-negative and shared between threads.
 This variable is used to solve the critical section problem and to achieve synchronization in the multiprocessing environment.
 
 📌 Use Case:
@@ -32,15 +40,14 @@ Definition of wait():              Definition of signal()     P(semaphore S){
     }
     S--;
 }
+-----------------------------------------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------------------------------------------
 🧠 Types of Semaphores
 There are mainly two types of semaphores:
 1.Binary Semaphore (Mutex)
 2.Counting Semaphore
 
 ✅1.Binary Semaphore:
-
 A binary_semaphore is a synchronization primitive that maintains an internal counter with a maximum value of 1.
 It allows threads to signal and wait, enabling controlled access or communication between threads.
 
@@ -113,13 +120,11 @@ So, if no one calls release() before acquire(), the thread will never proceed �
 
 🧪 Example:
 std::binary_semaphore bin_sem(0); // Not available initially
-
 void threadA() {
     std::cout << "Thread A waiting...\n";
     bin_sem.acquire(); // This will block
     std::cout << "Thread A entered\n";
 }
-
 void threadB() {
     std::this_thread::sleep_for(std::chrono::seconds(2));
     std::cout << "Thread B releasing semaphore\n";
@@ -128,7 +133,6 @@ void threadB() {
 Thread A will wait until Thread B releases the semaphore after 2 seconds.
 
 ✅ Summary:
-
 Initialization	Behavior
 bin_sem(1)	Starts as available. First acquire() succeeds.
 bin_sem(0)	Starts as unavailable. First acquire() blocks.
@@ -136,10 +140,10 @@ bin_sem(0)	Starts as unavailable. First acquire() blocks.
 
 */
 
-//--------------------------------------      Question         ------------------------------------------
+//--------------------------------------      Question         ---------------------------------------------------
 "Why not just use std::mutex with lock_guard or unique_lock?" instead of std::binary_semaphore in above code??
 ✅ Reason for binary_semaphore:
-Use std::mutex for mutual exclusion (protecting critical sections). 
+Use std::mutex for mutual exclusion (protecting critical sections).    
 Use std::binary_semaphore when you want explicit control over signaling, such as thread coordination or communication (like Thread A signaling Thread B).
 /* 
 look at a real scenario where mutex will fail or behave incorrectly, but binary_semaphore works perfectly.
@@ -214,7 +218,7 @@ This ensures that Thread B waits until Thread A finishes its work and signals it
 release() increments the semaphore count (up to 1 for binary semaphore). 
 acquire() blocks until the count is positive, then decrements it.
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//===================================================================================================================
 
 ✅2. Counting Semaphore:
 Purpose:
@@ -233,14 +237,14 @@ It is initialized with a non-negative integer value.
 The value represents the number of available units of the resource.
 Threads decrement the counter when acquiring a resource and increment it when releasing.
 
-✅ Code Example: Allow Only 2 Threads in Critical Section....
+✅ Code Example: Allow Only 2 Threads in Critical Section.....
 #include <iostream>
 #include <thread>
 #include <semaphore>
 #include <vector>
 #include <chrono>
 
-std::counting_semaphore<2> sem(2);  // max 2 threads at a time
+std::counting_semaphore<2> sem(2);  // Means 2 resources / permits are available right now, max 2 threads at a time can access
 
 void worker(int id) {
     std::cout << "🔃 Thread " << id << " waiting to enter...\n";
@@ -261,7 +265,6 @@ int main() {
     for (auto& t : threads) {
         t.join();
     }
-
     return 0;
 }
 🧾 Output Example (Formatted for clarity)
@@ -286,8 +289,8 @@ int main() {
 “How does the program know whether the shared resource is available or not? Where is the count maintained?”
 
 std::counting_semaphore<2> sem(2);
-We are doing two things:
 
+We are doing two things:
 1. 2 is the maximum number of permits (set by <2>)
 This tells the semaphore: "At most, I can allow 2 threads at a time."
 
@@ -318,7 +321,6 @@ if (semaphore_count > 0) {
     wait in line;
 }
 📌 What release() Does:
-
 sem.release();
 Increases the count by 1 (unless it's already at max()).
 
@@ -424,7 +426,6 @@ Lock can be released by a different thread	                       std::binary_se
 
 🧠 When to Use counting_semaphore
 Scenario	                                 Why it works
-
 Connection pools	                         Only N clients can use DB at once
 Resource pools (threads, printers, etc.)	 Control max concurrent usage
 Rate limiting	                             Limit how often a resource is accessed
