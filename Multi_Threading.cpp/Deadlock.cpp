@@ -1,3 +1,4 @@
+
 🚫 What is Deadlock?
 Deadlock happens when two or more threads are waiting for each other to release resources, but none of them do this, so they are all stuck forever.
 
