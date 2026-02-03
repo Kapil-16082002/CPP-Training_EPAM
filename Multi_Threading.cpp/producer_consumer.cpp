@@ -1,6 +1,7 @@
+
 Producer-Consumer Problem(or  bounded buffer problem) using Semaphores — a classic synchronization problem where:
 
-The Producer generates data and puts it in a buffer.
+The Producer produces data and puts it in a buffer.
 The Consumer takes data from the buffer and processes it.
 You have a bounded buffer (e.g., size 5), so Producer must wait if it’s full, and Consumer must wait if it’s empty.
 
