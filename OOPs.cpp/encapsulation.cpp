@@ -56,7 +56,6 @@ public:
         cout << "Employee ID: " << employeeID << ", Name: " << employeeName << endl;
     }
 };
-
 int main() {
     Employee emp;
     // Setting the employee details using setter methods
