@@ -65,6 +65,11 @@ It only declares methods and uses a Forward declaration of the hidden implementa
 #include <memory>  // For std::unique_ptr
 
 class Impl;  // Forward declaration of the hidden implementation class
+/* 
+Why do we forward-declare class Impl; in the header?
+Answer:
+Forward declaration avoids including heavy headers (<string>, <vector>, etc.) in the public header, reducing compilation dependencies.
+*/
 
 class PublicInterface {
 private:
