@@ -9,9 +9,9 @@ Consistency: Iterators and algorithms provide a consistent interface for many da
 ✅Components of STL:
 STL is mainly divided into four components:
 1. Containers
-2. Algorithms
-3. Iterators
-4. Functions
+2. Functions
+3. Algorithms
+4. Iterators
 
 ✅Types of STL Containers
 
@@ -23,10 +23,10 @@ STL is mainly divided into four components:
 1. Sequence Containers
 Sequence containers store elements in a sequence order. They are optimized for sequential access.
 1.std::vector
-2.std::deque
+2.std::array
 3.std::list
 4.std::forward_list (C++11)
-5.std::array
+5.std::deque
 //-----------------------------------------------------------------------------------------------------------------
 2. Associative Containers
 These store data elements in the form of key-value pairs and automatically arrange them in a sorted order based on the keys. 
