@@ -1,12 +1,12 @@
 C-style Array ->
-Data struture that store elements at  contiguous memory block.
+Data struture that store elements of same data type at contiguous memory block.
 
 📌 Key Differences
 Feature	               std::array<T, size>	                      C-style Array (T array[size])
 Size	                Fixed at compile-time	                  Fixed at compile-time
 Memory Location	         Stack (faster)	                          Stack (faster)
 Bound Checking	     .at(index) checks bounds	                  ❌ No bounds checking (arr[index] can cause undefined behavior)
-Copy & Assignment	  ✅ Supports assignment and copy operations	❌ Cannot be directly assigned
+Copy & Assignment	  ✅ Supports assignment and copy operations	 ❌ Cannot be directly assigned
 STL Support	          ✅ Supports STL functions (iteration, algorithms, etc.)	❌ No built-in STL support
 Size Retrieval	      ✅ .size() gives array size	             ❌ sizeof(arr)/sizeof(arr[0]) (error-prone)
 Compatibility with Algorithms	✅ Works with STL algorithms	     ❌ Needs manual handling
@@ -21,17 +21,12 @@ std::cout << c_arr[5] << std::endl;   // ❌ Undefined Behavior (May crash)
 
 ✅ Use .at() with std::array to avoid accessing invalid indexes.
 
-//---------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------
 
 3️⃣ Getting Array Size
 ✅ std::array
 std::array<int, 3> arr = {1, 2, 3};
 std::cout << arr.size() << std::endl;  // Output: 3
-
-❌ C-Style Array (Error-prone)
-int c_arr[3] = {1, 2, 3};
-std::cout << sizeof(c_arr) / sizeof(c_arr[0]) << std::endl; // Output: 3
-❌ This method fails if the array is passed to a function, as the array decays to a pointer.SEE below example
 
 Passing to Functions
 ✅ std::array (Preserves Size)
@@ -39,31 +34,101 @@ void printArray(const std::array<int, 3>& arr) {
     std::cout << arr.size(); // ✅ Correct size
 }
 
-❌ C-Style Array (Decays to Pointer)
-void printArray(int c_arr[]) {
+
+✅ C-Style Array (Error-prone)
+int c_arr[3] = {1, 2, 3};
+std::cout << sizeof(c_arr) / sizeof(c_arr[0]) << std::endl; // Output: 3
+In the SAME scope, it works fine because c_arr is a real array, not a pointer.
+
+❌ This method fails if the array is passed to a function, as the array decays to a pointer.
+void printArray(int c_arr[]) { //  int* c_arr 
     std::cout << sizeof(c_arr) / sizeof(c_arr[0]); // ❌ Incorrect size
 }
-✅ std::array maintains size, whereas C-style arrays decay to pointers.
+Since arr is now a pointer:
+sizeof(arr) = sizeof(int*) = 8 bytes(64-bit system)
+sizeof(arr) = sizeof(int*) = 4 bytes(32-bit system)
 
-//-------------------------------------------------------------------------------------------------------------
+Now expression: sizeof(arr) / sizeof(arr[0])
+for 64-bit system:     8/4=2 (❌Wrong size)
+for 32-bit system:     4/4=1 (❌Wrong size)
 
-4️⃣ Copy and Assignment
+//----------------------------------------------------------------------------------------------------------------
 
-✅ std::array (Allowed)
-std::array<int, 3> arr1 = {1, 2, 3};
-std::array<int, 3> arr2;
-arr2 = arr1; // ✅ Works fine
-
+4️⃣ Copy and Move assignment:
 ❌ C-Style Array (Not Allowed)
 int c_arr1[3] = {1, 2, 3};
 int c_arr2[3];
-
 // c_arr2 = c_arr1;  ❌ Error: Arrays cannot be assigned directly
 C-style arrays cannot be assigned directly; instead, you must use memcpy() or a loop.
 
 
+✅ std::array (Allowed)
+std::array<int, 3> arr1 = {1, 2, 3};
+std::array<int, 3> arr2;
+arr2 = arr1; // ✅ Works fine   arr2 = {1, 2, 3}  overwritten
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+std::array<int, 3> arr1 = {1, 2, 3};
+std::array<int, 3> arr2;
+arr2 = arr1; // ✅ Works fine   arr2 = {1, 2, 3}  overwritten
+
+
+
+✅Move Assignment
+
+std::array<int, 3> a = {1, 2, 3}std::array<int, 3> b = {4, 5, 6};
+b = std::move(a);  // b = {1, 2, 3}  overwritten
+
+
+std::array<int, 3> a = {1, 2, 3};
+std::array<int, 3> b;
+b = std::move(a); // b = {1, 2, 3}   overwritten.
+
+
+❓ Why std::array<int, 3>a  doesn’t change after std::move(a), but std::vector changes?
+1️⃣ What std::move really does
+std::move(a)
+Does NOT move data
+It only casts a to an rvalue reference (T&&)
+The actual behavior depends entirely on the type’s move constructor or move assignment
+
+std::move is a request to move, not a command.
+
+
+2️⃣ How std::array is designed
+std::array<int, 3>
+1. Stores elements inline, just like a C-style array
+2. Does NOT own heap memory
+3. No internal pointers, no resource ownership
+std::array’s move = element-wise move
+This is equivalent to:
+
+b[0] = std::move(a[0]);
+b[1] = std::move(a[1]);
+b[2] = std::move(a[2]);
+
+🔹 For int, std::move(int) does nothing special
+
+int has no move semantics
+Moving an int = copying an int
+So:
+int x = 5;
+int y = std::move(x);
+x == 5   // unchanged
+y == 5
+📌 Since std::array<int, N> contains ints, moving the array is the same as copying it.
+
+
+
+Why std::vector<int> v1  change after std::move(v1),
+✅std::vector
+std::vector<int> v2 = std::move(v1);
+Here:
+std::vector owns heap memory
+Move transfers the internal pointer
+Source vector becomes empty but valid
+
+
+//===================================================================================================================
 
 std::array in C++ ->
 std::array is a fixed-size array provided by the C++ Standard Library (#include <array>).
@@ -157,7 +222,7 @@ The size is unknown or changes dynamically.
 You need dynamic resizing.
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//===================================================================================================================
 
 std:: vector ->
 
@@ -171,6 +236,74 @@ Fast Random Access – Supports constant-time access using operator[] and .at().
 Automatic Memory Management – Automatically handles memory allocation and deallocation.
 STL Compatibility – Works seamlessly with STL algorithms.
 Efficient Insertion & Deletion – .push_back() and .emplace_back() efficiently add elements at the end.
+
+/* 
+✅Internal Structure of std::vector
+Conceptually it holds three things:
+
+T*  begin_;   // start of allocated memory
+T*  end_;     // one past the last constructed element
+T*  cap_;     // one past the allocated block
+
+begin_ is a pointer to an object of type T.
+👉 begin_ points to the first element of the vector’s allocated memory.
+👉 end_ points to one past the last constructed element in the vector.
+👉 cap_ points to one past the end of the allocated memory block.
+
+
+2️⃣Inserting elements ( no reallocation case)
+If capacity is available, the element is constructed in place at end_
+Increment end_
+🔥 Time Complexity: O(1)
+✔ No moves
+✔ No copies
+
+
+3️⃣ Inserting elements ( reallocation case)
+Condition:
+if (end_ == cap_)
+    reallocate();
+
+If capacity is full, the vector allocates a larger block of memory and moves or copies existing elements to it, destroys the old elements and deallocates old memory, and then inserts the new element. 
+Reallocation invalidates all iterators, pointers, and references. Removal destroys elements but does not reduce capacity unless explicitly requested.
+
+1. Compute new capacity       new_capacity = max(1, old_capacity * 2);
+2. Allocate new raw memory:   T* new_begin = allocator.allocate(new_capacity);
+3. Move or copy existing elements ?? in what cases move or copy?
+Decision:
+noexcept move constructor → MOVE
+Otherwise → COPY (strong exception safety)
+
+4. Destroy old elements
+5. Deallocate old memory:    allocator.deallocate(old_begin, old_capacity);
+6. Update internal pointers
+    begin_ = new_begin;
+    end_   = begin_ + old_size;
+    cap_   = begin_ + new_capacity;
+
+✅ Why push_back() is amortized O(1)
+An operation is amortized O(1) if most calls are constant time, and the rare expensive calls are spread out over many cheap ones.
+Some operations may be O(n),But average cost per operation over time is O(1)
+
+Cost analysis (important 🔥)
+| push_back call | capacity | elements moved |
+| -------------- | -------- | -------------- |
+| 1              | 1        | 0              |
+| 2              | 2        | 1              |
+| 3              | 4        | 2              |
+| 4              | 4        | 0              |
+| 5              | 8        | 4              |
+| 6              | 8        | 0              |
+| 7              | 8        | 0              |
+| 8              | 8        | 0              |
+
+Total moves for 8 insertions:  1 + 2 + 4 = 7 moves
+Total work:  8 insertions + 7 moves = 15 operations
+Average per insertion:   15 / 8 ≈ 2 → O(1)
+
+*/
+
+
 
 1️⃣ Declaring and Initializing a Vector
 
@@ -210,7 +343,7 @@ for (auto rit = vec.rbegin(); rit != vec.rend(); ++rit) std::cout << *rit << " "
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Difference between push_back() and emplace_back() in C++ STL
+Difference between push_back() and emplace_back() in C++ STL:
 
 1️⃣ push_back() – Requires a Fully Constructed Object
 push_back() creates a copy or moves an existing object into the vector.
@@ -229,8 +362,6 @@ int main() {
     Demo d(10);  // Object is created separately
     vec.push_back(d);  // Copy or move happens
     vec.push_back(Demo(20));  // Temporary object created, then moved
-
-    return 0;
 }
 Output:
 Constructor called  // Object `d` is created
@@ -258,31 +389,56 @@ public:
 int main() {
     std::vector<Demo> vec;
     vec.emplace_back(30);  // Object is constructed directly in the vector
-    return 0;
+   
+   /* Demo obj(2, 34);
+      vec.emplace_back(obj); 
+👉 In this case, the object is NOT constructed in-place
+What happens step-by-step:
+1. obj already exists
+2. emplace_back(obj) forwards obj as a constructor argument , resulting in a copy or move.
+3. Copy constructor is called (or move constructor if possible) 
+*/
 }
 Output:
 Constructor called  // Only one constructor call, no extra copy/move
+
+
 #include <iostream>
 #include <vector>
-
 class Demo {
 public:
-    int x, y;
-    // Constructor taking both x and y
-    Demo(int val1, int val2) : x(val1), y(val2) { 
-        std::cout << "Constructor called with x = " << x << ", y = " << y << "\n";
+    Demo(int x, int y) {
+        std::cout << "Parameterized constructor\n";
+    }
+    Demo(const Demo&) {
+        std::cout << "Copy constructor\n";
+    }
+    Demo(Demo&&) {
+        std::cout << "Move constructor\n";
     }
 };
 int main() {
-    std::vector<Demo> vec;
-    vec.emplace_back(30, 40);  // Directly constructs Demo(30, 40) in the vector
-    return 0;
-}
+    std::vector<Demo> v;
+    std::cout << "emplace_back(2,34)\n";
+    v.emplace_back(2, 34);
 
-🔹 Key Takeaways:
-Constructs object directly inside the vector.
-Avoids unnecessary copies/moves.
-Faster and more efficient, especially for large or complex objects.
+    Demo d(5, 6);
+    std::cout << "\nemplace_back(d)\n";
+    v.emplace_back(d);
+
+    std::cout << "\nemplace_back(std::move(d))\n";
+    v.emplace_back(std::move(d));
+}
+Output:
+emplace_back(2,34)
+Parameterized constructor
+
+emplace_back(d)
+Copy constructor
+
+emplace_back(std::move(d))
+Move constructor
+
 
 ⚡ Comparison Table
 Feature	                              push_back()	                                  emplace_back()
@@ -295,7 +451,7 @@ Suitable for	  Simple objects or when an object is already created	 Large, compl
 Use push_back() when you already have a created object.
 Use emplace_back() when constructing a new object directly inside the vector (for performance benefits).
 
-//-----------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
 
 🔹 size() vs capacity() in std::vector
 Function	What it tells you	                                  Changes when...?
@@ -307,20 +463,29 @@ capacity()	Number of elements it can hold without reallocating	  It automaticall
 using namespace std;
 int main() {
     vector<int> v;
-    cout << "Initial size: " << v.size() << endl;
-    cout << "Initial capacity: " << v.capacity() << endl;
+    cout << "Initial size: " << v.size() << endl; // 0
+    cout << "Initial capacity: " << v.capacity() << endl; // 0
     v.push_back(1);
     v.push_back(2);
     v.push_back(3);
-    cout << "Size after 3 push_backs: " << v.size() << endl;
-    cout << "Capacity after 3 push_backs: " << v.capacity() << endl;
+    cout << "Size after 3 push_backs: " << v.size() << endl; // 3
+    cout << "Capacity after 3 push_backs: " << v.capacity() << endl; // 4
 
-    return 0;
 }
+-------------------------------------------------------------------------------------------------------------------
+✅ Resize vs Reserve
+reserve(n)
+Allocates memory
+Does not construct elements
+Size unchanged
 
+resize(n)
+Changes size
+Constructs or destroys elements
+May reallocate
 
-//-----------------------------------------------------------------------------------------------------------
-//-----------------------------------------------------------------------------------------------------------
+//==================================================================================================================
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -478,13 +643,33 @@ Assign is not the same as operator= for vectors — though both replace content,
     std::cout << "a == b: " << (a == b) << "\n"; // Output: 1 (true)
     std::cout << "a < b: " << (a < b) << "\n";   // Output: 0 (false)
 
-    std::cout << "--- Utilities ---\n";
+    std::cout << "--- Sorting ---\n";
     std::vector<int> util{4, 1, 3, 2, 1};
     std::sort(util.begin(), util.end());           // Sorted → [1, 1, 2, 3, 4]
     std::reverse(util.begin(), util.end());        // Reversed → [4, 3, 2, 1, 1]
 
     auto it = std::find(util.begin(), util.end(), 3); // Finds 3
     if (it != util.end()) std::cout << "Found 3 at index: " << (it - util.begin()) << "\n"; // Output: 1
+
+/*
+✅ What std::find() returns:
+1. An iterator pointing to the first occurrence of the value
+2. OR last iterator(i.e util.end()) if not found
+
+std::vector<int> util{4, 1, 10, 2, 1};
+auto itr = std::find(util.begin(), util.end(), 10); // util.end() is past-the-last element, Dereferencing it gives undefined behavior
+So:
+itr points to the element 10
+That element is at index 2
+
+✅Bonus: how to get real pointer (if you really need)
+int* p = &(*itr);   // pointer to first element
+
+
+🧠 Why itr - util.begin() works here?
+itr - util.begin() means how many elements apart are these two iterator positions?”
+👉 Because std::vector iterators are random-access iterators and random-access iterators support which support iterator arithmetic(subtraction (operator-)).
+*/
 
     int count = std::count(util.begin(), util.end(), 1); // Occurrences of 1 → 2
     std::cout << "Count of 1: " << count << "\n";
