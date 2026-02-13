@@ -1,15 +1,32 @@
-✅A priority queue in C++ STL is a container adaptor that provides constant-time retrieval of the largest (or smallest) element, 
-while insertion and deletion take logarithmic time. 
+
+✅A priority queue in C++ STL is a container adaptor that takes constant-time(O(1)) for the retrieval of the largest (or smallest) element, 
+while insertion and deletion take logarithmic time.
 Specifically, it’s implemented as a max-heap or min-heap, depending on the comparison function used.
 
 
-In C++ Standard Template Library (STL), the priority_queue class is implemented using a heap data structure. 
-Specifically, it uses a binary heap (a complete binary tree) to store the elements efficiently.
+In C++ STL, the priority_queue class is implemented using a heap data structure.
+By default, std::priority_queue uses a std::vector as its underlying container to store the elements,
+and the elements in the vector are arranged in the form of a binary heap using the heap algorithms provided by STL (e.g., std::make_heap, std::push_heap, and std::pop_heap). use the concept of binary heap (a complete binary tree) to store the elements efficiently.
 
 
-By default, std::priority_queue uses a std::vector as its underlying container to store the elements.
-Internally, the elements in the vector are arranged in the form of a binary heap using the heap algorithms provided by STL (e.g., std::make_heap, std::push_heap, and std::pop_heap).
 
+🔷 1️⃣ Complete Binary Tree (Very Important)
+A heap is always:
+✅ Completely filled at every level
+✅ Except the last level
+✅ At Last level elements are filled from left to right
+
+Example:
+
+        50
+      /    \
+    30      40
+   /  \    /
+ 10   20  35
+
+
+
+--------------------------------------------------------------------------------------------------------------------
 
 C++ STL provides the std::priority_queue container to implement priority queues.
 ✅Types of Priority Queues:
@@ -24,9 +41,13 @@ This can be achieved by providing a custom comparison function.
 
 ✅Syntax:
 std::priority_queue<value_type> pq;  // Max-Heap by default
+std::priority_queue<int, std::vector<int>, std::less<int>> pq; // Max-Heap
 
+//Min heap
 std::priority_queue<value_type, container_type, comparison_function> pq; // Custom behavior such as Min-Heap
-Parameters
+Example:  priority_queue<int, vector<int>, greater<int>> pq;  // Min-Heap
+
+Parameters:
 value_type: The type of elements stored in the priority queue (e.g., int, float, std::pair, etc.).
 container_type: The underlying container that stores elements. By default, it is std::vector (usually std::deque for other adapters like queue).
 comparison_function: A binary predicate used for custom comparison of elements (e.g., std::less for max-heap, std::greater for min-heap).
@@ -40,6 +61,13 @@ emplace(args...)	Constructs an element in-place and inserts it into the priority
 top()	  Returns a reference to the largest (or smallest in min-heap) element of the priority queue.	pq.top()
 pop()	  Removes the top element from the priority queue.	                            pq.pop()
 swap(priority_queue& other) 	Swaps the contents of one priority queue with another.	pq1.swap(pq2)
+
+
+| Comparator Condition | Heap Type |
+| -------------------- | --------- |
+| `left < right`       | Max Heap  |
+| `left > right`       | Min Heap  |
+
 
 ✅Custom Comparator with a Min-Heap (Struct or Lambda)
 To use a custom comparator, you can use a struct or a lambda function.
