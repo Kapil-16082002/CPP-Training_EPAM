@@ -1,11 +1,12 @@
-✅A stack in C++ STL is a container adaptor designed to operate in a Last-In-First-Out (LIFO) manner. 
+
+✅A stack in C++ STL is a container adaptor designed on the principle of Last-In-First-Out (LIFO) manner.
 This means the last element added to the stack will be the one removed first.
-//Container adapters does not provide new containers but modify the interface of existing containers to provide specific functionalities.
-The std::stack is built on top of other containers such as std::deque, std::vector, or std::list. 
+//Container adapter does not provide new container but modify the interface of existing container to provide specific functionalities.
+The std::stack is built on top of other containers such as std::deque, std::vector, or std::list.
 By default, std::deque is used as the underlying container.
 
 
-🔹 Template Syntax
+🔹 Template Syntax:
 The general syntax for specifying a std::stack is:
 std::stack<T, Container>
 Where:
@@ -16,8 +17,8 @@ By default, std::deque is used as the underlying container for std::stack.
 You can also specify std::vector or std::list as the underlying container. For example:
 
 std::stack<int> myStack;  // default: std::deque<T>
-std::stack<int, std::vector<int>> myStack;
-std::stack<int, std::list<int>> myStack;
+std::stack<int, std::vector<int>> myStack; // by modifying the interface of vector, we wil get stack
+std::stack<int, std::list<int>> myStack;   // by modifying the interface of vector, we wil get stack
 
 /*
 What Does a std::stack Require from Its Underlying Container?
@@ -296,7 +297,7 @@ However, in simple cases where you already have an object, push is perfectly fin
 ✅Use Cases of Stack:
 1. Undo and Redo Operations (in Text Editors or IDEs):
  Undo(Ctrl + Z): returning the document or application to its previous state
- Redo(Ctrl + Y): returning the document or application to the state it was in after the original action
+ Redo(Ctrl + Y): returning the document or application to the next state it was in after the original action
 
 When typing or editing text, actions are pushed onto a stack. 
 "Undo" pops the last action while "Redo" re-applies it by pushing it back.
