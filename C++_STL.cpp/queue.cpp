@@ -1,3 +1,4 @@
+
 ✅The queue in the C++ Standard Template Library (STL) is a container adapter that works on the principle of FIFO (First-In-First-Out).
 
 Characteristics of Queue:
