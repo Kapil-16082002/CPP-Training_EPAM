@@ -1,3 +1,4 @@
+
 ✅std::unordered_map and std::map are two widely used associative containers in C++ STL (Standard Template Library). 
 Their primary purpose is to store key-value pairs.
 
@@ -14,12 +15,35 @@ You want average case O(1) performance for lookups instead of O(log(n)).
 
 
 /*
-
 ✅Internal Structure of std::map:
-Tree Data Structure: std::map uses a Red-Black Tree, which is a type of self-balancing binary search tree (BST)  with additional rules that maintain balance within the tree.
 
-Balanced means the height of the tree is kept approximately ( O(\log N) ),after each insert, delete, or update operation.
-Red-Black Tree ensures that the tree remains approximately balanced after each insert, delete, or update operation, thus guaranteeing a worst-case time complexity of O(log n) for search, insertion, and deletion operations.
+1. Elements in std::map are stored in dynamically allocated tree nodes in the form of std::pair<key,value>pair.
+2. Each tree node is Linked via parent/left/right pointers
+3.There is no array, no contiguous block.
+struct Node {
+    std::pair<const Key, T> data;
+    Node* left;
+    Node* right;
+    Node* parent;
+    bool color; // red or black
+};
+🔷 Memory Layout Visualization
+Suppose:
+mp[20] = "A";
+mp[10] = "B";
+mp[30] = "C";
+Internally:
+        (20,A)
+        /     \
+   (10,B)    (30,C)
+
+
+std::map uses a Red-Black Tree, which is a type of self-balancing binary search tree (BST).
+Red-Black Tree ensures that:
+1. Tree remains approximately balanced after each insert, delete, or update operation, 
+2. Guarantee a worst-case time complexity of O(log n) for search, insertion, and deletion operations.
+3. Data will be sorted
+
 
 Each node in the Red-Black Tree stores a key-value pair (std::pair<Key, Value>), where:
 Key: The identifier by which the value can be accessed.
@@ -44,26 +68,61 @@ Locate the key in the tree and perform removal, rebalancing the Red-Black Tree a
 4.Leaf nodes (NULL pointers) are always black.
 5.Every path from a node to its descendant NULL pointers (leaves) must contain the same number of black nodes.
 
-
+Applications:
 The red-black tree is widely used in applications such as database systems, compiler design, and associative containers in the STL(e.g., std::map and std::set in C++).
 
-//-----------------------------------------------------------------------------------------------------------------
+
+🔷 Why Not Just Normal BST?
+If data is sorted, Normal BST can become right-skewed BST:
+
+1
+ \
+  2
+   \
+    3
+     \
+      4
+Height becomes O(n) → bad performance. Search = O(n) ❌
+
+Red-Black Tree ensures: Height ≤ 2 * log2(n+1)
+So operations stay O(log n).
+
+
+
+🔷 Why Not Use Array?
+
+If std::map used an array:
+Insertion would require shifting elements → O(n)
+Deletion → O(n)
+Not efficient.
+
+
+//==================================================================================================================
 
 Internal Structure of std::unordered_map:
 Data Structure: It uses a Hash Table.
-A hash table consists of an array of buckets (Each bucket typically implemented as linked lists or dynamic arrays).
+A hash table consists of an array of buckets.
 A bucket typically implemented as linked list or a dynamic array to store multiple key-value pairs when hash collisions occur.
-Each key is processed through a hash function, which computes an index for that bucket within the hash table.
+Each key is processed through a hash function and a hash value is generated and that hash value is an index for that bucket within the hash table.
 The key-value pair is stored in the bucket at the resulting index.
 If more than one key hashes to the same bucket (a collision), the bucket may use a chain (e.g., a linked list) to hold key-value pairs.
 
 Hash Function:
-Converts the key into an integer, which acts as the index in the array of buckets.
+Converts the key into an integer(hash value), which acts as the index in the array of buckets.
 Default hash function is provided (e.g., std::hash<Key>) but you can supply a custom one.
+
 Bucket Collision:
-If two different keys hash to the same bucket (bucket collision).
+If two different keys after passing through Hash Function have same hash value (bucket collision).
 The keys are chained together into that bucket via a linked list or other collision resolution mechanisms (typically chaining is used in std::unordered_map).
 
+
+🔷 Main Collision Resolution Techniques:
+There are two major categories:
+✅ 1. Separate Chaining
+✅ 2. Open Addressing
+🔸 (a) Linear Probing
+🔸 (b) Quadratic Probing
+🔸 (c) Double Hashing
 
 */
 
@@ -113,6 +172,7 @@ Note: Reverse iterators are not supported for unordered containers because they 
 For std::map:
 Reverse iterators start from the largest key and go to the smallest.
 
+---------------------------------------------------------------------------------------------------------------
 
 ✅Member Functions
 1. size()
@@ -125,6 +185,7 @@ int main() {
     std::cout << "Size of the map: " << m.size() << '\n'; // Output: 3
     return 0;
 }
+-------------------------------------------------------------------------------------------------------------------
 ✅2. empty()
 Checks if the container is empty.
 Returns true if empty, false otherwise.
@@ -137,6 +198,7 @@ int main() {
     std::cout << "Is unordered_map empty? " << (um.empty() ? "Yes" : "No") << '\n'; // Output: No
     return 0;
 }
+------------------------------------------------------------------------------------------------------------------
 ✅3. clear()
 Removes all elements from the container. 
 The size becomes zero.
@@ -150,6 +212,7 @@ int main() {
     std::cout << "Size after clear: " << m.size() << '\n';  // Output: 0
     return 0;
 }
+-----------------------------------------------------------------------------------------------------------------
 ✅4. max_size()
 Returns the maximum number of elements the container can theoretically hold (depends on the system and memory constraints).
 
@@ -158,7 +221,7 @@ int main() {
     std::cout << "Maximum size of unordered_map: " << um.max_size() << '\n';
     return 0;
 }
-
+------------------------------------------------------------------------------------------------------------------
 Element Access
 ✅5. operator[]
 Retrieves the value associated with the given key.
@@ -174,8 +237,10 @@ int main() {
     m[1] = "one"; // Insert using operator[]
     std::cout << m[1] << '\n'; // Output: one
     std::cout << m[2] << '\n'; // Default value: empty string because key 2 doesn't exist
+    cout<<m.size(); // 2 , now map size will be 2;
     return 0;
 }
+------------------------------------------------------------------------------------------------------------------
 ✅6. at(key)
 Provides access to the value associated with the given key.
 This function throws std::out_of_range exception if the key is not present.
@@ -192,6 +257,7 @@ int main() {
     }
     return 0;
 }
+------------------------------------------------------------------------------------------------------------------
 Modifiers
 ✅7. insert()
 Inserts a pair of key-value into the container.
@@ -201,6 +267,7 @@ int main() {
     std::map<int, std::string> m;
 
     //m.insert({{3, "three"}, {4, "four"}, {5, "five"}});
+    //for(auto it:m) cout<<it.first<<" "<<it.second<<endl; 
 
     // Insert using make_pair
     auto result = m.insert(std::make_pair(1, "one"));
@@ -213,6 +280,7 @@ int main() {
 
     return 0;
 }
+------------------------------------------------------------------------------------------------------------------
 ✅8. emplace()
 Similar to insert(), but constructs the pair in place instead of copying.
 
@@ -223,6 +291,7 @@ int main() {
         std::cout << pair.first << ": " << pair.second << '\n';
     }
 }
+------------------------------------------------------------------------------------------------------------------
 9✅. erase(key)
 Removes an element by its key.
 If the key does not exist, nothing happens.
@@ -233,6 +302,7 @@ int main() {
     // Erase key 2
     m.erase(2);
 }
+------------------------------------------------------------------------------------------------------------------
 ✅. lower_bound(key) and upper_bound(key)
 No, lower_bound and upper_bound do not work for std::unordered_map.
 
@@ -282,6 +352,7 @@ int main() {
     std::cout << "um1 size: " << um1.size() << ", um2 size: " << um2.size() << '\n';
     return 0;
 }
+------------------------------------------------------------------------------------------------------------------
 ✅11. find(key)
 Returns an iterator pointing to the element if found; otherwise it returns end().
 int main() {
@@ -297,6 +368,7 @@ int main() {
 
     return 0;
 }
+------------------------------------------------------------------------------------------------------------------
 ✅12. count(key)
 Returns the number of elements matching the given key:
 std::map always returns 0 or 1 (only one unique key in std::map).
@@ -312,6 +384,7 @@ int main() {
 
     return 0;
 }
+------------------------------------------------------------------------------------------------------------------
 ✅13. equal_range(key)
 Returns a pair of iterators representing the range for elements matching the key.
 For std::map, this range will include either one or zero elements.
@@ -334,7 +407,7 @@ int main() {
 
     return 0;
 }
-//////////////////////////////////  multimap  /////////////////////////////////////////////////////////////////////
+//===============================      multimap    ====================================================================
 
 
 ✅The main difference between non-multi(std::map and std::unordered_map) is that multimap and unordered_multimap allow duplicate keys.
