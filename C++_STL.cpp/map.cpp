@@ -263,10 +263,39 @@ Modifiers
 Inserts a pair of key-value into the container.
 If the key already exists, the insertion fails.
 
+Return type:
+1️⃣ Insert single element: auto res = m.insert({3, "three"}); 
+👉 Return type:
+std::pair<iterator, bool>
+Meaning:
+iterator → points to element
+bool → true if inserted, false if key already exists
+
+
+2️⃣ If Insert multiple element:  auto res = m.insert({{3, "three"}, {4, "four"}, {5, "five"}});
+👉 Return type = void
+
+🔥Why does single insert return pair but initializer_list returns void?
+Because:
+1. If we insert Multiple elements,then multiple return type are possible.
+Example: If you insert 10,000 elements, then:
+C++ standard should Allocate 10,000 result pairs and then all pairs have to store in vactor of pairs or other container.
+👉That would results in :
+Increase complexity
+Increase memory overhead
+Complicate interface
+
+2. If we insert Single elemnts
+🔹 Did insertion happen?
+🔹 Where is the element located?
+So it returns: std::pair<iterator, bool>
+
+
 int main() {
     std::map<int, std::string> m;
 
     //m.insert({{3, "three"}, {4, "four"}, {5, "five"}});
+    //m.insert(std::make_pair(1, "one"));
     //for(auto it:m) cout<<it.first<<" "<<it.second<<endl; 
 
     // Insert using make_pair
@@ -306,7 +335,7 @@ int main() {
 ✅. lower_bound(key) and upper_bound(key)
 No, lower_bound and upper_bound do not work for std::unordered_map.
 
-1. lower_bound(key): Returns an iterator pointing to the first element NOT LESS THAN the given key (>= key).
+1. lower_bound(key): Returns an iterator pointing to the first element GREATER THAN or EQUAL to given key  (>= key).
 If no such element exists (i.e., the key is greater than all keys in the map), it returns m.end(), which is an iterator past the last element of the map.
 Accessing m.end() leads to undefined behavior if you try to dereference it.
 
@@ -334,6 +363,8 @@ std::cout << "Upper bound of 5: " << m.upper_bound(5)->second << '\n'; // Output
 
 std::cout << "Lower bound of 6: " << m.lower_bound(6)->second << '\n'; // Output: unexpected value
 std::cout << "Upper bound of 6: " << m.upper_bound(6)->second << '\n'; // Output: unexpected value
+
+-------------------------------------------------------------------------------------------------------------------
 ✅10. swap()
 Exchanges the content between two containers.
 int main() {
@@ -344,12 +375,12 @@ int main() {
     um2[2] = "two";
 
     std::cout << "Before swap:\n";
-    std::cout << "um1 size: " << um1.size() << ", um2 size: " << um2.size() << '\n';
+    std::cout << "um1 size: " << um1.size() << ", um2 size: " << um2.size() << '\n'; // 1, 1
 
     um1.swap(um2);
 
     std::cout << "After swap:\n";
-    std::cout << "um1 size: " << um1.size() << ", um2 size: " << um2.size() << '\n';
+    std::cout << "um1 size: " << um1.size() << ", um2 size: " << um2.size() << '\n'; // 1, 1
     return 0;
 }
 ------------------------------------------------------------------------------------------------------------------
@@ -404,7 +435,6 @@ int main() {
     } else {
         std::cout << "Key 1 not found.\n";
     }
-
     return 0;
 }
 //===============================      multimap    ====================================================================
@@ -442,6 +472,8 @@ int main() {
     }
     return 0;
 }
+------------------------------------------------------------------------------------------------------------------
+
 ✅2. Using Range-based for loop
 C++11 introduced range-based for loops, which simplify the syntax.
 int main() {
@@ -452,6 +484,8 @@ int main() {
     }
     return 0;
 }
+-----------------------------------------------------------------------------------------------------------------
+
 ✅3. Using std::for_each with Lambda (C++11 and newer)
 You can use the std::for_each algorithm with a lambda function for iteration.
 int main() {
@@ -462,6 +496,8 @@ int main() {
     });
     return 0;
 }
+------------------------------------------------------------------------------------------------------------------
+
 ✅4. Using Reverse Iteration
 To iterate in reverse, you can use rbegin() and rend() with a loop.
 int main() {
@@ -472,26 +508,38 @@ int main() {
     }
     return 0;
 }
+-------------------------------------------------------------------------------------------------------------------
+
 ✅5. Using std::multimap::equal_range for Keys
 auto range = mmap.equal_range(key);
 is used to retrieve all the elements in the std::multimap that contains the same key 'key'.
 
 What equal_range(key) Does:
-returns a pair of iterators (std::pair<std::multimap::iterator, std::multimap::iterator>). 
+returns a pair of iterators ,std::pair<std::multimap::iterator, std::multimap::iterator>.
 These two iterators define the range of elements that have the given key.
 
-range.first: An iterator pointing to the first element in the multimap with the key key (or an iterator to the first element that is greater than key if no such key exists).
-range.second: An iterator pointing to the position just past the last element with the key 'key'.
+range.first: An iterator pointing to the first element in the multimap with the key given 'key' (or an iterator to the first element that is greater than key if no such key exists).
+range.second: An iterator pointing to the position just past the last element with the key given'key'.
 
 int main() {
     std::multimap<int, std::string> mmap = {{1, "A"}, {2, "B"}, {2, "C"}, {3, "D"}};
     int key = 2;  // Example key
+    /*
+    cout << mmap.count(2); // 2
+    int count = distance(range.first, range.second); // 2 
+
+    int count = 0;
+    for (auto it = range.first; it != range.second; ++it)   count++;  // 2
+
+    */
     auto range = mmap.equal_range(key);
 
     for (auto it = range.first; it != range.second; ++it) {
         std::cout << "Key: " << it->first << ", Value: " << it->second << '\n';
     }
 }
+-------------------------------------------------------------------------------------------------------------------
+
 ✅6. Using std::find_if with Lambda
 To find and iterate over specific elements matching a condition, use the std::find_if algorithm.
 int main() {
@@ -507,6 +555,8 @@ int main() {
 
     return 0;
 }
+------------------------------------------------------------------------------------------------------------------
+
 ✅7. Using std::multimap::count and std::multimap::find
 Another technique for iteration over specific keys is using the count and find methods.
 int main() {
@@ -523,7 +573,7 @@ int main() {
 
     return 0;
 }
-
+//===============================================================================================================
 
 ✅Commonly Used Member Functions:
 1. insert()
@@ -543,6 +593,7 @@ Output:
 1: one
 1: uno
 
+-------------------------------------------------------------------------------------------------------------------
 ✅2. find()
 Finds one instance of a given key and returns an iterator pointing to it.
 For duplicate keys, it may return any one instance.
@@ -564,6 +615,7 @@ int main() {
 Output:
 Found 1: one
 
+-------------------------------------------------------------------------------------------------------------------
 
 ✅3. count(key)
 Returns the number of elements with the given key.
@@ -579,6 +631,7 @@ Output:
 Count of key 1: 2
 Count of key 2: 1
 
+-------------------------------------------------------------------------------------------------------------------
 
 ✅4. equal_range(key)
 Returns a range of iterators (pair of begin and end) corresponding to all elements with the given key.
@@ -598,6 +651,7 @@ Elements with key 1:
 1: one
 1: uno
 
+-------------------------------------------------------------------------------------------------------------------
 ✅5. erase(key)
 Removes all elements with the given key.
 
@@ -614,11 +668,13 @@ int main() {
 Output:
 2: two
 
+-----------------------------------------------------------------------------------------------------------------
 
 ✅6. Using Iterators (begin(), end())
 Both containers support traversal using iterators.
 With std::multimap: Iterates in sorted order.
 With std::unordered_multimap: Iterates in arbitrary order.
+
 
 ✅Other Key Functions in std::multimap and std::unordered_multimap
 Function	Description
@@ -661,7 +717,7 @@ Bucket 4 contains:
 
 
 ✅. load_factor()
-Returns the average number of elements per bucket. 
+Returns the average number of elements per bucket.
 A smaller load factor ensures fewer collisions and hence better performance.
 int main() {
     std::unordered_multimap<int, std::string> umap = {{1, "one"}, {2, "two"}, {1, "uno"}};
@@ -676,8 +732,9 @@ Number of elements: 3
 Number of buckets: 5
 Load factor: 0.6
 
+
 ✅. rehash(n)
-rehash(n) increases the number of buckets to at least n. 
+rehash(n) increases the number of buckets to at least n.
 This minimizes collisions if the container becomes too full, improving lookup and insertion performance.
 
 int main() {
