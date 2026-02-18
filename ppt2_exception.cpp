@@ -250,7 +250,6 @@ Destructors of local objects are called automatically
 This prevents memory leaks.
 
 
-
 2️⃣ To Separate Error Handling from Normal Code and To Propagate Errors Automatically
 Without exceptions:
 
@@ -264,9 +263,7 @@ Error codes mix with real return values
 Caller must check error every time
 Code becomes messy
 
-
 If an error happens deep inside function calls:
-
 main()
   ↓
 funcA()
