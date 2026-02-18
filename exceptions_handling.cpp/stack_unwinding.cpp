@@ -1,7 +1,7 @@
 
 ✅What is Stack Unwinding in C++?
 Stack unwinding refers to the process of cleaning up the stack when an exception is thrown in a C++ program.
-When an exception occurs, the runtime traverses the call stack (from the point where the exception was thrown) and:
+When an exception occurs, the C++ runtime traverses the call stack (from the point where the exception was thrown) and:
 1.Look for a matching catch block.
 2.Destruct objects (including local variables) in reverse order of their construction (starting from the current scope and moving upward).
 3.Perform proper cleanup of resources (memory, file handles, etc.) during this traversal.
@@ -60,18 +60,15 @@ Output:
 Constructor: A
 Constructor: B
 Constructor: C
-// Destructor: C   
-// Destructor: B
-// Destructor: A
-terminate called after throwing an instance of 'std::runtime_error'
-what(): Exception thrown in functionC
+Destructor: C   
+Destructor: B
+Destructor: A
+std::terminate() called after throwing an instance of 'std::runtime_error'
+/* 
+Even if no catch exists anywhere, the runtime still performs full stack unwinding first,
+and then calls std::terminate().
+*/
 
-Why is the Destructor of a Not Called ????
-functionC() throws an exception.
-functionB() does not handle the exception, so it propagates up.
-functionA() also does not handle it, so it propagates to main().
-Since main() also does not handle it, the program terminates immediately.
-Stack unwinding stops, and destructors of active objects (like a in functionA()) are not called.
 
 /*Here is how it happens in your code:
 functionA() creates the object "A".
@@ -84,10 +81,11 @@ functionB() calls functionC():
 
 functionC() creates the object "C".
 Exception is thrown from functionC().
-Stack Unwinding begins:
 
+Stack Unwinding begins:
 The exception propagates upward through the call stack (functionC → functionB → functionA → main).
-During this propagation, destructors are called for all objects created in the scope of the functions being unwound. Specifically:
+During this propagation, destructors are called for all objects created in the scope of the functions being unwound. 
+Specifically:
 Destructor for "C" is called.
 Destructor for "B" is called.
 Destructor for "A" is called.
@@ -99,7 +97,7 @@ Therefore, the program terminates after stack unwinding is complete.
 
 
 
-//================================================================================================================
+//==================================================================================================================
 
 #include <iostream>
 class Test {
@@ -131,6 +129,7 @@ void functionA() {
 }
 int main() {
     functionA();
+    cout<<"Program will continue.....";
     return 0;
 }
 Output:
@@ -156,6 +155,8 @@ a is destroyed last before exiting functionA().
 #include <iostream>
 #include <stdexcept>
 class Test {
+private:
+    std::string name;
 public:
     Test(const std::string& name) : name(name) {
         std::cout << "Constructor: " << name << std::endl;
@@ -163,8 +164,6 @@ public:
     ~Test() {
         std::cout << "Destructor: " << name << std::endl;
     }
-private:
-    std::string name;
 };
 void functionC() {
     Test c("C");
