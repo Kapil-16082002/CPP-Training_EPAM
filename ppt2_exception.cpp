@@ -2,6 +2,13 @@
 ✅What exceptions are:
 Exceptions basically are runtime errors and unexpected behaviour in a program, that interrupts normal flow of program and we can handle it using C++ exception handling mechanism.
 
+🚗 Real Life Example: Moving Car
+
+Imagine:
+You are driving a car normally.
+👉 Suddenly a dog comes in front of the car. So, That dog is an unexpected situation.
+
+
 Basic Example of Exception:
 ✅ Example 1: Division by Zero
 int a = 10;
@@ -57,7 +64,14 @@ catch (ExceptionType2 e) {
 catch (...) {
     // Catch any type of exception (optional)
 }
+⚠ But there are some Limitation of catch-all handler catch(...) Like:
+
+❌ You cannot access the exception object
+❌ You cannot call what()
+❌ You don’t know what was thrown
+
 --------------------------------------------------------------------------------------------------------------------
+
 Lets understand by example:
 
 void divide(int a, int b) {
@@ -132,7 +146,6 @@ If an exception is thrown:
 4. Control transfers to matched handler.
 */
 =================================================================================================================
-
 
 
 ✅ Stack unwinding and how object destruction works when an exception is thrown
