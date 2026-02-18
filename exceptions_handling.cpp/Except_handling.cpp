@@ -1,3 +1,4 @@
+Exceptions basically are runtime errors and unexpected behaviour in a program, that interrupts normal flow of program and we can handle it using C++ exception handling mechanism.
 Exception handling in C++ provides a way to handle runtime errors and unexpected behaviour in a program.
 
 Keywords in C++ Exception Handling:
@@ -143,7 +144,7 @@ Program continues normally after catch
 ✅ Exception handling IS happening correctly
 
 
-// ==========================    throw exception in constructor  ================================================
+// ==========================    throw exception in constructor  ===================================================
 
 When an Exception is Thrown in a Constructor
 In C++, if a constructor of a class throws an exception, the destructor for the object being created will NOT be called, because the object is considered incomplete at the time of the exception.
