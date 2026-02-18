@@ -6,7 +6,8 @@ Exceptions basically are runtime errors and unexpected behaviour in a program, t
 
 Imagine:
 You are driving a car normally.
-👉 Suddenly a dog comes in front of the car. So, That dog is an unexpected situation.
+👉 Suddenly a dog comes in front of the car. Then you have to stop car.
+ So, That dog came in front of your car is an unexpected situation.
 
 
 Basic Example of Exception:
@@ -84,6 +85,9 @@ int main() {
         divide(10, 0);   // This will throw
     }
     // catch(int){};
+    catch (const std::runtime_error ) {
+        cout << "Exception caught: " << e.what() << endl;
+    }
     catch (const std::exception& e) {
         cout << "Exception caught: " << e.what() << endl;
     }
@@ -114,12 +118,12 @@ catch(const char*)
 catch(const std::exception&)
 
 2️⃣ Step 2: Memory Allocation Happens for exception object.
-🔥The exception object is stored in Special memory and that memory is managed by the C++ runtime (not stack)
+🔥The runtime copies/moves this exception object into Special memory and that memory is managed by the C++ runtime (not stack)
 Why not stack?
 Because stack will be destroyed during stack unwinding.
 
 3️⃣ Stack Unwinding Begins. I will Explain it later, what is it
-4️⃣ Compiler looks for matching catch block and Control Transfers to the matching Catch Block
+4️⃣C++ runtime look for matching catch block and Control Transfers to the matching Catch Block
 
 ✅What if No Catch block  Matches?
 std::terminate() is called and Program immediately stops or may be Program crashes.
