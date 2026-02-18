@@ -1,9 +1,29 @@
 ✅Differences Between Containers
-Container	            Duplicacy	 Ordering	Underlying Data Str. Performance
+Container	            Duplicacy	 Ordering	Underlying Data Str.   Performance
 std::set	            No	         Sorted	     Red-Black Tree	      O(log(n)) for insert/find/delete
 std::unordered_set	    No	         Unordered	 Hash Table	          O(1) average, O(n) worst-case for insert/find/delete
 std::multiset	        Yes	         Sorted	     Red-Black Tree       O(log(n)) for insert/find/delete
 std::unordered_multiset	Yes	         Unordered	 Hash Table	          O(1) average, O(n) worst-case for insert/find/delete
+
+/* 
+O(n) worst case for insert / find / erase.
+Because unordered_map is a hash table. If many keys go into the same bucket → collision chain becomes long.
+If ALL elements go into ONE bucket:
+bucket[5] → (k1) → (k2) → (k3) → ... → (kn)
+Linear search → O(n)
+
+
+🔴 Why Binary Search Is NOT Possible in unordered_map Buckets
+Binary search requires:
+✅ 1. Sorted data
+✅ 2. Random access (array-like structure)
+
+But in unordered_map:
+
+❌ Buckets are NOT sorted
+❌ Buckets are NOT stored as arrays
+❌ Buckets are typically linked lists (separate chaining). Linked list does NOT allow O(1) random access.
+*/
 
 ✅When to Use Which Container
 Use std::set When:
@@ -95,6 +115,7 @@ int main() {
     std::cout << "Size of the set: " << s.size() << '\n'; // Output: 3
     return 0;
 }
+-------------------------------------------------------------------------------------------------------------------
 ✅2. empty()
 Returns true if the container is empty, and false otherwise.
 int main() {
@@ -106,7 +127,7 @@ int main() {
 
     return 0;
 }
-
+------------------------------------------------------------------------------------------------------------------
 ✅3. clear()
 Removes all elements from the container.
 int main() {
@@ -116,7 +137,7 @@ int main() {
     std::cout << "Size after clear: " << s.size() << '\n';
     return 0;
 }
-
+------------------------------------------------------------------------------------------------------------------
 ✅4. insert()
 Adds an element to the container. For:
 std::set or std::unordered_set: Duplicate elements will be ignored.
@@ -135,7 +156,7 @@ int main() {
 }
 Output:
 1 1 2
-
+------------------------------------------------------------------------------------------------------------------
 ✅5. find()
 Finds an element in the container and returns an iterator pointing to it. 
 If the element is not present, it returns end().
@@ -151,7 +172,7 @@ int main() {
     }
     return 0;
 }
-
+------------------------------------------------------------------------------------------------------------------
 ✅6. count()
 Returns the number of occurrences of an element:
 For std::set/std::unordered_set: The result will be either 0 or 1.
@@ -164,7 +185,7 @@ int main() {
     std::cout << "Count of 3: " << ms.count(3) << '\n'; // Output: 1
     return 0;
 }
-
+-----------------------------------------------------------------------------------------------------------------
 ✅7. equal_range()
 Returns the range of elements matching the given value in a std::multiset or std::set.
 int main() {
@@ -179,7 +200,7 @@ int main() {
 Output:
 1 1
 
-
+-----------------------------------------------------------------------------------------------------------------
 ✅Special Functions for unordered_set and unordered_multiset
 1. bucket_count()
 Get the number of buckets in the container.
@@ -201,7 +222,7 @@ int main() {
     return 0;
 }
 
-
+---------------------------------------------------------------------------------------------------------------------
 1. erase()
 Overview:
 The erase() function removes elements from the container.
@@ -231,13 +252,15 @@ int main() {
 Output:
 1 3 4
 2 3
-
+------------------------------------------------------------------------------------------------------------------
 ✅2. operator[]
 Overview:
 operator[] is only available for containers like std::map and std::unordered_map where elements are stored as key-value pairs.
 NOT AVAILABLE in std::set, std::unordered_set, std::multiset, or std::unordered_multiset. 
 In contrast, set-based containers do not have key-value pairs—they only hold values.
 Attempting to use operator[] in set-based containers will result in a compiler error.
+
+----------------------------------------------------------------------------------------------------------------
 
 ✅3. lower_bound(key) and upper_bound(key)
 Overview:
