@@ -1,7 +1,7 @@
 
 O - Open/Closed Principle (OCP):
 Software entities (classes, modules, functions) should be open for extension but closed for modification.
-Example: When adding new functionality, instead of modifying existing code, you can create new classes or methods that extend existing behavior.
+Example: When adding new functionality, instead of modifying existing code, we can create new classes or methods that extend existing behavior.
 
 This means:
 Open for extension:    Adding new functionality to the class/module without changing its existing code.
@@ -10,9 +10,29 @@ The idea is to design your system in such a way that it’s easy to extend with 
 This is often achieved using abstraction, polymorphism, and interfaces.
 
 ✅Benefits of OCP:
-Improved Maintainability: Reduces the risk of introducing errors into existing functionality.
 Enhances Extensibility: New features or behaviors can be added without requiring modifications to the already tested code.
+Improved Maintainability: Reduces the risk of introducing errors into existing functionality.
 Promotes Reusability: Existing code remains reusable without the need for changes.
+
+
+🔴 What Problems Occur If Code Does NOT Follow OCP?
+🔥 1️⃣. if new features are added then existing classes may be modified.
+Problem:
+Existing tested code changes
+New bugs may appear
+
+🔥 2️⃣. Harder Unit Testing
+Testing becomes complex
+You must test many conditions together
+Mocking becomes harder
+
+🔥 3️⃣ Team Development Becomes Difficult
+
+In real industrial level code:
+Multiple developers work together.
+If every feature requires modifying the same class,
+→ merge conflicts happen
+→ coordination overhead increases
 
 
 #include <iostream>
@@ -63,17 +83,17 @@ public:
         return 0.5 * base * height;
     }
 };
-// class AreaCalculator {
-// public:
-//     float calculateTotalArea(const std::vector<std::shared_ptr<Shape>>& shapes) const {
-//         float totalArea = 0;
+class Total_AreaCalculator {
+public:
+    float calculateTotalArea(const std::vector<std::shared_ptr<Shape>>& shapes) const {
+        float totalArea = 0;
 
-//         for (const auto& shape : shapes) {
-//             totalArea += shape->calculateArea();
-//         }
-//         return totalArea;
-//     }
-// };
+        for (const auto& shape : shapes) {
+            totalArea += shape->calculateArea();
+        }
+        return totalArea;
+    }
+};
 
 int main() {
     // Create shapes using std::make_shared
@@ -84,31 +104,47 @@ int main() {
     // Store shapes in a vector (using polymorphism)
     std::vector<std::shared_ptr<Shape>> shapes = {rectangle, circle, triangle};
 
-    // Calculate and display area of individual shapes (polymorphism in action)
+    Total_AreaCalculator calculator;
+    std::cout << "Total Area: " << calculator.calculateTotalArea(shapes) << std::endl;
+
+    /*
+    Calculate and display area of individual shapes (polymorphism in action)
     for (const auto& shape : shapes) {
         std::cout << "Shape Area: " << shape->calculateArea() << std::endl; // Polymorphically calls calculateArea()
     }
-
+    */
     return 0;
 }
+✅How Does the Refactored Code Follow OCP?
+1.Open for Extension:
+To add a new shape (e.g., Square), all we need to do is create a new class (Square) derived from the Shape interface. 
+We don't modify AreaCalculator or its existing logic.
+This makes the code easily extensible.
+
+2.Closed for Modification:
+The AreaCalculator class and the existing shape classes (Rectangle, Circle) remain unchanged when new shapes are introduced.
+This reduces the risk of breaking existing functionality when adding new features.
+
+3.Polymorphism:
+The AreaCalculator expects a vector of Shape pointers.
+It calls the calculateArea() method polymorphically without needing to know the specific type of shape.
+
+4.Reusable and Maintainable:
+Each shape encapsulates its own area-calculation logic. This makes the code modular and easier to test.
+
+✅Benefits of the OCP-Compliant Code
+Extensibility: Adding new shapes does not require modifying existing tested code.
+Scalability: Works well as the application grows and more shapes are added.
+Reusability: The AreaCalculator can calculate areas for any shape (existing or future) as long as they inherit from Shape.
+
+✅Key Takeaways
+By using abstraction (interface) and polymorphism, the code adheres to the Open/Closed Principle.
+Decoupling the AreaCalculator from specific shape implementations ensures flexibility and extensibility.
+Applying OCP results in clean, modular, and maintainable code.
 
 
 
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
-
+================================================================================================================
 
 Anti-OCP Example (Code That Violates OCP)
 #include <iostream>
@@ -200,7 +236,8 @@ Why Is It Problematic?
 Using std::vector<void*> works, but it introduces several problems:
 
 1. Safety:
-The major problem is that void* pointers are type-unsafe. The compiler cannot verify that you're casting the void* back to the correct type. If you accidentally cast to the wrong type, behavior is undefined and may lead to crashes or corruption.
+The major problem is that void* pointers are type-unsafe. The compiler cannot verify that you're casting the void* back to the correct type. 
+If you accidentally cast to the wrong type, behavior is undefined and may lead to crashes or corruption.
 
 Example:
 Rectangle rectangle(10, 20);
@@ -330,27 +367,3 @@ int main() {
     return 0;
 }
 
-✅How Does the Refactored Code Follow OCP?
-1.Open for Extension:
-To add a new shape (e.g., Square), all we need to do is create a new class (Square) derived from the Shape interface. We don't modify AreaCalculator or its existing logic.
-This makes the code easily extensible.
-
-2.Closed for Modification:
-The AreaCalculator class and the existing shape classes (Rectangle, Circle) remain unchanged when new shapes are introduced.
-This reduces the risk of breaking existing functionality when adding new features.
-
-3.Polymorphism:
-The AreaCalculator expects a vector of Shape pointers. It calls the calculateArea() method polymorphically without needing to know the specific type of shape.
-
-4.Reusable and Maintainable:
-Each shape encapsulates its own area-calculation logic. This makes the code modular and easier to test.
-
-✅Benefits of the OCP-Compliant Code
-Extensibility: Adding new shapes does not require modifying existing tested code.
-Scalability: Works well as the application grows and more shapes are added.
-Reusability: The AreaCalculator can calculate areas for any shape (existing or future) as long as they inherit from Shape.
-
-✅Key Takeaways
-By using abstraction (interface) and polymorphism, the code adheres to the Open/Closed Principle.
-Decoupling the AreaCalculator from specific shape implementations ensures flexibility and extensibility.
-Applying OCP results in clean, modular, and maintainable code.
