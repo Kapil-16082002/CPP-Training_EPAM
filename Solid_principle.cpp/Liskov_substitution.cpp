@@ -1,21 +1,77 @@
 
 ✅Liskov Substitution Principle (LSP):
 Objects of a superclass should be replaceable with objects of a subclass without changing the correctness of the program.
+Derived class must behave like base class.
+
 
 ✅Objects of a superclass should be replaceable with objects of their subclass??
-it means: objects of their subclass can maintain superclass members.
-Subclass inherits all behaviors of the superclass:
+it means: objects of their subclass should maintain superclass members.
+Subclass inherits all behaviors of the superclass.
 
+🔥 Classic Real-Life Example
+🚗 Vehicle → Car
+If I say:
+You can drive a Vehicle.
+And if I give you a Car, then you should definitely drive car
+That works ✅
+Car behaves like a Vehicle.
+Superclass: Vehicle, Other types inherit from it.
+Subclass: Car
 
 ✅Why is LSP Important?
 Improves Code Reusability: Derived classes can be substituted wherever a base class is expected, reducing redundancy.
 Enhances Code Maintainability: Code that depends on abstractions (e.g., base classes) works seamlessly with new derived types.
 Promotes Polymorphism: Allows polymorphic behavior without violating program correctness.
 
+----------------------------------------------------------------------------------------------------------------
+
+🔥 1️⃣ Runtime Errors
+class Bird {
+public:
+    virtual void fly() = 0;
+};
+
+class Penguin : public Bird {
+public:
+    void fly() override {
+        throw std::logic_error("Cannot fly");
+    }
+};
+Bird* b = new Penguin();
+b->fly();  // 💥 Unexpected runtime error
+
+The caller expected "fly works", but it crashed.
+Program correctness broken ❌
+
+
+🔥2️⃣ Broken Polymorphism
+Polymorphism works only when subclasses behave properly.
+
+
+
+
+
+
+
 
 Example of LSP Violation
 /*A rectangle is a shape.A square is also a rectangle, but if you replace a rectangle with a square, 
-certain calculations(like area) might behave unexpectedly if assumptions about width / height change.*/
+certain calculations(like area) might behave unexpectedly if assumptions about width / height change.
+🔥 Classic Example: Rectangle–Square Problem
+
+If Square inherits from Rectangle:
+Rectangle r;
+r.setWidth(5);
+r.setHeight(4);
+
+Expected area = 20
+But if Square forces width = height: Area becomes wrong.
+
+Mathematically correct,
+but behaviorally incorrect.
+
+That’s LSP violation.
+*/
 
 #include <iostream>
 #include <string>
@@ -56,7 +112,7 @@ int main() {
     // Example of violation of LSP
     Rectangle* rect = new Square(5); // Use a Square where a Rectangle is expected
 
-    rect->setLength(10);             // Modifies only the length in the Rectangle context
+    rect->setLength(10);             // Modifies only the length not width in the Rectangle context
     std::cout << "Area: " << rect->getArea() << std::endl; // Unexpected behavior!
 
     delete rect;
@@ -65,7 +121,7 @@ int main() {
 
 ✅Step-by-Step Explanation of Violation
 Step 1: Rectangle* rect = new Square(5);
-A Square object is created, and the Rectangle* pointer rect points to it.
+A Square object is created, and the Rectangle*rect pointer points to it.
 Initial values for the Square object:
 
 length = 5
@@ -167,12 +223,12 @@ int main() {
 
 std::vector<std::shared_ptr<Shape>> shapes; // A collection of Shape pointers (base class)
 shapes.push_back(std::make_shared<Rectangle>(10, 20)); // Derived class Rectangle stored as Shape
-shapes.push_back(std::make_shared<Square>(15));       // Derived class Square stored as Shape
-The vector std::vector<std::shared_ptr<Shape>> stores derived class objects (Rectangle and Square) but refers to them through the common base class Shape.
+shapes.push_back(std::make_shared<Square>(15)) stores derived class objects (Rectangle and Square) but refers to them through the common base class Shape.
 This demonstrates that subclasses can replace the base class without causing issues (a core idea of LSP).
 
 2.Polymorphism in Action:
-
+;       // Derived class Square stored as Shape
+The vector std::vector<std::shared_ptr<Shape>>
 for (const auto& it : shapes) {
     std::cout << "Area: " <<it->getArea() << std::endl; // Calls correct implementation
 }
