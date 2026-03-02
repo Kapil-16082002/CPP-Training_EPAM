@@ -1,13 +1,56 @@
+
 ✅Interface Segregation Principle:
 A client should not be forced to depend on methods it does not use.
-/*"Classes should not be forced to implement  unnecessarily / irrelevant methods that they do not use.*/
+/*Classes should not be forced to implement unnecessarily / irrelevant methods that they do not use.*/
 // Main aim removing fat interfaces
 
-When ISP Applies
-The ISP comes into play when:
+When ISP Applies: The ISP comes into play when,
 You notice large interfaces with many unrelated methods.
 Different implementing classes require only subsets of the interface's methods.
 New features or methods are being added to the interface, impacting all implementing classes unnecessarily
+
+
+🔴 What Problems Occur If We Don’t Follow ISP ?
+🔥 1️⃣ Classe will implement unnecessary methods
+🔥 2️⃣ code size increases and compilation time also increases
+🔥 3️⃣  Harder Testing
+🔥 3️⃣ Unnecessary Coupling
+
+/* 
+🔴 Why Code Size Becomes Large?
+1️⃣ Large Interface = Large VTables
+When you write:
+class Machine {
+public:
+    virtual void print() = 0;
+    virtual void scan() = 0;
+    virtual void fax() = 0;
+    virtual void photocopy() = 0;
+};
+Every derived class:
+          Must override all methods
+          Gets a larger vtable
+          Generates more object code
+
+Even if methods are empty/dummy.
+👉 More virtual functions = more entries in vtable
+👉 More compiled symbols
+👉 Larger binary size
+
+-------------------------------------------------------------------------------------------------------------------
+
+🔴 Why Compilation Time Increases?
+Large interfaces are usually placed in header files.
+If you modify:
+virtual void newFeature() = 0;
+
+Now:
+All derived classes must recompile
+All files including that header recompile
+👉 Full rebuild triggered
+
+*/
+
 
 ⚠️Example of ISP Violation
 Here is  an example where the Interface Segregation Principle is violated:
