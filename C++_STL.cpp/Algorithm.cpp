@@ -1,14 +1,112 @@
+
 ✅The C++ STL provides a std::sort() function that is widely used for sorting containers like arrays and vectors. 
+std::sort works on:
+vector, deque, array, raw arrays, But NOT on: list, forward_list Because std::sort requires Random Access Iterators.
 
 std::sort      Sorts a range in ascending order:                   std::sort(v.begin(), v.end());
-std::partial_sort Partially sorts the first k elements in a range.	std::partial_sort(v.begin(), v.begin() + k, v.end());
+sort(v.rbegin(), v.rend());//  5,4,3,2,1 Sort in reverse direction.
+sort(v.begin(), v.end(), greater<int>()); // 5,4,3,2,1 Sort in reverse direction.
+With Custom Comparator: Lambda
+sort(v.begin(), v.end(), [](int a, int b) {
+    return a > b;
+});  //  5,4,3,2,1
+
+Time Complexity: 👉 O(N log N) Same complexity 
+/* 
+vector<int> v = {10, 5, 8, 1, 7, 3, 9};
+sort(v.begin() + 1, v.begin() + 5);  // Sort elements from index 1 to index 4 in ascending order
+Output: 10 1 5 7 8 3 9
+
+sort(v.begin() + 1, v.begin() + 5, greater<int>());// Sort elements from index 1 to index 4 in descending order
+Output: 10 8 7 5 1 3 9
+
+sort(v.rbegin() + 1, v.rbegin() + 5); // 10 5 8 7 3 1 9   Reason ---->>>>>>>
+Index:  0   1   2   3   4   5   6
+Value: 10   5   8   1   7   3   9
+
+✅Reverse iterator sees the vector like this:
+Reverse Index: 0   1   2   3   4   5   6
+Value:         9   3   7   1   8   5  10
+
+✅ What Does This Sort? sort(v.rbegin() + 1, v.rbegin() + 5);
+That means sort this range in reverse view:
+
+rbegin()+1  → value 3
+rbegin()+5  → stops before index 5
+
+✅ Sort in Ascending Order (because default sort)
+Ascending of: 3 7 1 8
+Becomes: 1 3 7 8
+
+✅ Replace Back in Reverse View
+9   1   3   7   8   5   10
+
+✅ Convert Back to Normal Vector Order
+Now reverse that back:
+10   5   8   7   3   1   9
+
+
+*/
+=================================================================================================================
+
+✅Finding k Smallest and largest Element
+vector<int> v = {7, 2, 9, 4, 1, 6, 3};
+int k=3;
+std::partial_sort(v.begin(), v.begin() + k, v.end()); // gives you k smallest elements sorted in ascending order, Without sorting the whole container.
+Output: 1 2 3 9 7 6 4
+
+partial_sort(v.begin(), v.begin() + k, v.end(), greater<int>()); // gives you k largest elements Sorted in descending order, Without sorting the whole container.
+Output: 9 7 6 2 1 4 3
+🔥 Time Complexity
+O(N log K)
+
+
+✅🔹 What is nth_element? 
+nth_element(first, nth, last);
+
+It rearranges elements such that:
+1️⃣ The element at position nth is the same as if the array were fully sorted
+2️⃣ All elements before it are smaller
+3️⃣ All elements after it are larger
+4️⃣ But the array is NOT fully sorted
+
+vector<int> v = {17, 12, 19, 14, 10, 16, 13};
+int k = 3;   // will give 4th smallest
+std::nth_element(v.begin(), v.begin() + k, v.end());
+cout << v[k]; // 14, 4th smallest
+
+✅ Possible Output:
+12 10 13 14 19 16 17
+[ smaller elements ] 14 [ larger elements ]
+
+🔥 Time Complexity
+Average: O(N)
+Worst:  O(N log N).
+
+=================================================================================================================
 is_sorted	Checks if a range is sorted.	bool sorted = std::is_sorted(v.begin(), v.end());
+
 stable_sort	Sorts a range in ascending order while maintaining the relative order of equivalent elements. std::stable_sort(v.begin(), v.end());
-nth_element	 Partitions the range such that the n-th element is in its correct position and all smaller elements are before it.	std::nth_element(v.begin(), v.begin() + n, v.end());
+✔ Uses Merge Sort internally
+✔ Needs extra memory
+vector<pair<int, string>> v = {
+        {90, "Kapil"},
+        {80, "Rahul"},
+        {90, "Amit"},
+        {70, "Neha"}
+    };
+Output: 
+70 Neha
+80 Rahul
+90 Kapil
+90 Amit
+
+=================================================================================================================
+
 
 The sorting algorithm used in std::sort() is generally a combination of:
 1. Introsort (introspective sort)
-2. Heap sort 
+2. Heap sort
 3. Insertion sort.
 
 ✅1. Introduction to Introsort:
@@ -21,8 +119,8 @@ Insertion sort: For sorting small partitions efficiently.
 Step-by-Step Internals of std::sort() Algorithm:
 STEP:1  Begin with Quicksort
 Introsort starts with quicksort, which is a divide-and-conquer algorithm.
-The array is divided into smaller partitions based on a selected pivot element. 
-Elements less than the pivot go to one partition, and elements greater go to another partition.
+The array is divided into smaller partitions based on a selected pivot element.
+Elements less than the pivot go to one partition, and elements greater than the pivot go to another partition.
 
 STEP:2  Switch to Heap Sort for Deep Recursion
 When the recursion depth of Quicksort exceeds a certain limit (usually proportional to log(n)), introsort switches to heap sort. 
@@ -30,7 +128,7 @@ This is done to prevent :
   1.stack overflows caused by deep recursion 
   2.worst-case time complexity of quicksort (O(n²)).
   Why switch to heap sort()->
-Heap sort gives time complexity of  O(n log n)in the worst case scenerios. 
+Heap sort gives time complexity of  O(n log n)in the worst case scenerios.
 A max-heap is constructed, and elements are swapped repeatedly to ensure sorting.
 
 Step 3: Use Insertion Sort for Small Partitions:
@@ -66,9 +164,10 @@ int idx= it - vec.begin();
 int value_at_idx = *it;
 
 //================================================================================================================
+
 ✅std::equal_range()  combination of  lower_bound() and upper_bound()
 It is used to find the range of elements in a sorted container that are equal to a given value. 
-It is especially useful when the container contains duplicates and you want to find all occurrences of a particular value.
+It is especially useful when the container contains duplicates and you want to find all occurrence11111111111111s of a particular value.
 
 
 std::equal_range() returns a std::pair of iterators:
