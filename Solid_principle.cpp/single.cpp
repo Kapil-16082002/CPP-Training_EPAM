@@ -44,9 +44,34 @@ A class should have one and only one reason to change, meaning it should have on
 This means that a class should perform a single, well-defined task or responsibility. 
 When a class has more than one responsibility, it becomes harder to maintain, debug, and extend because changes in one part of the class may effects on other parts.
 
+🔥 Real Life Example 1: Restaurant
+❌ Bad Design
+Imagine a restaurant.
+One person:
+Takes order
+Cooks food
+Cleans table
+Manages billing
+
+If billing rules change → that person must change work.
+If cooking menu changes → same person affected.
+
+
+✅ Good Design (SRP Applied)
+Separate roles:
+Waiter → takes order
+Chef → cooks food
+Cashier → handles billingngnnn
+Cleaner → cleans tables
+
+Now:
+If recipe(menu) changes → only Chef affected
+If tax rules change → only Cashier affected
+
+
 Why SRP is Important?
 Maintainability: A class that handles a single responsibility is easier to understand and modify.
-Extensibility: Changes and new features can be added without affecting unrelated parts of the application.
+Extensibility: Changes and new features can be added without affecting other parts of the application.
 Testability: Small, focused classes are easier to test.
 Separation of Concerns: Each class has a specific purpose, which makes the design cleaner and modular.
 
@@ -60,16 +85,16 @@ using namespace std;
 
 class User {
 private:
-    string name;
-    string email;
+    string employe_name;
+    string employe_email;
 public:
-    User(string name, string email) : name(name), email(email) {}
+    User(string name, string email) : employe_name(name), employe_email(email) {}
     void saveToDatabase() {
         // Code logic for saving user to database
-        cout << "Saving user '" << name << "' to the database.\n";
+        cout << "Saving user '" << employe_name << "' to the database.\n";
     }void sendEmail(string message) {
         // Code logic for sending email
-        cout << "Sending email to '" << email << "': " << message << endl;
+        cout << "Sending email to employe" <<employe_name<<" having mail"<< employe_email << "': " << message << endl;
     }  
 };
 int main() {
@@ -86,6 +111,7 @@ These are unrelated tasks bundled together, violating SRP.
 
 2.Hard to Maintain:
 If we modify the database logic, the chances of accidentally breaking email functionality increase.
+Example: Now saving employe_id not employe_name, then will effect sendEmail function that contains employe_name.
 
 3.Scalability or extensibility Issue:
 If we want to later add SMS notifications or change user persistence to a different database, we will have to edit this single, cluttered class.
@@ -168,3 +194,14 @@ Maintainability: Code is much easier to modify and debug since responsibilities 
 Extensibility: Adding new functionality becomes simpler since modifications are isolated within specific classes.
 Team Collaboration: Developers can work on different classes independently.
 Testability: Each class can be tested without depending on other classes, ensuring reliability.
+
+
+--------------------------------------------------------------------------------------------------------------
+
+✅Why does SRP make testing easier ?
+If a class has only one responsibility, then:
+It has less logic
+It has fewer dependencies
+It has fewer scenarios,(fewer testcases)
+It has clear behavior
+So testing becomes simple and focused.
