@@ -70,7 +70,8 @@ int main() {
 
 
 3.Element Removal (erase):
-Removing elements invalidates only iterators referring to the removed elements. Iterators pointing to other elements remain valid.
+Removing elements invalidates only iterators referring to the removed elements. 
+Iterators pointing to other elements remain valid.
 
 
 int main() {
