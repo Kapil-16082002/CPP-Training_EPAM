@@ -1,17 +1,47 @@
 Exceptions basically are runtime errors and unexpected behaviour in a program, that interrupts normal flow of program and we can handle it using C++ exception handling mechanism.
 Exception handling in C++ provides a way to handle runtime errors and unexpected behaviour in a program.
 
-Keywords in C++ Exception Handling:
-try → Defines a block of code that might throw an exception.
-throw → Used to throw an exception.
-catch → Handles exceptions thrown by the try block.
-/*Catch-All Handler
-Use catch(...) to handle all exceptions when the type is unknown or irrelevant.
+🚗 Real Life Example: Moving Car
+Imagine:
+You are driving a car normally.
+👉 Suddenly a dog comes in front of the car. Then you have to stop car.
+So, That dog came in front of your car is an unexpected situation.
 
-catch (const std::exception&e)
-std::exception&e will catch only those exceptions that are derived from the std::exception class.
-Example, std::runtime_error, std::logic_error, or create a custom exception class.
+
+
+Basic Example of Exception:
+✅ Example 1: Division by Zero
+int a = 10;
+int b = 0;
+int result = a / b;   // ❌ division by zero not allowed
+
+If you don’t handle the exception, program will:
+will give Undefined Behavior, On most systems → Program crashes
+
+
+✅ Example 2: Accessing Invalid Index in a vector
+vector<int> v = {1, 2, 3};
+cout << v.at(5);   // throws std::out_of_range
+
+If you don’t handle the exception, program will:
+Throw std::out_of_range
+Call std::terminate() // When std::terminate() is called, it means the program will immediately stop execution.
+Program crashes
+/*When std::terminate() is invoked:
+The program stops immediately.
+Stack unwinding may NOT complete.
+Destructors may NOT run.
 */
+
+✅ Example 3: Memory Allocation Failure
+
+    int* p = new int[1000000000000];
+
+If you don’t handle the exception, program will:
+std::bad_alloc is thrown
+std::terminate() is called, Program crashes.
+
+
 
 Scenarios in Exception Handling:
 1. Divide by Zero (Mathematical Errors) -> can lead to undefined behavior
@@ -56,6 +86,102 @@ A caught exception can be re-thrown for higher-level handling.
 Exception Specifications (deprecated in C++11):
 throw(type) was used to declare which exceptions a function might throw.
 This feature was removed in modern C++ because it was difficult to enforce at runtime.
+
+=================================================================================================================
+
+Keywords in C++ Exception Handling:
+try → Defines a block of code that might throw an exception.
+throw → Used to throw an exception.
+catch → Handles exceptions thrown by the try block.
+
+
+✅ Basic Syntax of exception handling:
+try {
+    // Code that may cause an exception
+     
+}
+catch (ExceptionType1 e) {
+    // Handle exception of type ExceptionType1
+}
+catch (ExceptionType2 e) {
+    // Handle another type
+}
+catch (...) {
+    // Catch any type of exception (optional)
+}
+/*Catch-All Handler
+Use catch(...) to handle all exceptions when the type is unknown or irrelevant.
+
+catch (const std::exception&e)
+std::exception&e will catch only those exceptions that are derived from the std::exception class.
+Example, std::runtime_error, std::logic_error, or create a custom exception class.
+
+⚠ But there are some Limitation of catch-all handler catch(...) Like:
+❌ You cannot access the exception object
+❌ You cannot call what()
+❌ You don’t know what was thrown
+*/
+Questions:
+can we call Catch-All Handler before any other catch block ?
+Explore Catch-All Handler in details
+
+
+-----------------------------------------------------------------------------------------------------------------
+
+✅try:
+Tells the compiler:
+“If an exception occurs inside this block, look for matching catch handlers.”
+
+
+
+What Happens When this line execute  throw std::runtime_error("Division by zero"); ??
+
+1️⃣. Program Execution stops immediately.
+1️⃣Step 1: A Temporary Exception Object Is Created
+The type of the Exception Object is Exactly same as the type of the expression after throw.
+
+throw 5;                // exception object type: int
+throw "error";          // exception object type: const char*
+throw std::runtime_error("x");  // exception object type: runtime_error
+
+And corresponding matching catch blocks will be:
+catch(int)
+catch(const char*)
+catch(const std::exception&)
+
+2️⃣ Step 2: Memory Allocation Happens for exception object.
+🔥The runtime copies/moves this exception object into Special memory and that memory is managed by the C++ runtime (not stack)
+Why not stack?
+Because stack will be destroyed during stack unwinding.
+
+3️⃣ Stack Unwinding Begins. I will Explain it later, what is it
+4️⃣C++ runtime look for matching catch block and Control Transfers to the matching Catch Block
+
+✅What if No Catch block  Matches?
+std::terminate() is called and Program immediately stops or may be Program crashes.
+
+
+
+
+/*catch (const std::exception&e)
+std::exception&e will catch only those exceptions that are derived from the std::exception class.
+Example, std::runtime_error, std::logic_error, or create a custom exception class.
+
+
+🔥 So What Is The Role of throw?
+throw does 3 major things:
+| Role                 | Meaning                           |
+| -------------------- | --------------------------------- |
+| 1️⃣ Signal Error     | Something went wrong              |
+| 2️⃣ Stop Execution   | Exit current function immediately |
+| 3️⃣ Transfer Control | Jump to matching catch block      |
+
+If an exception is thrown:
+1. Program Execution stops immediately.
+2. Stack unwinding begins.
+3. Compiler looks for matching catch.
+4. Control transfers to matched handler.
+*/
 
 //==================================================================================================================
 
