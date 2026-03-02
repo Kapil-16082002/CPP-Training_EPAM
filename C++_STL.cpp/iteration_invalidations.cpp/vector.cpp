@@ -13,7 +13,6 @@ int main() {
     std::cout << "\n--- Problem 1: Invalidation due to Reallocation ---\n";
     {
         std::vector<int> vec = {1, 2, 3};
-
         // Get an iterator pointing to the first element
         auto it = vec.begin(); // Iterator points to 1
 
