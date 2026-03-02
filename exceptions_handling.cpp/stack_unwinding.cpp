@@ -27,6 +27,13 @@ The goal of stack unwinding is to clean up responsibly even in the face of an un
 
 //===============================================================================================================
 
+🧠 Code Flow
+main()
+ └── functionA()
+      └── functionB()
+           └── functionC()
+
+
 #include <iostream>
 #include <stdexcept>
 class Test {
@@ -140,18 +147,43 @@ Destructor: C
 Destructor: B
 Caught exception: Exception thrown in functionC
 Destructor: A
+Program will continue.....
 
 Explanation:
 functionA() creates a (Test("A")).
 functionB() creates b (Test("B")).
 functionC() creates c (Test("C")) and throws an exception.
-Since functionC() threw an exception: c is destroyed first (stack unwinding).//Destructor: C
-b is destroyed next (stack unwinding in functionB()). // Destructor: B
-Program Control returns to functionA(), where the catch block handles the exception.
-a is destroyed last before exiting functionA().
-✅ All destructors are called in proper order (reverse of construction order).
 
-                                                         //////////////////////////////////////////////////////
+🔥 Now the important part begins.
+When throw runs:
+An exception object is created (of type runtime_error).
+Control immediately leaves functionC.
+The runtime starts searching for a matching catch.
+
+🔥 Step 5: Leaving functionC()
+Since there is no catch Block in functionC(), Control immediately leaves functionC.
+Before exiting functionC:
+Destructor: C will be called, c is destroyed.
+
+🔥 Step 6: Enter functionB()
+Since there is no catch Block in functionB(), Control immediately leaves functionB.
+Before exiting functionB also:
+Destructor: B will be called, b is destroyed.
+
+So runtime continues moving upward.
+
+🔥 Step 7: Enter functionA()
+Does functionA have a matching catch?
+catch (const std::exception& e)
+Yes ✅
+So propagation stops here.
+Catch Block Executes : Caught exception: Exception thrown in functionC
+Now here functionA Ends and Destructor: A  will be called.
+
+So in this way  destructors are called during stack unwinding and now Program will continue...doing its task.
+
+----------------------------------------------------------------------------------------------------------------
+
 #include <iostream>
 #include <stdexcept>
 class Test {
