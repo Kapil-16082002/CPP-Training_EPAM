@@ -1,12 +1,65 @@
+
 ✅Dependency Inversion Principle:
-High-level modules should not depend on low-level modules. Both should depend on abstractions.
-And:
+High-level modules should not depend on low-level modules.Both should depend on abstractions(e.g abstract classes or interfaces ).
+And
 Abstractions should not depend on details. Details should depend on abstractions.
 In simple ternms, class should rely on abstractions(e.g abstract classes or interfaces ) rather than concrete implementations.
 
 
+
+/*🔵 1️⃣ High-Level Modules contain:
+main Business logic
+Core rules of the application
+What the system does
+They define policy.
+
+🔴 2️⃣ Low-Level Modules contain:
+Implementation details
+Technical operations
+They define how things are done.
+*/
+🔴 What Problems Happen If We Don’t Follow DIP?
+
+Tight coupling = High dependency = Hard to change.
+Loose coupling = Low dependency = Flexible design.
+
+1️⃣ Tight Coupling (Biggest Problem)
+One class (or module) is highly dependent on the internal implementation of another class.
+If one changes → the other must change.
+
+🚨 Example of Tight Coupling
+class Engine {
+public:
+    void start() {
+        std::cout << "Engine started\n";
+    }
+};
+class Car {
+private:
+    Engine engine;   // Direct dependency
+public:
+    void drive() {
+        engine.start();
+    }
+};
+Problem:
+Car is directly dependent on Engine.
+If Engine changes → Car may break.
+You cannot replace Engine with ElectricEngine easily.
+
+❌ Why Tight Coupling Is Bad?
+Hard to modify
+Hard to test (cannot mock easily)
+Hard to extend
+Violates Open-Closed Principle
+Violates Dependency Inversion Principle
+
+
+-------------------------------------------------------------------------------------------------------------------
+
 ✅Without Dependency Inversion (DIP Violation)
-In this example, AreaCalculator (the high-level module) directly depends on low-level classes (Square and Rectangle). This violates DIP because:
+In this example, AreaCalculator (the high-level module) directly depends on low-level classes (Square and Rectangle). 
+This violates DIP because:
 
 The AreaCalculator logic is tightly coupled to the specific shape implementations.
 Adding a new shape or changing implementations will require modifying AreaCalculator.
@@ -63,10 +116,10 @@ Square area: 16
 
 ✅Whats wrong here?
 1.Violation of DIP:
-AreaCalculator directly depends on specific classes (Rectangle, Square) instead of an abstraction. 
+AreaCalculator directly depends on specific classes (Rectangle, Square) instead of an abstraction.
 If a new shape is added (e.g., Circle), the AreaCalculator would need to change, violating the Open/Closed Principle (OCP).
 2.Tight Coupling:
-The AreaCalculator class cannot work with other shapes unless explicitly modified for each new shape. 
+The AreaCalculator class cannot work with other shapes unless explicitly modified for each new shape.
 This makes the program inflexible and hard to extend.
 
 
@@ -76,8 +129,6 @@ To fix the design, we'll:
 Introduce an abstraction (Shape) that defines a common contract (getArea()) for all shapes.
 Make both Rectangle and Square inherit from the Shape abstraction.
 Modify the AreaCalculator to depend on Shape, making it operate on any shape rather than specific implementations.
-Code with DIP
-cpp
 
 
 #include <iostream>
@@ -148,10 +199,9 @@ The AreaCalculator now depends on the Shape abstraction and operates on a set of
 It no longer depends directly on Rectangle, Square, or any other specific shape.
 
 2.Flexible and Scalable:
-Adding a new shape (e.g., Circle, Triangle) requires just implementing the Shape interface. No changes are needed in the AreaCalculator.
-Adding a New Shape (Circle)
-If we want to add support for Circle, we just need to implement the Shape interface. The rest of the code remains unchanged.
-
+Adding a new shape (e.g., Circle, Triangle) requires just implementing the Shape interface. 
+No changes are needed in the AreaCalculator. The rest of the code remains unchanged.
+ 
 // Low-level module: Circle implementing Shape
 class Circle : public Shape {
 public:
