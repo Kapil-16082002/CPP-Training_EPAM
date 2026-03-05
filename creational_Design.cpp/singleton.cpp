@@ -1,20 +1,25 @@
 
-//what are design principles?? why design principle??
+//what are design principles?? why design principle ??
 Design Pattren are guidelines or principles that help developers to write clean, readable, maintainable, scalable, and efficient software solutions.
 These basically are foundation for designing software that are modular, well-structured, and easy to understand, modify, and extend over time.
 
 Why Design Principles?
 Design principles are important because they:
 
-✅Improve Code Quality: Encourage writing readable, reusable, and maintainable code.
+✅Improve Code Quality: Encourage writing readable, reusable, and maintainable code.    
 Reduce Complexity: Help manage and reduce codebase complexity.
 Enable Scalability: Ensure systems can adapt and grow with changing requirements.
 Promote Reusability: Help avoid duplication and enable effective use of software components.
 Prevent Bugs: Minimize errors by adhering to proven architectural guidelines.
 
-//================================================================================================================
 
-✅What is Creational Design Pattern?
+🧱 1️⃣ Creational Design Patterns : 👉 Deal with object creation mechanisms
+🏗 2️⃣ Structural Design Patterns  : 👉 Deal with class & object composition
+🧠 3️⃣ Behavioral Design Patterns  : 👉 Deal with object communication.They define how objects interact and share responsibilities.
+
+=====================================================================================================================
+
+✅What is Creational Design Pattern
 Creational design patterns are a category of design patterns in software development that generally focus on the process of object creation. 
 They ensure that the creation of objects is flexible, reusable, and scalable while hiding the object creation logic from the client code.
 
@@ -51,12 +56,11 @@ public:
         }
         return instance;
     }
-    void showMessage() {
-        std::cout << "Singleton Instance!" << std::endl;
+    void showMessage()         std::cout << "Singleton Instance!" << std::endl;
     }
     // Delete the copy constructor and assignment operator to prevent cloning
-    Singleton(const Singleton&) = delete; //  explicitly deletes the copy constructor functionality for the Singleton class.
-    Singleton& operator=(const Singleton&) = delete;//  explicitly deletes the copy assignment operator functionality for the Singleton class.
+    Singleton(const Singleton&) = delete;  //  explicitly deletes the copy constructor functionality for the Singleton class.
+    Singleton& operator=(const Singleton&) = delete; //  explicitly deletes the copy assignment operator functionality for the Singleton class.
 };
 
 // static member  must Initialize outside the class
@@ -76,7 +80,6 @@ int main() {
     Both pointers have the same memory address, proving that they refer to the same singleton instance.
     Variables singleton1 and singleton2 are just pointers (references) to the single instance; they are not creating new instances. 
     */
-
     return 0;
 }
 ✅Explanation:
@@ -90,13 +93,13 @@ Drawback:
 Not Thread-Safe: In a multithreaded environment, two threads might create multiple instances simultaneously when accessing getInstance() at the same time.
 
 
-✅Question 1: Why is Singleton* instance static and private?
+✅Question 1: Why is Singleton* instance static and private ?
 Answer:
 instance is declared as static because a singleton ensure that  there is only one instance of the class that is shared throughout the program. 
 By making instance static, it exists globally for the entire lifetime of the program and is shared across all calls to Singleton::getInstance().
 Without the static keyword, instance would be an instance variable, and each instance of the Singleton class would have its own copy of instance, thereby defeating the singleton purpose.
 Private:
-instance is private to ensure that no external code or class can directly access or modify it. 
+instance is private to ensure that no external code or class can directly access or modify it.
 This enforces controlled access to the singleton instance via the public getInstance() method.
 This is a core principle of encapsulation, ensuring that the management of the singleton instance remains within the Singleton class.
 
@@ -114,6 +117,7 @@ The Singleton pattern is designed to ensure that all parts of the program access
 Making getInstance() static allows it to be available globally and ensures that it controls access to the single shared instance
 
 
+
 Question 3: What Happens Without delete? 
 Singleton(const Singleton&) = delete;   
 Singleton& operator=(const Singleton&) = delete;
@@ -123,7 +127,16 @@ A default copy constructor: Performs a shallow copy.
 A default copy assignment operator: Copies the content of one object into another.
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Question 4: If we already prevent creating multiple instances, why delete copy assignment operator(that requires two objects)?
+Even if constructor is private,
+the compiler may still generate copy operations internally.
+
+If we don’t explicitly delete them:
+Compiler generates default copy constructor
+Compiler generates default copy assignment operator
+
+==================================================================================================================
 
 
 ✅Thread-Safe Singleton (with Mutex Lock)
@@ -186,7 +199,7 @@ public:
     static Singleton* getInstance() {
         if (instance == nullptr) {           // First check (without locking)
             std::lock_guard<std::mutex> lock(mtx);
-            if (instance == nullptr) {       // Second check (with locking)
+            if (instance == nullptr) {      // Second check (with locking)
                 instance = new Singleton();
             }
         }
@@ -215,7 +228,10 @@ First without locking to avoid the overhead of acquiring a lock.
 Second with locking to ensure the instance is created safely.
 Prevents unnecessary locking and improves runtime performance.
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+🔥 Why Second Check Is Required ?
+Because multiple threads may pass the first check simultaneously.
+
+====================================================================================================================
 
 ✅Eager Initialization Singleton
 //In an eager singleton implementation, the instance is created at the time of class loading, avoiding the need for lazy initialization.
@@ -313,9 +329,7 @@ Memory-Safe: The use of std::unique_ptr ensures the singleton instance is automa
 Modern C++ Features: Following modern C++ conventions.
 
 
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+====================================================================================================================
 
 C++11 Static Local Variable (Thread-Safe by Default)
 Since C++11, the initialization of static local variables is thread-safe. 
@@ -369,9 +383,11 @@ Key Points:
 The instance is declared as a static local variable, which is thread-safe in C++11 and later.
 This is the recommended implementation in modern C++ due to its simplicity and thread-safety advantages.
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-C++11 Static Local Variable (Thread-Safe by Default):
+===================================================================================================================
+
+
+
 static local variables are thread-safe by default because the compiler guarantees that their initialization is done exactly once.
 If multiple threads try to initialize the variable simultaneously, only one thread can initialization the static Local Variable , while other threads wait until its complete. 
 
