@@ -2,7 +2,7 @@
 //what are design principles?? why design principle ??
 Design Pattren are guidelines or principles that help developers to write clean, readable, maintainable, scalable, and efficient software solutions.
 These basically are foundation for designing software that are modular, well-structured, and easy to understand, modify, and extend over time.
-
+8630464393 rahul prajapati
 Why Design Principles?
 Design principles are important because they:
 
