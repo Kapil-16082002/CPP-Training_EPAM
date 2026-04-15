@@ -2,7 +2,8 @@
 ✅# CLASS
 1. A Class is a user-defined data type that has data members and member functions.
    Data members are the data variables and member functions are the functions.
-2. A class is a blueprint or template for creating objects. 
+2. A class is a blueprint or template for creating objects.
+
 
 ✅# OBJECTS
 1. An object is an instance of a class. It holds the actual data and can use the methods and variables defined by the class.
@@ -25,6 +26,7 @@ but when it is instantiated (i.e. an object is created) memory is allocated.
 
 
 // --------------------------- Memory Occupied by object----------------------------------------------------------
+
 Key Points to Remember:
 1.An empty class is one that has no data members or member functions.
 class Empty {};
@@ -59,14 +61,13 @@ Even in the case of empty classes, distinct instances (obj1 and obj2) must have 
 
 //--------------------------------------------------------------------------------------------------------------
 
-What if the Class has Static Members?
-Static members belong to the class itself rather than individual objects. 
+What if the Class has Static Members ?
+Static members belong to the class itself rather than individual objects.
 Therefore, they do not contribute to the size of any instance(object) of the class.
 
 Example:
 #include <iostream>
 using namespace std;
-
 class StaticTest {
     static int count;  // Static member variable
 };
@@ -83,7 +84,7 @@ Size of static member object: 1 bytes.
 //----------------------------------------------------------------------------------------------------------------
 
 Empty Base Optimization (EBO)
-If an empty class is used as a base class in an inheritance hierarchy, the compiler may optimize and stop the empty base from occupying memory. 
+If an empty class is used as a base class in an inheritance hierarchy, the compiler may optimize and stop the empty base class from occupying memory. 
 This is called Empty Base Optimization (EBO).
 
 Example:
@@ -112,7 +113,7 @@ Static members do not contribute to object size.
 Inheritance with empty base classes can use Empty Base Optimization (EBO) to eliminate unnecessary memory usage.
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+===================================================================================================================
 
 Object Creation Methods in C++:
 
@@ -126,12 +127,10 @@ public:
 };
 int main() {
     MyClass obj(10);  // Object created on stack (automatic memory allocation)
-
     cout << "Value of x: " << obj.x << endl;
     return 0;
 }
 Key Characteristics of Stack Objects:
-
 1.Memory is automatically allocated and deallocated.
 2.Lifetime within the scope in which it is created.
 3.Stored in the stack memory region.
@@ -144,6 +143,12 @@ Memory management is faster since stack memory has low overhead.
 Disadvantages:
 Objects are limited by the stack size.
 Cannot be shared outside the scope in which they were created (local lifetime).
+
+/* Dynamic Objects (Heap Memory) Objects created using new:
+int* ptr = new int(10);
+📌 Lifetime:
+NOT tied to scope
+Exists until you explicitly delete it */
 
 //----------------------------------------------------------------------------------------------------------------
 
@@ -175,31 +180,3 @@ These objects can be shared between different parts of the program.
 Disadvantages:
 Requires manual memory management (potential for memory leaks if delete is missed).
 Slower to allocate/deallocate than stack objects due to heap overhead.
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-6. Static Data Members & Static Member Functions
-1. What are Static Data Members?
-A static data member is a class variable that is shared among all objects of the class.
-It belongs to the class, not individual objects.
-It is declared using the static keyword inside the class but must be defined outside the class.
-It gets memory allocation only once and retains(persists) its value across all objects.
-
-6.1 Compile-time Input
-class Car {
-public:
-    static int totalCars;
-    Car() { totalCars++; }
-    static void showTotal() {
-        cout << "Total Cars: " << totalCars << endl;
-    }
-};
-int Car::totalCars = 0;
-int main() {
-    Car c1, c2, c3;
-    Car::showTotal();
-    return 0;
-}
-Output:
-Total Cars: 3
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
