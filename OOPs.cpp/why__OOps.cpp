@@ -1,9 +1,10 @@
-#Definition
+✅#Definition
 Object-oriented programming (OOP) is defined as a programming model (and not a specific language) built on the concept of objects,
- that helps in software or application designing.
- OOP focuses on the objects that developers want to manipulate rather than the logic required to manipulate them.
+that helps in software or application designing.
+OOP focuses on the objects that developers want to manipulate rather than the logic required to manipulate them.
 
-#Why OOps-
+
+✅#Why OOps
 #1.Reusability-> Through inheritance, OOPs allow programmers to reuse code agin and again and extend the use of existing classes.
 #2.Enhanced Security -> With encapsulation, critical or inernal data is hidden from outside interference, allowing only specific parts of the program 
 to interact with the internal states of an object, improving security and reducing unintended side effects.
@@ -13,7 +14,8 @@ but following a general pattern.
 #4.Abstraction -> OOPs hide complex implementation(un-necessary ) details  from user and shows only necessary details.
 
 
-#Difference between OOps and Traditional(procedural) Programming-
+
+✅#Difference between OOps and Traditional(procedural) Programming:
 #1.
 OOP:
 Promotes code reusability through inheritance and polymorphism. Classes can be extended, and objects can be reused across the program.
