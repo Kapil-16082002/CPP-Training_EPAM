@@ -1,3 +1,4 @@
+
 Inheritance is a fundamental concept of object-oriented programming in C++ that allows one class (derived class) to inherit properties and behaviors (data members and member functions) of another class (base class). 
 This promotes code reuse and helps in building a hierarchical relationship between classes.
 
@@ -176,8 +177,7 @@ This is the Derived2 class
 
 //-----------------------------------------------------------------------------------------------------------------
 
-✅5. Hybrid (Virtual) Inheritance
-
+✅5. Hybrid (Virtual) Inheritance:
 Hybrid Inheritance is a combination of more than one type of inheritance (e.g., single, multiple, multilevel). 
 It is not necessarily the same as the Diamond Problem, but the Diamond Problem can occur in hybrid inheritance when multiple inheritance is involved.
                   Base
@@ -217,31 +217,6 @@ int main() {
     // obj.displayBase();  // Error: Ambiguity! Which Base is being referred to?
     return 0;
 }
-Solution:
-Resolving Ambiguity Using Virtual Inheritance:
-#include <iostream>
-using namespace std;
-
-class Base {
-public:
-    void displayBase() {
-        cout << "This is the Base class" << endl;
-    }
-};
-// Virtual inheritance
-class Derived1 : virtual public Base {};
-class Derived2 : virtual public Base {};
-
-class Hybrid : public Derived1, public Derived2 {};
-
-int main() {
-    Hybrid obj;
-    obj.displayBase();  // Unambiguous due to virtual inheritance
-    return 0;
-}
-Output:
-This is the Base class
-
 //================================================================================================================
 
 ✅Diamond problem: Virtual inheritance 
@@ -254,13 +229,12 @@ This creates a diamond-shaped inheritance hierarchy:
        \   /
          D
 Here:
-
 A is the Base Class.
 B and C inherit from A.
 D inherits from both B and C.
 Problem: The derived class D now has two copies of A (one from B and one from C), leading to ambiguity when accessing members of A through D.
-// Ambiguity: Which method should be called, B's or C's version of A?
-
+// Ambiguity: Which method should be called, B's or C's version of A ?
+//Ambiguity occurs when the compiler cannot decide which function or variable to use because multiple options exist with the same name.”
 
 #include <iostream>
 using namespace std;
@@ -279,7 +253,7 @@ class D : public B, public C { };
 
 int main() {
     D obj;
-    obj.display(); // Ambiguity: Which "display()" should be called, B's or C's version of A?
+    obj.display(); // Ambiguity: Which "display()" should be called, B's or C's version of A ?
     return 0;
 }
 Output: Error: ambiguous call to "display"
@@ -312,21 +286,24 @@ Virtual inheritance is a technique used in C++ to solve the Diamond Problem in m
 The keyword virtual ensures that only ONE shared copy of the base class will be created, even if multiple parent classes inherit from it.
 This means the class D has only one copy of A, even though it inherits from both B and C.
 
-⭐ 1. What “virtual” does internally?
+⭐ 1. What “virtual” does internally ?
 
 When you write:
 class B : virtual public A {};
 virtual keyword ensures that compiler will not create a copy of A inside B.
 Instead, the compiler create: a hidden pointer inside B called the virtual base pointer (vbptr).
-
 Similarly for C:  a hidden pointer inside C called the virtual base pointer (vbptr).
 
-
 But these pointers do not point to A yet —
+in future it tells the compiler:
+“If a most-derived class exists, place one shared object of A at the bottom and make my vbptr point to it.”
+Both B.vbptr and C.vbptr point to the same object A inside D.
 
-it tells the compiler:
-“If a most-derived class exists,
-place one shared A at the bottom
-and make my vbptr point to it.”
+🧠 Internal Structure:
 
-Both B.vbptr and C.vbptr point to the same A inside D.
+        A   ← (only ONE shared object)
+       / \
+   (vbptr)(vbptr)
+     B       C
+       \   /
+         D
