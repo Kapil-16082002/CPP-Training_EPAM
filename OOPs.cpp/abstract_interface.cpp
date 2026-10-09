@@ -1,17 +1,18 @@
+
 Abstract Class:
 Can have both pure virtual functions (like an interface) and non-pure (regular) virtual functions with default implementations.
 Can also have member variables and shared code that subclasses can inherit.
 Used when you want to enforce certain shared behavior along with a common interface.
 
 Interface (Pure Abstract Class):
-Contains only pure virtual functions (no implementation or state variables are allowed).
+Contains only pure virtual functions (a function with no definition and declared with = 0).
 Derived class must implement all the methods of base class.
 Used when all you need is a contract or protocol for communication without any behavior or implementation.
 
 
 
-✅Abstract Base Class and Pure Virtual Functions
-A virtual function can be made a pure virtual function by assigning = 0. 
+✅Abstract Base Class and Pure Virtual Functions:
+A virtual function can be made a pure virtual function by assigning = 0.
 This makes the class abstract, meaning it cannot be instantiated directly:
 
 class AbstractClass {

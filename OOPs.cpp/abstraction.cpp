@@ -1,9 +1,8 @@
 
-
 ✅#Abstraction:
-It is the process of hiding the complex implementation details and showing only the essential or necessary information of an object. 
+It is the process of hiding the complex internal implementation details and showing only the essential or necessary information of an object. 
 
-how does abstraction differ from encapsulation?
+how does abstraction differ from encapsulation ?
 
 Aspect	                    Abstraction	                                    Encapsulation
 Description	 Hiding implementation(logic) details.	          Hiding internal  data details and restricting direct access to certain parts of data using access control (e.g., private, protected).
@@ -15,9 +14,9 @@ Goal	To provide a simplified interface for the user and hide unnecessary details
 1.Security: Users do not need to know the implementation details of a function or method.
 2.Focus on Essentials: It allows the programmer to focus on what an object does rather than how it does it.
 
-✅why use abstrct class??
+✅why use abstrct class ??
 1.Give Common Interface:
-An abstract class is useful when you want to define a common interface (behavior) that all derived classes must implement. 
+An abstract class is useful when you want to define a common interface (behavior) that all derived classes must implement those behavior. 
 It ensures that all derived classes follow the same rules and provide their specific implementations for the required method(s)
 
 2.Enabling Polymorphism
@@ -29,13 +28,13 @@ derived class must implement abstract class methods.
 
 
 ✅How Abstraction Works in C++:
-1.Abstract Class: A class that cannot be instantiated and is meant to be inherited by other classes. 
+1.Abstract Class: A class that cannot be instantiated and is meant to be inherited by other classes.
 It has at least one pure virtual function (a function with no definition and declared with = 0).
 2.Pure Virtual Function: A virtual function that must be implemented by derived classes.
 
 Example 1: Abstraction Using Abstract Class
 In this example, we'll create an abstract class Shape with a pure virtual function area().
- The derived classes (Circle and Rectangle) must provide their own implementation for the area() function.
+The derived classes (Circle and Rectangle) must provide their own implementation for the area() function.
 #include <iostream>
 #include <cmath> // for M_PI constant
 using namespace std;
@@ -96,7 +95,7 @@ The class Shape is an abstract class because it has the pure virtual function ar
 The derived classes (Circle and Rectangle) implement the area() function.
 
 We don't need to know how the area is calculated in each shape; we just call the area() function and get the result.
- This is the essence of abstraction — showing only the necessary details.
+This is the essence of abstraction — showing only the necessary details.
 
 1.Instead of using Shape* shape1 = new Triangle(...);, we simply create instances of Triangle and Square directly
  using Triangle triangle(...); and Square square(...);.

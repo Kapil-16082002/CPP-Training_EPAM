@@ -1,10 +1,10 @@
 
 Operator overloading allows giving additional meanings to the operators when they are used with user-defined data types (like objects).
 For example, we can make use of the addition operator (+) for string class to concatenate two strings.
-We know that the task of this operator is to add two operands. 
+We know that the task of this operator is to add two operands.
 So a single operator ‘+’, when placed between integer operands, adds them and when placed between string operands, concatenates them.
 
-For example, using + to add two objects of a class.
+For example, using + to add two objects of a class
 Complex c1(3, 4), c2(2, 5);
 Complex c3 = c1 + c2;  // Calls overloaded operator+
 

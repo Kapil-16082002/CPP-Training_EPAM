@@ -8,7 +8,6 @@
 | `.*`     | object + pointer-to-member            | access via pointer-to-member | `obj.*p`      |
 | `->*`    | pointer-to-object + pointer-to-member | access via pointer-to-member | `ptr->*p`     |
 
-
 🟦 1) . — Member access through object
 Meaning:
 Use the . operator when you have a normal object, NOT a pointer.

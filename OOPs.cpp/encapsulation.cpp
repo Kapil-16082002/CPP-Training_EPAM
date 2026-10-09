@@ -2,14 +2,13 @@
 Encapsulation is defined as the wrapping up of data and information in a single unit. 
 Encapsulation is the process of hiding internal data by making variables private and exposing controlled access through public methods.
 
-Example
+Example:
 /*
 In a company, there are different sections like the accounts section, finance section, sales section, etc. Now,
 1.The finance section handles all the financial related transactions and keeps records of all the data related to finance.
 2.Similarly, the sales section handles all the sales-related activities and keeps records of all the sales.
 
-Now there may arise a situation when for some reason an official from the finance section needs 
-all the data about sales in a particular month.
+Now there may arise a situation when for some reason an official from the finance section needs all the data about sales in a particular month.
 In this case, he is not allowed to directly access the data of the sales section.
 He will first have to contact some other officer in the sales section and then request him to give the particular data.
 This is what Encapsulation is. Here the data of the sales section and the employees that can manipulate them are wrapped under a single name “sales section”. 
@@ -27,7 +26,7 @@ Key Features of Encapsulation:
 using namespace std;
 class Employee {
 private:
-    int employeeID;    // // Hidden Data
+    int employeeID;    // Hidden Data
     string employeeName;
 public:   
     // Controlled Access, Setter method for employeeID
@@ -73,11 +72,10 @@ Employee ID: 101
 Employee Name: John Doe
 Employee ID: 101, Name: John Doe
 
-1.how to access private members of a class without getter,setter method??
-2.why encapsulation principle, still private members can be access??  
+1.how to access private members of a class without getter,setter method ??
+2.why encapsulation principle, still private members can be access ?? 
 
 ✅ 1. Using a Friend Function (Most Common Trick)
-
 A friend function can access private members without getters/setters.
 
 class Test {
@@ -121,14 +119,11 @@ class A {
 private:
     int x = 30;
 };
-
 int A::* ptr = &A::x;   // ALLOWED!
 int main() {
     A obj;
     cout << obj.*ptr;   // Access private member
 }
-
-
 ✔ This actually compiles
 ✔ Because access control applies when accessing the member, not declaring pointer
 ✔ But many compilers allow it as a loophole
