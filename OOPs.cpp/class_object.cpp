@@ -36,7 +36,7 @@ public:
     static int x;
     static void fun() {}
 };
-✔ Does this affect object size?  NO
+✔ Does this affect object size ?  NO
 cout << sizeof(Test) << endl; // 1
 
 👉 So is it technically an empty class?

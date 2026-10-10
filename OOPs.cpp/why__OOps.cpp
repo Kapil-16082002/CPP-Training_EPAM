@@ -33,7 +33,7 @@ Example: In a banking system, functions like deposit(), withdraw() would operate
 #3.
 Data is more secure as we have public, private, protected access modifiers.
 Procedural Programming:
-Data is typically stored in global variables or passed between functions and hence  less control over accessing of data, which can lead to unintended modifications or bugs.
+Data is typically stored in global variables or passed between functions and hence less control over accessing of data, which can lead to unintended modifications or bugs.
 
 	                OOP                                          	Procedural Programming
 Main focus- 	    Objects (data + functions)	                       Functions and procedures

@@ -19,7 +19,6 @@ In this type, a single derived class inherits from a single base class.
 
 #include <iostream>
 using namespace std;
-
 class Base {
 public:
     void displayBase() {
@@ -212,14 +211,14 @@ class Derived2 : public Base {};
 class Hybrid : public Derived1, public Derived2 {  // Hybrid inherits from two Derived classes
     // Causes ambiguity when accessing Base class methods
 };
-int main() {
+int main() 
     Hybrid obj;
     // obj.displayBase();  // Error: Ambiguity! Which Base is being referred to?
     return 0;
 }
 //================================================================================================================
 
-✅Diamond problem: Virtual inheritance 
+✅Diamond problem: Virtual inheritance
 The Diamond Problem is a specific issue that arises in multiple inheritance when a derived class inherits from two classes, which themselves inherit from a common base class.
 This creates a diamond-shaped inheritance hierarchy:
 
@@ -238,19 +237,15 @@ Problem: The derived class D now has two copies of A (one from B and one from C)
 
 #include <iostream>
 using namespace std;
-
 class A {
 public:
     void display() {
         cout << "Class A" << endl;
     }
 };
-
 class B : public A { };
 class C : public A { };
-
 class D : public B, public C { };
-
 int main() {
     D obj;
     obj.display(); // Ambiguity: Which "display()" should be called, B's or C's version of A ?
@@ -283,7 +278,7 @@ int main() {
 }
 Virtual Inheritance:
 Virtual inheritance is a technique used in C++ to solve the Diamond Problem in multiple inheritance.
-The keyword virtual ensures that only ONE shared copy of the base class will be created, even if multiple parent classes inherit from it.
+The keyword virtual ensures that only ONE shared copy of the base class will be created, even if multiple derived classes inherit from it.
 This means the class D has only one copy of A, even though it inherits from both B and C.
 
 ⭐ 1. What “virtual” does internally ?

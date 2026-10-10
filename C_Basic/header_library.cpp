@@ -1,8 +1,8 @@
 
-✅ Header File (.h / .hpp) 
+✅ Header File (.h / .hpp)
 Contains declarations (function prototypes, macros, data types, etc.)
 What They Do:
-They tell the compiler what functions, variables, and classes exist — but not how they work.
+They tell the compiler that functions, variables, and classes exist — but don't how they work.
 
 Example: math.h /* Declaration only — no definition here */
 double sqrt(double x);
